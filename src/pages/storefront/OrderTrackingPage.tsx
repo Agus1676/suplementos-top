@@ -43,9 +43,10 @@ export const OrderTrackingPage: React.FC = () => {
   return (
     <div className="container tracking-page">
       <div className="tracking-header">
-        <h1 className="tracking-title">Seguimiento de Pedido</h1>
+        <span className="section-eyebrow">ESTADO EN TIEMPO REAL</span>
+        <h1 className="tracking-title">SEGUIMIENTO DE PEDIDO</h1>
         <p className="tracking-subtitle">
-          Consultá el estado en tiempo real de tu compra ingresando tu número de pedido (ej: ST-2026-1001) o tu DNI.
+          Consultá el estado de tu compra ingresando tu número de pedido (ej: ST-2026-1001) o tu DNI.
         </p>
 
         <form
@@ -64,15 +65,15 @@ export const OrderTrackingPage: React.FC = () => {
             className="tracking-input"
           />
           <button type="submit" className="btn btn-primary">
-            Rastrear
+            RASTREAR
           </button>
         </form>
       </div>
 
       {hasSearched && !foundOrder && (
         <div className="card not-found-alert">
-          <AlertCircle size={32} className="text-warning" />
-          <h3>No encontramos ningún pedido con ese identificador</h3>
+          <AlertCircle size={36} className="text-gold" />
+          <h3>NO ENCONTRAMOS NINGÚN PEDIDO CON ESE IDENTIFICADOR</h3>
           <p>
             Revisá si el número coincide con el comprobante que recibiste por email. Si tenés dudas, podés contactarnos directamente por WhatsApp al <strong>11 6565 1990</strong>.
           </p>
@@ -83,18 +84,18 @@ export const OrderTrackingPage: React.FC = () => {
         <div className="card tracking-result-card">
           <div className="result-top-info">
             <div>
-              <span className="order-badge">Pedido #{foundOrder.orderNumber}</span>
+              <span className="order-badge">PEDIDO #{foundOrder.orderNumber}</span>
               <p className="text-xs text-muted mt-1">Realizado el {formatDate(foundOrder.createdAt)}</p>
             </div>
             <div className="status-pill-wrap">
               <span className="status-pill status-approved">
-                Pago Acreditado
+                PAGO ACREDITADO (MP)
               </span>
               <span className="status-pill status-logistic">
-                {foundOrder.fulfillmentStatus === 'preparing' && 'Preparando en local'}
-                {foundOrder.fulfillmentStatus === 'ready_for_pickup' && 'Listo para Retiro en Recoleta'}
-                {foundOrder.fulfillmentStatus === 'shipped' && 'Despachado en Camino'}
-                {foundOrder.fulfillmentStatus === 'delivered' && 'Entregado'}
+                {foundOrder.fulfillmentStatus === 'preparing' && 'PREPARANDO EN RECOLETA'}
+                {foundOrder.fulfillmentStatus === 'ready_for_pickup' && 'LISTO PARA RETIRO EN LOCAL'}
+                {foundOrder.fulfillmentStatus === 'shipped' && 'DESPACHADO EN CAMINO'}
+                {foundOrder.fulfillmentStatus === 'delivered' && 'ENTREGADO'}
               </span>
             </div>
           </div>
@@ -102,32 +103,32 @@ export const OrderTrackingPage: React.FC = () => {
           {/* Timeline */}
           <div className="timeline-wrap">
             <div className="timeline-step completed">
-              <div className="step-circle"><CheckCircle size={18} /></div>
-              <span className="step-title">1. Pago Aprobado</span>
+              <div className="step-circle"><CheckCircle size={20} /></div>
+              <span className="step-title">1. PAGO APROBADO</span>
               <span className="step-desc">Mercado Pago confirmó la operación</span>
             </div>
 
             <div className={`timeline-step ${getStepStatus(1, foundOrder.fulfillmentStatus)}`}>
-              <div className="step-circle"><Package size={18} /></div>
-              <span className="step-title">2. Preparando</span>
+              <div className="step-circle"><Package size={20} /></div>
+              <span className="step-title">2. PREPARANDO</span>
               <span className="step-desc">Armado en Uriburu 1163, CABA</span>
             </div>
 
             <div className={`timeline-step ${getStepStatus(foundOrder.deliveryMethod === 'pickup' ? 2 : 3, foundOrder.fulfillmentStatus)}`}>
               <div className="step-circle">
-                {foundOrder.deliveryMethod === 'pickup' ? <MapPin size={18} /> : <Truck size={18} />}
+                {foundOrder.deliveryMethod === 'pickup' ? <MapPin size={20} /> : <Truck size={20} />}
               </div>
               <span className="step-title">
-                {foundOrder.deliveryMethod === 'pickup' ? '3. Listo para Retirar' : '3. Despachado'}
+                {foundOrder.deliveryMethod === 'pickup' ? '3. LISTO RETIRO' : '3. DESPACHADO'}
               </span>
               <span className="step-desc">
-                {foundOrder.deliveryMethod === 'pickup' ? 'En sucursal Recoleta' : (foundOrder.trackingNumber ? `Guía: ${foundOrder.trackingNumber}` : 'En tránsito prioritario')}
+                {foundOrder.deliveryMethod === 'pickup' ? 'En sucursal Recoleta' : (foundOrder.trackingNumber ? `Guía: ${foundOrder.trackingNumber}` : 'En tránsito express')}
               </span>
             </div>
 
             <div className={`timeline-step ${getStepStatus(4, foundOrder.fulfillmentStatus)}`}>
-              <div className="step-circle"><CheckCircle size={18} /></div>
-              <span className="step-title">4. Entregado</span>
+              <div className="step-circle"><CheckCircle size={20} /></div>
+              <span className="step-title">4. ENTREGADO</span>
               <span className="step-desc">Paquete recibido</span>
             </div>
           </div>
@@ -135,7 +136,7 @@ export const OrderTrackingPage: React.FC = () => {
           {/* Delivery & Customer Info */}
           <div className="order-details-grid">
             <div className="details-col">
-              <h4>Datos del Destinatario</h4>
+              <h4>DATOS DEL DESTINATARIO</h4>
               <p><strong>Nombre:</strong> {foundOrder.customerName}</p>
               <p><strong>DNI:</strong> {foundOrder.customerDni}</p>
               <p><strong>Teléfono:</strong> {foundOrder.customerPhone}</p>
@@ -143,7 +144,7 @@ export const OrderTrackingPage: React.FC = () => {
             </div>
 
             <div className="details-col">
-              <h4>Modalidad de Entrega</h4>
+              <h4>MODALIDAD DE ENTREGA</h4>
               {foundOrder.deliveryMethod === 'pickup' ? (
                 <div>
                   <p><strong>Punto de Retiro:</strong></p>
@@ -163,7 +164,7 @@ export const OrderTrackingPage: React.FC = () => {
             </div>
 
             <div className="details-col">
-              <h4>Artículos ({foundOrder.items.length})</h4>
+              <h4>ARTÍCULOS ({foundOrder.items.length})</h4>
               <ul className="tracking-items-list">
                 {foundOrder.items.map((i) => (
                   <li key={i.id}>
@@ -172,7 +173,7 @@ export const OrderTrackingPage: React.FC = () => {
                 ))}
               </ul>
               <div className="tracking-total mt-2">
-                <strong>Total: {formatARS(foundOrder.totalInCents)}</strong>
+                <strong>TOTAL: <span className="text-gold">{formatARS(foundOrder.totalInCents)}</span></strong>
               </div>
             </div>
           </div>
@@ -181,44 +182,59 @@ export const OrderTrackingPage: React.FC = () => {
 
       <style>{`
         .tracking-page {
-          padding-top: 2rem;
+          padding-top: 2.5rem;
           padding-bottom: 5rem;
-          max-width: 860px;
+          max-width: 880px;
         }
         .tracking-header {
           text-align: center;
-          margin-bottom: 2.5rem;
+          margin-bottom: 3rem;
+        }
+        .section-eyebrow {
+          font-family: var(--font-display);
+          font-size: 0.85rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          color: var(--color-accent);
+          display: block;
+          margin-bottom: 0.2rem;
         }
         .tracking-title {
-          font-size: 2.2rem;
+          font-size: 2.8rem;
           margin-bottom: 0.5rem;
         }
         .tracking-subtitle {
           color: var(--color-text-muted);
           max-width: 600px;
-          margin: 0 auto 1.5rem;
-          font-size: 0.95rem;
+          margin: 0 auto 2rem;
+          font-size: 1rem;
         }
         .tracking-search-form {
           position: relative;
           display: flex;
-          max-width: 520px;
+          max-width: 540px;
           margin: 0 auto;
           gap: 0.5rem;
         }
         .search-icon {
           position: absolute;
-          left: 1rem;
+          left: 1.15rem;
           top: 50%;
           transform: translateY(-50%);
-          color: var(--color-text-subtle);
+          color: var(--color-accent);
         }
         .tracking-input {
           flex: 1;
-          padding: 0.75rem 1rem 0.75rem 2.8rem;
+          padding: 0.85rem 1rem 0.85rem 3rem;
+          background: #121724;
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
+          color: #FFF;
           font-size: 0.95rem;
+        }
+        .tracking-input:focus {
+          outline: none;
+          border-color: var(--color-accent);
         }
         .not-found-alert {
           text-align: center;
@@ -226,17 +242,20 @@ export const OrderTrackingPage: React.FC = () => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.85rem;
+        }
+        .not-found-alert h3 {
+          font-size: 1.4rem;
         }
         .tracking-result-card {
-          padding: 2rem;
+          padding: 2.5rem;
         }
         .result-top-info {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
           border-bottom: 1px solid var(--color-border);
-          padding-bottom: 1.25rem;
+          padding-bottom: 1.5rem;
           margin-bottom: 2rem;
           flex-wrap: wrap;
           gap: 1rem;
@@ -244,34 +263,41 @@ export const OrderTrackingPage: React.FC = () => {
         .order-badge {
           font-family: var(--font-display);
           font-weight: 800;
-          font-size: 1.35rem;
-          color: var(--color-primary);
+          font-size: 1.6rem;
+          color: var(--color-accent);
+          letter-spacing: 0.04em;
         }
         .status-pill-wrap {
           display: flex;
           gap: 0.5rem;
+          flex-wrap: wrap;
         }
         .status-pill {
-          padding: 0.3rem 0.75rem;
-          border-radius: var(--radius-full);
-          font-size: 0.775rem;
+          padding: 0.35rem 0.85rem;
+          border-radius: var(--radius-sm);
+          font-family: var(--font-display);
+          font-size: 0.85rem;
           font-weight: 700;
+          letter-spacing: 0.05em;
         }
         .status-approved {
-          background: #ECFDF5;
-          color: #065F46;
+          background: rgba(16, 185, 129, 0.15);
+          color: #34D399;
+          border: 1px solid rgba(16, 185, 129, 0.35);
         }
         .status-logistic {
-          background: #EFF6FF;
-          color: #1E40AF;
+          background: rgba(229, 184, 105, 0.15);
+          color: var(--color-accent);
+          border: 1px solid var(--color-border-gold);
         }
         .timeline-wrap {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 1.5rem;
           margin-bottom: 2.5rem;
-          background: var(--color-bg-muted);
-          padding: 1.5rem;
+          background: #0B0E16;
+          border: 1px solid var(--color-border);
+          padding: 2rem;
           border-radius: var(--radius-md);
         }
         @media (min-width: 640px) {
@@ -285,7 +311,7 @@ export const OrderTrackingPage: React.FC = () => {
           align-items: center;
           text-align: center;
           gap: 0.35rem;
-          opacity: 0.45;
+          opacity: 0.4;
         }
         .timeline-step.completed {
           opacity: 1;
@@ -293,26 +319,28 @@ export const OrderTrackingPage: React.FC = () => {
         }
         .timeline-step.current {
           opacity: 1;
-          color: var(--color-accent-hover);
+          color: var(--color-accent);
         }
         .step-circle {
-          width: 40px;
-          height: 40px;
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
-          background: #FFFFFF;
+          background: #121724;
           border: 2px solid currentColor;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-bottom: 0.35rem;
+          margin-bottom: 0.5rem;
         }
         .step-title {
-          font-size: 0.85rem;
+          font-family: var(--font-display);
+          font-size: 1rem;
           font-weight: 700;
-          color: var(--color-primary);
+          color: #FFF;
+          letter-spacing: 0.04em;
         }
         .step-desc {
-          font-size: 0.725rem;
+          font-size: 0.75rem;
           color: var(--color-text-muted);
         }
         .order-details-grid {
@@ -320,7 +348,7 @@ export const OrderTrackingPage: React.FC = () => {
           grid-template-columns: 1fr;
           gap: 1.5rem;
           border-top: 1px solid var(--color-border);
-          padding-top: 1.5rem;
+          padding-top: 1.75rem;
         }
         @media (min-width: 768px) {
           .order-details-grid {
@@ -328,21 +356,22 @@ export const OrderTrackingPage: React.FC = () => {
           }
         }
         .details-col h4 {
-          font-size: 0.95rem;
-          margin-bottom: 0.75rem;
-          color: var(--color-primary);
+          font-size: 1.05rem;
+          margin-bottom: 0.85rem;
+          color: var(--color-accent);
         }
         .details-col p {
           font-size: 0.85rem;
-          line-height: 1.5;
+          line-height: 1.6;
         }
         .tracking-items-list {
-          font-size: 0.825rem;
-          line-height: 1.4;
+          font-size: 0.85rem;
+          line-height: 1.5;
         }
         .tracking-total {
-          font-size: 0.95rem;
-          color: var(--color-primary);
+          font-family: var(--font-display);
+          font-size: 1.15rem;
+          margin-top: 0.5rem;
         }
       `}</style>
     </div>

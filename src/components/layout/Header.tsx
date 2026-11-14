@@ -5,12 +5,11 @@ import {
   Search, 
   Menu, 
   X, 
-  MapPin, 
-  Clock, 
   Phone, 
-  ShieldCheck,
-  ChevronDown,
-  LayoutDashboard
+  ShieldCheck, 
+  ChevronDown, 
+  LayoutDashboard, 
+  Zap 
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
@@ -33,27 +32,32 @@ export const Header: React.FC = () => {
 
   return (
     <header className="header-root">
-      {/* Top Banner Bar */}
-      <div className="top-banner">
-        <div className="container top-banner-content">
-          <div className="top-banner-item">
-            <MapPin size={13} className="text-accent" />
-            <span>Retiro en Recoleta: <strong>Uriburu 1163, CABA</strong></span>
+      {/* Infinite Athletic Announcement Bar */}
+      <div className="ticker-bar">
+        <div className="ticker-track">
+          <div className="ticker-content">
+            <span>🔥 ENVÍO GRATIS EN COMPRAS MAYORES A $85.000</span>
+            <span className="ticker-dot">•</span>
+            <span>📍 RETIRO HOY MISMO EN RECOLETA: URIBURU 1163, CABA</span>
+            <span className="ticker-dot">•</span>
+            <span>💳 HASTA 3 CUOTAS SIN INTERÉS CON MERCADO PAGO</span>
+            <span className="ticker-dot">•</span>
+            <span>⚡ WHATSAPP OFICIAL: 11 6565 1990</span>
+            <span className="ticker-dot">•</span>
+            <span>🏆 100% SUPLEMENTACIÓN DE ALTO RENDIMIENTO CON MATERIAS PRIMAS IMPORTADAS</span>
+            <span className="ticker-dot">•</span>
           </div>
-          <div className="top-banner-item hidden-mobile">
-            <Clock size={13} className="text-accent" />
-            <span>Lun a Vie 8 a 23hs | Sáb 10 a 18hs</span>
-          </div>
-          <div className="top-banner-right">
-            <a 
-              href="https://wa.me/5491165651990?text=Hola%20Suplementos%20Top,%20quiero%20hacer%20una%20consulta"
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="top-banner-link"
-            >
-              <Phone size={13} />
-              <span>WhatsApp: 11 6565 1990</span>
-            </a>
+          <div className="ticker-content" aria-hidden="true">
+            <span>🔥 ENVÍO GRATIS EN COMPRAS MAYORES A $85.000</span>
+            <span className="ticker-dot">•</span>
+            <span>📍 RETIRO HOY MISMO EN RECOLETA: URIBURU 1163, CABA</span>
+            <span className="ticker-dot">•</span>
+            <span>💳 HASTA 3 CUOTAS SIN INTERÉS CON MERCADO PAGO</span>
+            <span className="ticker-dot">•</span>
+            <span>⚡ WHATSAPP OFICIAL: 11 6565 1990</span>
+            <span className="ticker-dot">•</span>
+            <span>🏆 100% SUPLEMENTACIÓN DE ALTO RENDIMIENTO CON MATERIAS PRIMAS IMPORTADAS</span>
+            <span className="ticker-dot">•</span>
           </div>
         </div>
       </div>
@@ -67,15 +71,21 @@ export const Header: React.FC = () => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Abrir menú"
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
 
-          {/* Brand Logo */}
-          <Link to="/" className="brand-logo">
-            <span className="brand-logo-badge">TOP</span>
-            <div className="brand-logo-text">
-              <span className="brand-title">SUPLEMENTOS</span>
-              <span className="brand-sub">NUTRITION & PERFORMANCE</span>
+          {/* Real Brand Logo with Emblem */}
+          <Link to="/" className="brand-logo-container">
+            <div className="logo-badge-wrap">
+              <img 
+                src="/logo.jpg" 
+                alt="Suplementos Top Logo" 
+                className="brand-logo-img"
+              />
+            </div>
+            <div className="brand-text-block">
+              <span className="brand-main-title">SUPLEMENTOS <span className="text-gold">TOP</span></span>
+              <span className="brand-sub-tag">PERFORMANCE & NUTRITION</span>
             </div>
           </Link>
 
@@ -84,7 +94,7 @@ export const Header: React.FC = () => {
             <Search size={18} className="search-icon" />
             <input
               type="text"
-              placeholder="Buscar proteínas, creatinas, pre-entrenos..."
+              placeholder="Buscar proteínas CFM, creatina Creapure®, pre-entrenos..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -94,15 +104,25 @@ export const Header: React.FC = () => {
             </button>
           </form>
 
-          {/* Actions & Utilities */}
+          {/* Header Actions */}
           <div className="header-actions">
+            <a 
+              href="https://wa.me/5491165651990?text=Hola%20Suplementos%20Top,%20quiero%20hacer%20una%20consulta"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="wa-nav-pill hidden-mobile"
+            >
+              <Phone size={14} className="text-gold" />
+              <span>11 6565 1990</span>
+            </a>
+
             <Link to="/seguimiento" className="action-link hidden-mobile">
-              <ShieldCheck size={18} />
+              <ShieldCheck size={18} className="text-gold" />
               <span>Seguimiento</span>
             </Link>
 
-            <Link to="/admin" className="action-link-admin hidden-mobile" title="Panel de Administración">
-              <LayoutDashboard size={18} />
+            <Link to="/admin" className="admin-pill hidden-mobile" title="Panel Administrador">
+              <LayoutDashboard size={15} />
               <span>Admin</span>
             </Link>
 
@@ -118,13 +138,13 @@ export const Header: React.FC = () => {
                   <span className="cart-badge">{totalItemsCount}</span>
                 )}
               </div>
-              <span className="cart-label hidden-mobile">Carrito</span>
+              <span className="cart-label hidden-mobile">CARRITO</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Secondary Desktop Categories Navigation */}
+      {/* Categories Navigation Bar */}
       <nav className="categories-nav hidden-mobile">
         <div className="container categories-nav-inner">
           <div 
@@ -133,13 +153,14 @@ export const Header: React.FC = () => {
             onMouseLeave={() => setCategoriesOpen(false)}
           >
             <button className="nav-dropdown-btn">
-              <span>Categorías</span>
+              <Zap size={14} className="text-gold" />
+              <span>CATEGORÍAS</span>
               <ChevronDown size={14} />
             </button>
             {categoriesOpen && (
               <div className="nav-dropdown-menu">
-                <Link to="/catalogo" className="nav-dropdown-item font-bold">
-                  Ver Todo el Catálogo
+                <Link to="/catalogo" className="nav-dropdown-item font-bold text-gold">
+                  ⚡ VER TODO EL CATÁLOGO
                 </Link>
                 {categories.map((cat) => (
                   <Link 
@@ -147,33 +168,35 @@ export const Header: React.FC = () => {
                     to={`/catalogo?categoria=${cat.slug}`} 
                     className="nav-dropdown-item"
                   >
-                    {cat.name}
+                    {cat.name.toUpperCase()}
                   </Link>
                 ))}
               </div>
             )}
           </div>
 
-          <Link to="/catalogo" className="nav-link">Catálogo Completo</Link>
-          <Link to="/catalogo?categoria=proteinas" className="nav-link">Proteínas</Link>
-          <Link to="/catalogo?categoria=creatinas" className="nav-link">Creatinas Creapure</Link>
-          <Link to="/catalogo?categoria=pre-entrenos" className="nav-link">Pre-Entrenos</Link>
-          <Link to="/catalogo?categoria=aminoacidos" className="nav-link">Aminoácidos</Link>
-          <Link to="/envios" className="nav-link highlight">Envíos & Retiro</Link>
-          <Link to="/contacto" className="nav-link">Contacto</Link>
+          <Link to="/catalogo" className="nav-link">TODOS LOS PRODUCTOS</Link>
+          <Link to="/catalogo?categoria=proteinas" className="nav-link">PROTEÍNAS ISOLATE</Link>
+          <Link to="/catalogo?categoria=creatinas" className="nav-link">CREATINAS CREAPURE®</Link>
+          <Link to="/catalogo?categoria=pre-entrenos" className="nav-link">PRE-WORKOUTS</Link>
+          <Link to="/catalogo?categoria=aminoacidos" className="nav-link">AMINOÁCIDOS & BCAA</Link>
+          <Link to="/envios" className="nav-link highlight">📍 RETIRO EN RECOLETA</Link>
+          <Link to="/contacto" className="nav-link">CONTACTO</Link>
         </div>
       </nav>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="mobile-drawer-overlay" onClick={() => setMobileMenuOpen(false)}>
           <div className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-drawer-header">
-              <span className="font-bold">Menú de Navegación</span>
-              <button onClick={() => setMobileMenuOpen(false)}><X size={22} /></button>
+              <div className="flex items-center gap-2">
+                <img src="/logo.jpg" alt="Logo" className="w-8 h-8 rounded" />
+                <span className="font-display font-bold text-lg text-gold">SUPLEMENTOS TOP</span>
+              </div>
+              <button onClick={() => setMobileMenuOpen(false)}><X size={24} /></button>
             </div>
 
-            {/* Mobile Search */}
             <form className="mobile-search-form" onSubmit={handleSearch}>
               <input
                 type="text"
@@ -185,8 +208,8 @@ export const Header: React.FC = () => {
             </form>
 
             <div className="mobile-nav-links">
-              <Link to="/catalogo" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
-                🔥 Catálogo Completo
+              <Link to="/catalogo" onClick={() => setMobileMenuOpen(false)} className="mobile-link text-gold">
+                ⚡ CATÁLOGO COMPLETO
               </Link>
               {categories.map((cat) => (
                 <Link
@@ -198,17 +221,17 @@ export const Header: React.FC = () => {
                   {cat.name}
                 </Link>
               ))}
-              <hr className="my-2 border-slate-200" />
+              <hr className="my-3 border-slate-800" />
               <Link to="/seguimiento" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
                 📦 Seguimiento de Pedido
               </Link>
               <Link to="/envios" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
-                📍 Retiro en Local & Envíos
+                📍 Retiro en Recoleta (Uriburu 1163)
               </Link>
               <Link to="/contacto" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
-                💬 Contacto & WhatsApp
+                💬 WhatsApp: 11 6565 1990
               </Link>
-              <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="mobile-link text-accent">
+              <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="mobile-link text-gold font-bold">
                 ⚙️ Panel Administrador
               </Link>
             </div>
@@ -225,46 +248,45 @@ export const Header: React.FC = () => {
         .header-root {
           position: sticky;
           top: 0;
-          z-index: 50;
-          background: #FFFFFF;
-          box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.07);
+          z-index: 100;
+          background: rgba(7, 9, 14, 0.95);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid var(--color-border);
         }
-        .top-banner {
-          background-color: var(--color-primary);
-          color: #E2E8F0;
-          font-size: 0.775rem;
+        /* Marquee Ticker */
+        .ticker-bar {
+          background: #000000;
+          border-bottom: 1px solid rgba(229, 184, 105, 0.2);
+          overflow: hidden;
+          white-space: nowrap;
           padding: 0.35rem 0;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        .top-banner-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .top-banner-item {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-        }
-        .top-banner-right {
-          display: flex;
-          gap: 1.25rem;
-        }
-        .top-banner-link {
-          display: flex;
-          align-items: center;
-          gap: 0.35rem;
-          color: var(--color-accent);
+          font-family: var(--font-display);
+          font-size: 0.85rem;
           font-weight: 600;
+          letter-spacing: 0.08em;
+          color: #E2E8F0;
         }
-        .top-banner-link:hover {
-          text-decoration: underline;
+        .ticker-track {
+          display: flex;
+          width: max-content;
+          animation: tickerScroll 25s linear infinite;
         }
-        .text-accent {
+        .ticker-content {
+          display: flex;
+          align-items: center;
+          gap: 1.5rem;
+          padding-right: 1.5rem;
+        }
+        .ticker-dot {
           color: var(--color-accent);
+          font-size: 1.1rem;
+        }
+        @keyframes tickerScroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
         .main-navbar {
-          padding: 0.75rem 0;
+          padding: 0.65rem 0;
           border-bottom: 1px solid var(--color-border);
         }
         .main-navbar-inner {
@@ -273,40 +295,49 @@ export const Header: React.FC = () => {
           justify-content: space-between;
           gap: 1.5rem;
         }
-        .brand-logo {
+        .brand-logo-container {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
+          gap: 0.85rem;
           text-decoration: none;
         }
-        .brand-logo-badge {
-          background: var(--color-primary);
-          color: var(--color-accent);
-          font-family: var(--font-display);
-          font-weight: 800;
-          font-size: 1.15rem;
-          padding: 0.2rem 0.55rem;
-          border-radius: var(--radius-sm);
-          letter-spacing: 0.05em;
-          border: 1px solid var(--color-accent);
+        .logo-badge-wrap {
+          width: 52px;
+          height: 52px;
+          border-radius: var(--radius-md);
+          overflow: hidden;
+          border: 1.5px solid var(--color-accent);
+          box-shadow: 0 0 15px var(--color-accent-glow);
+          background: #000;
+          flex-shrink: 0;
+          transition: transform 0.2s;
         }
-        .brand-logo-text {
+        .brand-logo-container:hover .logo-badge-wrap {
+          transform: scale(1.05);
+        }
+        .brand-logo-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .brand-text-block {
           display: flex;
           flex-direction: column;
         }
-        .brand-title {
+        .brand-main-title {
           font-family: var(--font-display);
           font-weight: 800;
-          font-size: 1.25rem;
-          letter-spacing: -0.02em;
-          color: var(--color-primary);
-          line-height: 1.1;
+          font-size: 1.55rem;
+          letter-spacing: 0.04em;
+          color: #FFFFFF;
+          line-height: 1;
         }
-        .brand-sub {
-          font-size: 0.625rem;
+        .brand-sub-tag {
+          font-size: 0.65rem;
           font-weight: 700;
+          letter-spacing: 0.15em;
           color: var(--color-text-muted);
-          letter-spacing: 0.12em;
+          margin-top: 0.15rem;
         }
         .desktop-search {
           display: none;
@@ -321,81 +352,103 @@ export const Header: React.FC = () => {
         }
         .search-icon {
           position: absolute;
-          left: 0.9rem;
+          left: 1rem;
           top: 50%;
           transform: translateY(-50%);
           color: var(--color-text-subtle);
         }
         .search-input {
           width: 100%;
-          padding: 0.65rem 5.5rem 0.65rem 2.5rem;
-          background: var(--color-bg-muted);
+          padding: 0.65rem 6rem 0.65rem 2.6rem;
+          background: var(--color-bg-secondary);
           border: 1px solid var(--color-border);
           border-radius: var(--radius-full);
-          font-size: 0.875rem;
+          font-size: 0.85rem;
+          color: #FFF;
           outline: none;
           transition: all 0.2s;
         }
         .search-input:focus {
-          background: #FFFFFF;
-          border-color: var(--color-primary);
-          box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+          border-color: var(--color-accent);
+          box-shadow: 0 0 0 2px var(--color-accent-glow);
         }
         .search-btn {
           position: absolute;
           right: 0.35rem;
           top: 50%;
           transform: translateY(-50%);
-          background: var(--color-primary);
-          color: #FFF;
-          font-size: 0.8rem;
-          font-weight: 600;
-          padding: 0.4rem 0.85rem;
+          background: var(--color-accent);
+          color: #07090E;
+          font-family: var(--font-display);
+          font-size: 0.9rem;
+          font-weight: 700;
+          padding: 0.35rem 1rem;
           border-radius: var(--radius-full);
+          text-transform: uppercase;
+          transition: background 0.15s;
+        }
+        .search-btn:hover {
+          background: var(--color-accent-hover);
         }
         .header-actions {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 1.15rem;
+        }
+        .wa-nav-pill {
+          display: flex;
+          align-items: center;
+          gap: 0.45rem;
+          background: rgba(229, 184, 105, 0.1);
+          border: 1px solid rgba(229, 184, 105, 0.3);
+          color: #FFFFFF;
+          padding: 0.4rem 0.75rem;
+          border-radius: var(--radius-full);
+          font-size: 0.825rem;
+          font-weight: 700;
         }
         .action-link {
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: var(--color-text-main);
-          padding: 0.4rem 0.6rem;
-          border-radius: var(--radius-sm);
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: var(--color-text-muted);
+          font-family: var(--font-display);
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
         }
         .action-link:hover {
-          background-color: var(--color-bg-muted);
+          color: var(--color-accent);
         }
-        .action-link-admin {
+        .admin-pill {
           display: flex;
           align-items: center;
           gap: 0.35rem;
-          font-size: 0.8rem;
-          font-weight: 700;
-          color: var(--color-primary);
-          background: var(--color-accent-light);
+          background: #182032;
+          color: var(--color-accent);
+          border: 1px solid var(--color-border-gold);
           padding: 0.35rem 0.65rem;
           border-radius: var(--radius-sm);
-          border: 1px solid rgba(245, 158, 11, 0.4);
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 0.85rem;
+          letter-spacing: 0.05em;
         }
         .cart-trigger {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          background: var(--color-primary);
-          color: #FFFFFF;
-          padding: 0.55rem 0.95rem;
+          gap: 0.6rem;
+          background: linear-gradient(135deg, #F3C77D 0%, #E5B869 100%);
+          color: #07090E;
+          padding: 0.55rem 1.15rem;
           border-radius: var(--radius-full);
+          box-shadow: 0 4px 15px rgba(229, 184, 105, 0.3);
           transition: all 0.2s;
         }
         .cart-trigger:hover {
-          background: var(--color-primary-light);
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(229, 184, 105, 0.45);
         }
         .cart-icon-wrap {
           position: relative;
@@ -404,29 +457,28 @@ export const Header: React.FC = () => {
         }
         .cart-badge {
           position: absolute;
-          top: -8px;
+          top: -9px;
           right: -10px;
-          background: var(--color-accent);
-          color: #0F172A;
-          font-weight: 800;
-          font-size: 0.7rem;
-          width: 18px;
-          height: 18px;
+          background: #07090E;
+          color: var(--color-accent);
+          border: 1px solid var(--color-accent);
+          font-weight: 900;
+          font-size: 0.725rem;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         .cart-label {
-          font-size: 0.875rem;
-          font-weight: 700;
+          font-family: var(--font-display);
+          font-size: 0.95rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
         }
         .mobile-toggle {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0.4rem;
+          color: #FFFFFF;
         }
         @media (min-width: 900px) {
           .mobile-toggle {
@@ -434,28 +486,28 @@ export const Header: React.FC = () => {
           }
         }
         .categories-nav {
-          background: #FFFFFF;
+          background: #0B0E16;
           border-bottom: 1px solid var(--color-border);
         }
         .categories-nav-inner {
           display: flex;
           align-items: center;
-          gap: 1.5rem;
-          font-size: 0.875rem;
-          font-weight: 600;
-          padding-top: 0.4rem;
-          padding-bottom: 0.4rem;
+          gap: 1.75rem;
+          padding: 0.5rem 0;
+          font-family: var(--font-display);
+          font-size: 0.95rem;
+          letter-spacing: 0.05em;
         }
         .nav-link {
           color: var(--color-text-muted);
           transition: color 0.15s;
-          padding: 0.3rem 0;
         }
         .nav-link:hover {
-          color: var(--color-primary);
+          color: var(--color-accent);
         }
         .nav-link.highlight {
-          color: var(--color-secondary);
+          color: var(--color-accent);
+          font-weight: 700;
         }
         .nav-dropdown-wrap {
           position: relative;
@@ -463,35 +515,35 @@ export const Header: React.FC = () => {
         .nav-dropdown-btn {
           display: flex;
           align-items: center;
-          gap: 0.35rem;
+          gap: 0.4rem;
           font-weight: 700;
-          color: var(--color-primary);
-          padding: 0.3rem 0;
+          color: #FFFFFF;
         }
         .nav-dropdown-menu {
           position: absolute;
           top: 100%;
           left: 0;
-          width: 220px;
-          background: #FFFFFF;
-          border: 1px solid var(--color-border);
+          width: 240px;
+          background: #0D111A;
+          border: 1px solid var(--color-border-gold);
           border-radius: var(--radius-md);
           box-shadow: var(--shadow-lg);
-          padding: 0.5rem;
+          padding: 0.65rem;
           display: flex;
           flex-direction: column;
-          gap: 0.2rem;
+          gap: 0.35rem;
           z-index: 100;
         }
         .nav-dropdown-item {
-          padding: 0.5rem 0.75rem;
+          padding: 0.6rem 0.85rem;
           border-radius: var(--radius-sm);
-          color: var(--color-text-main);
-          font-size: 0.85rem;
+          color: #E2E8F0;
+          font-size: 0.9rem;
+          transition: background 0.15s;
         }
         .nav-dropdown-item:hover {
-          background-color: var(--color-bg-muted);
-          color: var(--color-accent-hover);
+          background: #182032;
+          color: var(--color-accent);
         }
         .hidden-mobile {
           display: none;
@@ -505,25 +557,20 @@ export const Header: React.FC = () => {
         .mobile-drawer-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(15, 23, 42, 0.6);
-          backdrop-filter: blur(2px);
-          z-index: 100;
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(4px);
+          z-index: 1000;
           display: flex;
         }
         .mobile-drawer {
-          width: 82%;
+          width: 85%;
           max-width: 320px;
-          background: #FFFFFF;
+          background: #0D111A;
+          border-right: 1px solid var(--color-border);
           height: 100%;
           display: flex;
           flex-direction: column;
-          padding: 1.25rem;
-          box-shadow: var(--shadow-xl);
-          animation: slideRight 0.2s ease-out;
-        }
-        @keyframes slideRight {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(0); }
+          padding: 1.5rem;
         }
         .mobile-drawer-header {
           display: flex;
@@ -534,39 +581,41 @@ export const Header: React.FC = () => {
         }
         .mobile-search-form {
           display: flex;
-          margin: 1rem 0;
+          margin: 1.25rem 0;
           position: relative;
         }
         .mobile-search-form input {
           width: 100%;
-          padding: 0.6rem 2.2rem 0.6rem 0.75rem;
+          padding: 0.7rem 2.4rem 0.7rem 0.85rem;
+          background: #07090E;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-md);
-          font-size: 0.875rem;
+          color: #FFF;
+          font-size: 0.9rem;
         }
         .mobile-search-form button {
           position: absolute;
-          right: 0.5rem;
+          right: 0.6rem;
           top: 50%;
           transform: translateY(-50%);
-          color: var(--color-text-subtle);
+          color: var(--color-accent);
         }
         .mobile-nav-links {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.75rem;
           flex: 1;
           overflow-y: auto;
+          font-family: var(--font-display);
+          font-size: 1.1rem;
         }
         .mobile-link {
-          font-weight: 700;
-          font-size: 0.95rem;
-          padding: 0.5rem 0;
-          color: var(--color-primary);
+          color: #FFF;
+          padding: 0.4rem 0;
         }
         .mobile-link-sub {
           padding-left: 1rem;
-          font-size: 0.875rem;
+          font-size: 0.95rem;
           color: var(--color-text-muted);
         }
         .mobile-drawer-footer {

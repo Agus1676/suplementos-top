@@ -71,10 +71,10 @@ export const CheckoutPage: React.FC = () => {
     return (
       <div className="container empty-checkout-wrap">
         <ShoppingBag size={48} className="text-subtle" />
-        <h2>No hay productos en tu carrito</h2>
+        <h2>NO HAY PRODUCTOS EN TU CARRITO</h2>
         <p>Seleccioná al menos un suplemento para poder iniciar el proceso de checkout.</p>
         <Link to="/catalogo" className="btn btn-primary">
-          Ir al Catálogo
+          IR AL CATÁLOGO
         </Link>
       </div>
     );
@@ -91,7 +91,6 @@ export const CheckoutPage: React.FC = () => {
   const onSubmit = async (data: CheckoutFormData) => {
     setIsProcessing(true);
 
-    // Simulación de creación de orden en base de datos transaccional
     const generatedOrderNumber = `ST-${Date.now().toString().slice(-6)}`;
     
     const orderItems: OrderItem[] = items.map((item, idx) => ({
@@ -136,17 +135,15 @@ export const CheckoutPage: React.FC = () => {
       shippingFeeInCents: effectiveShippingCost,
       discountInCents: 0,
       totalInCents: finalTotalInCents,
-      paymentStatus: 'approved', // Simulación exitosa de retorno
+      paymentStatus: 'approved',
       fulfillmentStatus: data.deliveryMethod === 'pickup' ? 'ready_for_pickup' : 'preparing',
       paymentMethod: 'Mercado Pago Checkout Pro',
       mercadopagoPaymentId: `MP-${Math.floor(100000000 + Math.random() * 900000000)}`,
     };
 
-    // Registrar en store
     createOrder(newOrder);
     clearCart();
 
-    // Redirigir al resultado del pago con la información
     setTimeout(() => {
       navigate(`/pago-resultado?orden=${newOrder.orderNumber}`);
     }, 1000);
@@ -156,24 +153,23 @@ export const CheckoutPage: React.FC = () => {
     <div className="container checkout-page">
       <div className="checkout-top-bar">
         <Link to="/catalogo" className="back-link">
-          <ArrowLeft size={16} /> Volver a la tienda
+          <ArrowLeft size={16} /> VOLVER A LA TIENDA
         </Link>
         <div className="secure-badge">
           <ShieldCheck size={16} className="text-success" />
-          <span>Checkout Seguro SSL 256-bit</span>
+          <span>CHECKOUT CIFRADO SSL 256-BIT</span>
         </div>
       </div>
 
-      <h1 className="checkout-main-title">Finalizar Compra</h1>
+      <h1 className="checkout-main-title">FINALIZAR COMPRA</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="checkout-grid">
-        {/* Left Column: Customer & Delivery Details */}
+        {/* Left Column */}
         <div className="checkout-form-column">
-          {/* Section 1: Customer Contact */}
           <div className="card checkout-card">
-            <h2 className="card-section-title">1. Datos Personales & Facturación</h2>
+            <h2 className="card-section-title">1. DATOS PERSONALES & FACTURACIÓN</h2>
             <p className="section-note">
-              No necesitás crear contraseña. Comprás como invitado de forma rápida y segura.
+              Comprás de forma rápida como invitado. Sin contraseñas obligatorias.
             </p>
 
             <div className="form-row-2">
@@ -236,9 +232,9 @@ export const CheckoutPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Section 2: Delivery Option */}
+          {/* Section 2: Delivery */}
           <div className="card checkout-card">
-            <h2 className="card-section-title">2. Forma de Entrega</h2>
+            <h2 className="card-section-title">2. FORMA DE ENTREGA</h2>
 
             <div className="delivery-selector-grid">
               <label className={`delivery-option-box ${selectedDeliveryMethod === 'shipping' ? 'selected' : ''}`}>
@@ -250,17 +246,17 @@ export const CheckoutPage: React.FC = () => {
                 />
                 <div className="delivery-box-inner">
                   <div className="box-header">
-                    <Truck size={20} className="text-accent" />
-                    <span className="box-title">Envío a Domicilio</span>
+                    <Truck size={20} className="text-gold" />
+                    <span className="box-title">ENVÍO A DOMICILIO</span>
                   </div>
-                  <span className="box-price">
+                  <span className="box-price text-gold">
                     {isFreeShippingEligible ? (
-                      <strong className="text-success">¡GRATIS!</strong>
+                      <strong className="text-success font-bold">¡GRATIS!</strong>
                     ) : (
                       formatARS(settings.flatShippingRateInCents)
                     )}
                   </span>
-                  <p className="box-detail">A todo el país por correo y logística prioritaria.</p>
+                  <p className="box-detail">A todo el país por transporte y correo prioritario.</p>
                 </div>
               </label>
 
@@ -273,10 +269,10 @@ export const CheckoutPage: React.FC = () => {
                 />
                 <div className="delivery-box-inner">
                   <div className="box-header">
-                    <MapPin size={20} className="text-accent" />
-                    <span className="box-title">Retiro en Recoleta</span>
+                    <MapPin size={20} className="text-gold" />
+                    <span className="box-title">RETIRO EN RECOLETA</span>
                   </div>
-                  <span className="box-price text-success">¡GRATIS!</span>
+                  <span className="box-price text-success font-bold">¡GRATIS!</span>
                   <p className="box-detail">Uriburu 1163 (entre Sta. Fe y Arenales), CABA.</p>
                 </div>
               </label>
@@ -284,9 +280,9 @@ export const CheckoutPage: React.FC = () => {
 
             {selectedDeliveryMethod === 'pickup' ? (
               <div className="pickup-info-alert">
-                <Clock size={18} className="text-accent flex-shrink-0" />
+                <Clock size={20} className="text-gold flex-shrink-0" />
                 <div>
-                  <strong>Dirección de Retiro: {settings.pickupAddress}</strong>
+                  <strong>DIRECCIÓN DE RETIRO: {settings.pickupAddress}</strong>
                   <p>Horarios: {settings.hoursDescription}</p>
                   <p className="text-xs text-muted mt-1">
                     Te enviaremos un WhatsApp cuando tu pedido esté listo para retirar con tu DNI.
@@ -295,7 +291,7 @@ export const CheckoutPage: React.FC = () => {
               </div>
             ) : (
               <div className="shipping-address-fields">
-                <h3 className="sub-fields-title">Dirección de Envío</h3>
+                <h3 className="sub-fields-title">DIRECCIÓN DE ENTREGA</h3>
 
                 <div className="form-row-2">
                   <div className="form-group flex-2">
@@ -370,11 +366,11 @@ export const CheckoutPage: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Indicaciones especiales para el repartidor (Opcional)</label>
+                  <label className="form-label">Indicaciones de entrega (Opcional)</label>
                   <textarea
                     rows={2}
                     className="form-textarea"
-                    placeholder="Ej: Tocar timbre en portería, entre calles, dejar con seguridad..."
+                    placeholder="Ej: Tocar timbre en portería, dejar con encargado las 24hs..."
                     {...register('deliveryNotes')}
                   />
                 </div>
@@ -390,10 +386,10 @@ export const CheckoutPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Order Summary & Mercado Pago CTA */}
+        {/* Right Column: Order Summary */}
         <div className="checkout-summary-column">
           <div className="card summary-card">
-            <h2 className="card-section-title">Resumen del Pedido</h2>
+            <h2 className="card-section-title">RESUMEN DEL PEDIDO</h2>
 
             <div className="summary-items-list">
               {items.map((item) => (
@@ -404,7 +400,7 @@ export const CheckoutPage: React.FC = () => {
                     <span className="summary-item-variant">{item.variantTitle}</span>
                     <span className="summary-item-qty">Cant: {item.quantity}</span>
                   </div>
-                  <span className="summary-item-price">
+                  <span className="summary-item-price text-gold">
                     {formatARS(item.priceInCents * item.quantity)}
                   </span>
                 </div>
@@ -413,15 +409,15 @@ export const CheckoutPage: React.FC = () => {
 
             <div className="summary-financials">
               <div className="financial-row">
-                <span>Subtotal:</span>
+                <span>SUBTOTAL:</span>
                 <span>{formatARS(subtotalInCents)}</span>
               </div>
 
               <div className="financial-row">
-                <span>Costo de envío:</span>
+                <span>COSTO DE ENVÍO:</span>
                 <span>
                   {effectiveShippingCost === 0 ? (
-                    <strong className="text-success">GRATIS</strong>
+                    <strong className="text-success font-bold">GRATIS</strong>
                   ) : (
                     formatARS(effectiveShippingCost)
                   )}
@@ -429,32 +425,32 @@ export const CheckoutPage: React.FC = () => {
               </div>
 
               <div className="financial-total-row">
-                <span>Total a Pagar:</span>
-                <span className="final-total-amount">
+                <span>TOTAL A PAGAR:</span>
+                <span className="final-total-amount text-gold">
                   {formatARS(finalTotalInCents)}
                 </span>
               </div>
             </div>
 
-            {/* Mercado Pago Badge */}
+            {/* Mercado Pago CTA Box */}
             <div className="mp-card-cta-box">
               <div className="mp-badge-header">
-                <CreditCard size={18} className="text-accent" />
-                <span>Pago Procesado por <strong>Mercado Pago</strong></span>
+                <CreditCard size={18} className="text-gold" />
+                <span>PAGO PROCESADO POR <strong>MERCADO PAGO</strong></span>
               </div>
               <p className="text-xs text-muted">
-                Serás redirigido a la plataforma oficial de Mercado Pago para abonar con tarjeta de crédito, débito o dinero en cuenta con total protección.
+                Hasta 3 cuotas con tarjetas de crédito, débito o dinero disponible en cuenta con total protección al comprador.
               </p>
 
               <button
                 type="submit"
                 disabled={isProcessing}
-                className="btn btn-accent btn-block btn-lg pay-submit-btn"
+                className="btn btn-primary btn-block btn-lg pay-submit-btn"
               >
                 {isProcessing ? (
-                  <span>Conectando con Mercado Pago...</span>
+                  <span>CONECTANDO CON MERCADO PAGO...</span>
                 ) : (
-                  <span>Pagar {formatARS(finalTotalInCents)} con Mercado Pago</span>
+                  <span>PAGAR {formatARS(finalTotalInCents)} CON MERCADO PAGO</span>
                 )}
               </button>
             </div>
@@ -462,7 +458,7 @@ export const CheckoutPage: React.FC = () => {
             <div className="post-payment-guarantee">
               <ShieldCheck size={16} className="text-success flex-shrink-0" />
               <span>
-                Al confirmarse el pago, recibirás tu comprobante y se enviará la orden a despacho inmediatamente.
+                Al confirmarse el pago, recibirás tu comprobante y se enviará la alerta a nuestro depósito en Uriburu 1163 para despachar de inmediato.
               </span>
             </div>
           </div>
@@ -471,7 +467,7 @@ export const CheckoutPage: React.FC = () => {
 
       <style>{`
         .checkout-page {
-          padding-top: 1.5rem;
+          padding-top: 2rem;
           padding-bottom: 5rem;
         }
         .checkout-top-bar {
@@ -484,20 +480,22 @@ export const CheckoutPage: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: var(--color-primary);
+          font-family: var(--font-display);
+          font-size: 0.95rem;
+          letter-spacing: 0.05em;
+          color: var(--color-accent);
         }
         .secure-badge {
           display: flex;
           align-items: center;
-          gap: 0.35rem;
-          font-size: 0.8rem;
-          font-weight: 600;
+          gap: 0.4rem;
+          font-family: var(--font-display);
+          font-size: 0.85rem;
           color: var(--color-success);
+          letter-spacing: 0.05em;
         }
         .checkout-main-title {
-          font-size: 2.2rem;
+          font-size: 2.6rem;
           margin-bottom: 2rem;
         }
         .checkout-grid {
@@ -519,7 +517,7 @@ export const CheckoutPage: React.FC = () => {
           padding: 1.75rem;
         }
         .card-section-title {
-          font-size: 1.25rem;
+          font-size: 1.35rem;
           margin-bottom: 0.4rem;
         }
         .section-note {
@@ -564,40 +562,41 @@ export const CheckoutPage: React.FC = () => {
           display: none;
         }
         .delivery-option-box {
-          border: 2px solid var(--color-border);
+          border: 1.5px solid var(--color-border);
           border-radius: var(--radius-md);
-          padding: 1rem;
+          padding: 1.15rem;
           cursor: pointer;
           transition: all 0.2s;
-          background: #FFFFFF;
+          background: #0B0E16;
         }
         .delivery-option-box:hover {
-          border-color: var(--color-primary);
+          border-color: var(--color-accent);
         }
         .delivery-option-box.selected {
-          border-color: var(--color-primary);
-          background: #F8FAFC;
-          box-shadow: 0 0 0 1px var(--color-primary);
+          border-color: var(--color-accent);
+          background: rgba(229, 184, 105, 0.08);
+          box-shadow: 0 0 15px rgba(229, 184, 105, 0.15);
         }
         .delivery-box-inner {
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
+          gap: 0.35rem;
         }
         .box-header {
           display: flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 0.5rem;
         }
         .box-title {
-          font-size: 0.95rem;
+          font-family: var(--font-display);
+          font-size: 1.05rem;
           font-weight: 700;
-          color: var(--color-primary);
+          color: #FFF;
         }
         .box-price {
-          font-size: 1.1rem;
+          font-family: var(--font-display);
+          font-size: 1.25rem;
           font-weight: 800;
-          color: var(--color-primary);
         }
         .box-detail {
           font-size: 0.775rem;
@@ -607,14 +606,16 @@ export const CheckoutPage: React.FC = () => {
           display: flex;
           align-items: flex-start;
           gap: 0.85rem;
-          background: var(--color-bg-muted);
-          border: 1px solid var(--color-border);
+          background: #0B0E16;
+          border: 1px solid var(--color-border-gold);
           padding: 1rem;
           border-radius: var(--radius-md);
           font-size: 0.85rem;
         }
         .pickup-info-alert strong {
-          color: var(--color-primary);
+          color: var(--color-accent);
+          font-family: var(--font-display);
+          font-size: 0.95rem;
           display: block;
         }
         .pickup-info-alert p {
@@ -626,7 +627,7 @@ export const CheckoutPage: React.FC = () => {
           margin-top: 0.5rem;
         }
         .sub-fields-title {
-          font-size: 1rem;
+          font-size: 1.15rem;
           margin-bottom: 1rem;
         }
         .error-alert {
@@ -657,12 +658,13 @@ export const CheckoutPage: React.FC = () => {
           font-size: 0.85rem;
         }
         .summary-item-img {
-          width: 50px;
-          height: 50px;
+          width: 52px;
+          height: 52px;
           object-fit: cover;
           border-radius: var(--radius-sm);
           border: 1px solid var(--color-border);
           flex-shrink: 0;
+          background: #000;
         }
         .summary-item-details {
           flex: 1;
@@ -670,8 +672,10 @@ export const CheckoutPage: React.FC = () => {
           flex-direction: column;
         }
         .summary-item-name {
+          font-family: var(--font-display);
+          font-size: 0.95rem;
           font-weight: 700;
-          color: var(--color-primary);
+          color: #FFF;
         }
         .summary-item-variant {
           color: var(--color-text-muted);
@@ -682,8 +686,9 @@ export const CheckoutPage: React.FC = () => {
           font-size: 0.75rem;
         }
         .summary-item-price {
-          font-weight: 700;
-          color: var(--color-primary);
+          font-family: var(--font-display);
+          font-size: 1.05rem;
+          font-weight: 800;
         }
         .summary-financials {
           border-top: 1px solid var(--color-border);
@@ -691,7 +696,8 @@ export const CheckoutPage: React.FC = () => {
           display: flex;
           flex-direction: column;
           gap: 0.65rem;
-          font-size: 0.9rem;
+          font-family: var(--font-display);
+          font-size: 1rem;
           margin-bottom: 1.5rem;
         }
         .financial-row {
@@ -705,16 +711,15 @@ export const CheckoutPage: React.FC = () => {
           align-items: center;
           border-top: 1px solid var(--color-border);
           padding-top: 0.75rem;
-          font-size: 1.1rem;
+          font-size: 1.2rem;
           font-weight: 800;
-          color: var(--color-primary);
+          color: #FFFFFF;
         }
         .final-total-amount {
-          font-size: 1.5rem;
-          color: var(--color-primary);
+          font-size: 1.8rem;
         }
         .mp-card-cta-box {
-          background: #F8FAFC;
+          background: #0B0E16;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-md);
           padding: 1.25rem;
@@ -726,9 +731,10 @@ export const CheckoutPage: React.FC = () => {
         .mp-badge-header {
           display: flex;
           align-items: center;
-          gap: 0.4rem;
-          font-size: 0.85rem;
-          color: var(--color-primary);
+          gap: 0.5rem;
+          font-family: var(--font-display);
+          font-size: 0.95rem;
+          color: #FFF;
         }
         .pay-submit-btn {
           margin-top: 0.5rem;

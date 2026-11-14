@@ -26,14 +26,13 @@ export const PaymentResultPage: React.FC = () => {
     );
   }
 
-  // Preparamos texto para WhatsApp al dueño
   const itemsText = order.items
     .map((item) => `• ${item.quantity}x ${item.productName} (${item.variantTitle}) - ${formatARS(item.totalPriceInCents)}`)
     .join('\n');
 
   const addressText = order.shippingAddress 
     ? `${order.shippingAddress.street} ${order.shippingAddress.number}${order.shippingAddress.apartment ? ` (${order.shippingAddress.apartment})` : ''}, ${order.shippingAddress.neighborhood ? `${order.shippingAddress.neighborhood}, ` : ''}${order.shippingAddress.city}, ${order.shippingAddress.province} (CP: ${order.shippingAddress.postalCode})`
-    : 'Retiro en sucursal Uriburu 1163';
+    : 'Retiro en sucursal Uriburu 1163, CABA';
 
   const waDispatchLink = buildWhatsAppDispatchLink({
     orderNumber: order.orderNumber,
@@ -54,10 +53,10 @@ export const PaymentResultPage: React.FC = () => {
           <div className="success-icon-wrap">
             <CheckCircle2 size={54} className="text-success" />
           </div>
-          <span className="badge badge-success">Pago Acreditado con Éxito</span>
-          <h1 className="result-title">¡Gracias por tu compra, {order.customerName.split(' ')[0]}!</h1>
+          <span className="badge badge-success">PAGO ACREDITADO CON ÉXITO</span>
+          <h1 className="result-title">¡GRACIAS POR TU COMPRA, {order.customerName.split(' ')[0].toUpperCase()}!</h1>
           <p className="order-num-text">
-            Número de Pedido: <strong>#{order.orderNumber}</strong> • {formatDate(order.createdAt)}
+            NÚMERO DE PEDIDO: <strong>#{order.orderNumber}</strong> • {formatDate(order.createdAt)}
           </p>
         </div>
 
@@ -67,19 +66,19 @@ export const PaymentResultPage: React.FC = () => {
             <Send size={16} />
             <span>ALERTA DE DESPACHO INMEDIATO</span>
           </div>
-          <h3 className="dispatch-title">Notificación directa para armar el paquete</h3>
+          <h3 className="dispatch-title">Notificación para preparar el paquete</h3>
           <p className="dispatch-desc">
-            Al dueño se le envía una notificación por correo a <strong>{settings.supportEmail}</strong>. 
+            Al dueño se le envía una notificación formal por correo a <strong>{settings.supportEmail}</strong>. 
             También podés enviar el comprobante directamente al WhatsApp del local para agilizar el retiro o entrega:
           </p>
           <a
             href={waDispatchLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-accent btn-lg wa-dispatch-btn"
+            className="btn btn-primary btn-lg wa-dispatch-btn"
           >
             <Phone size={18} />
-            <span>Enviar Datos de Despacho al WhatsApp (11 6565 1990)</span>
+            <span>ENVIAR DATOS DE DESPACHO AL WHATSAPP (11 6565 1990)</span>
           </a>
         </div>
 
@@ -87,9 +86,9 @@ export const PaymentResultPage: React.FC = () => {
         <div className="delivery-status-box">
           {order.deliveryMethod === 'pickup' ? (
             <div className="status-flex">
-              <MapPin size={24} className="text-accent flex-shrink-0" />
+              <MapPin size={26} className="text-gold flex-shrink-0" />
               <div>
-                <h4>Modalidad: Retiro en Sucursal Recoleta</h4>
+                <h4>MODALIDAD: RETIRO EN SUCURSAL RECOLETA</h4>
                 <p>
                   <strong>Punto de entrega:</strong> {settings.pickupAddress}
                 </p>
@@ -100,9 +99,9 @@ export const PaymentResultPage: React.FC = () => {
             </div>
           ) : (
             <div className="status-flex">
-              <Truck size={24} className="text-accent flex-shrink-0" />
+              <Truck size={26} className="text-gold flex-shrink-0" />
               <div>
-                <h4>Modalidad: Envío a Domicilio</h4>
+                <h4>MODALIDAD: ENVÍO A DOMICILIO</h4>
                 <p>
                   <strong>Destino:</strong> {addressText}
                 </p>
@@ -116,7 +115,7 @@ export const PaymentResultPage: React.FC = () => {
 
         {/* Order Details Breakdown */}
         <div className="order-items-breakdown">
-          <h3>Detalle de Suplementos Comprados</h3>
+          <h3>DETALLE DE SUPLEMENTOS COMPRADOS</h3>
           <div className="items-table">
             {order.items.map((item) => (
               <div key={item.id} className="item-row">
@@ -125,7 +124,7 @@ export const PaymentResultPage: React.FC = () => {
                   <span className="text-xs text-muted">{item.variantTitle}</span>
                 </div>
                 <div className="item-qty">x{item.quantity}</div>
-                <div className="item-price">{formatARS(item.totalPriceInCents)}</div>
+                <div className="item-price text-gold">{formatARS(item.totalPriceInCents)}</div>
               </div>
             ))}
           </div>
@@ -142,8 +141,8 @@ export const PaymentResultPage: React.FC = () => {
               </span>
             </div>
             <div className="total-line grand-total">
-              <span>Total Abonado:</span>
-              <span>{formatARS(order.totalInCents)}</span>
+              <span>Total Abonado (MP):</span>
+              <span className="text-gold">{formatARS(order.totalInCents)}</span>
             </div>
           </div>
         </div>
@@ -151,17 +150,17 @@ export const PaymentResultPage: React.FC = () => {
         {/* Next Actions */}
         <div className="result-actions-row">
           <Link to={`/seguimiento?orden=${order.orderNumber}`} className="btn btn-secondary">
-            Ver Seguimiento del Pedido
+            SEGUIMIENTO EN VIVO
           </Link>
           <Link to="/catalogo" className="btn btn-primary">
-            Seguir Comprando
+            SEGUIR COMPRANDO
           </Link>
         </div>
       </div>
 
       <style>{`
         .payment-result-page {
-          padding-top: 2rem;
+          padding-top: 2.5rem;
           padding-bottom: 5rem;
           max-width: 760px;
         }
@@ -179,62 +178,61 @@ export const PaymentResultPage: React.FC = () => {
           border-bottom: 1px solid var(--color-border);
         }
         .success-icon-wrap {
-          background: #ECFDF5;
+          background: rgba(16, 185, 129, 0.15);
+          border: 1px solid rgba(16, 185, 129, 0.35);
           padding: 1rem;
           border-radius: 50%;
         }
         .result-title {
-          font-size: 2rem;
+          font-size: 2.2rem;
           margin-top: 0.25rem;
         }
         .order-num-text {
-          font-size: 0.95rem;
+          font-family: var(--font-display);
+          font-size: 1.05rem;
           color: var(--color-text-muted);
+          letter-spacing: 0.05em;
         }
         .dispatch-alert-banner {
-          background: #FFFBEB;
-          border: 1.5px solid #FCD34D;
+          background: #121724;
+          border: 1.5px solid var(--color-border-gold);
           border-radius: var(--radius-md);
           padding: 1.5rem;
           margin-bottom: 2rem;
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
+          box-shadow: 0 0 20px rgba(229, 184, 105, 0.1);
         }
         .alert-badge {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          font-size: 0.75rem;
+          font-family: var(--font-display);
+          font-size: 0.85rem;
           font-weight: 800;
-          color: #B45309;
-          letter-spacing: 0.05em;
+          color: var(--color-accent);
+          letter-spacing: 0.08em;
         }
         .dispatch-title {
-          font-size: 1.15rem;
-          color: #92400E;
+          font-size: 1.35rem;
+          color: #FFF;
           margin: 0;
         }
         .dispatch-desc {
-          font-size: 0.875rem;
-          color: #78350F;
-          line-height: 1.5;
+          font-size: 0.9rem;
+          color: var(--color-text-muted);
+          line-height: 1.6;
         }
         .wa-dispatch-btn {
           margin-top: 0.75rem;
           align-self: flex-start;
-          background: #25D366;
-          color: #FFFFFF;
-          box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.25);
-        }
-        .wa-dispatch-btn:hover {
-          background: #20BA5A;
         }
         .delivery-status-box {
-          background: var(--color-bg-muted);
+          background: #0B0E16;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-md);
-          padding: 1.25rem;
+          padding: 1.25rem 1.5rem;
           margin-bottom: 2rem;
         }
         .status-flex {
@@ -243,26 +241,27 @@ export const PaymentResultPage: React.FC = () => {
           align-items: flex-start;
         }
         .status-flex h4 {
-          font-size: 1rem;
+          font-size: 1.15rem;
           margin-bottom: 0.25rem;
         }
         .status-flex p {
-          font-size: 0.875rem;
+          font-size: 0.9rem;
         }
         .order-items-breakdown {
           border: 1px solid var(--color-border);
           border-radius: var(--radius-md);
-          padding: 1.25rem;
+          padding: 1.5rem;
           margin-bottom: 2rem;
+          background: #121724;
         }
         .order-items-breakdown h3 {
-          font-size: 1.05rem;
-          margin-bottom: 1rem;
+          font-size: 1.2rem;
+          margin-bottom: 1.25rem;
         }
         .items-table {
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: 0.85rem;
           border-bottom: 1px solid var(--color-border);
           padding-bottom: 1rem;
           margin-bottom: 1rem;
@@ -271,7 +270,7 @@ export const PaymentResultPage: React.FC = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-size: 0.875rem;
+          font-size: 0.9rem;
         }
         .item-main {
           display: flex;
@@ -282,16 +281,20 @@ export const PaymentResultPage: React.FC = () => {
           width: 50px;
           text-align: center;
           color: var(--color-text-muted);
+          font-weight: 700;
         }
         .item-price {
-          font-weight: 700;
-          color: var(--color-primary);
+          font-family: var(--font-display);
+          font-size: 1.05rem;
+          font-weight: 800;
         }
         .order-totals-summary {
           display: flex;
           flex-direction: column;
           gap: 0.4rem;
-          font-size: 0.875rem;
+          font-family: var(--font-display);
+          font-size: 0.95rem;
+          letter-spacing: 0.04em;
         }
         .total-line {
           display: flex;
@@ -299,12 +302,12 @@ export const PaymentResultPage: React.FC = () => {
           color: var(--color-text-muted);
         }
         .grand-total {
-          font-size: 1.15rem;
+          font-size: 1.35rem;
           font-weight: 800;
-          color: var(--color-primary);
+          color: #FFFFFF;
           border-top: 1px solid var(--color-border);
           padding-top: 0.5rem;
-          margin-top: 0.25rem;
+          margin-top: 0.35rem;
         }
         .result-actions-row {
           display: flex;
