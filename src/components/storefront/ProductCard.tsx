@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Star, Check } from 'lucide-react';
 import { Product, ProductVariant } from '../../types';
-import { formatARS, calculateDiscountPercentage } from '../../lib/utils';
+import { formatARS, formatInstallments, calculateDiscountPercentage } from '../../lib/utils';
 import { useCart } from '../../context/CartContext';
 
 interface ProductCardProps {
@@ -35,14 +35,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {/* Badges Overlay */}
       <div className="card-badge-wrap">
         {discountPercent > 0 && (
-          <span className="badge badge-gold">-{discountPercent}% OFF</span>
+          <span className="badge badge-red">{discountPercent}% OFF</span>
         )}
         {product.isBestSeller && (
-          <span className="badge badge-dark">TOP SELLER</span>
+          <span className="badge badge-black">MÁS VENDIDO</span>
         )}
       </div>
 
-      {/* Image with Link */}
+      {/* Product Image */}
       <Link to={`/producto/${product.slug}`} className="product-image-container">
         <img
           src={product.images[0]?.url}
@@ -50,15 +50,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           className="product-main-img"
           loading="lazy"
         />
-        <div className="img-glow-overlay"></div>
       </Link>
 
-      {/* Content */}
+      {/* Card Body */}
       <div className="product-card-body">
         <div className="product-brand-rating">
           <span className="product-brand">{product.brand}</span>
           <div className="product-rating">
-            <Star size={13} className="text-gold fill-gold" />
+            <Star size={13} className="star-icon" />
             <span className="rating-val">{product.rating.toFixed(1)}</span>
             <span className="rating-count">({product.reviewCount})</span>
           </div>
@@ -68,9 +67,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Link to={`/producto/${product.slug}`}>{product.name}</Link>
         </h3>
 
-        <p className="product-tagline">{product.tagline}</p>
-
-        {/* Variant Pills Selector */}
+        {/* Variant selector pills if >1 */}
         {product.variants.length > 1 && (
           <div className="variants-selector-grid">
             {product.variants.map((v) => (
@@ -91,9 +88,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         )}
 
-        {/* Pricing & Stock */}
-        <div className="price-stock-row">
-          <div className="price-wrap">
+        {/* Pricing Block */}
+        <div className="price-block">
+          <div className="price-row">
             <span className="current-price">
               {formatARS(selectedVariant.priceInCents)}
             </span>
@@ -104,41 +101,40 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             )}
           </div>
 
-          <div className="stock-indicator">
+          {/* Real Argentine Installment Text (like ENA Sport) */}
+          <div className="installments-text">
+            <span>💳 {formatInstallments(selectedVariant.priceInCents, 3)}</span>
+          </div>
+
+          <div className="stock-info">
             {selectedVariant.stock <= 5 && selectedVariant.stock > 0 ? (
-              <span className="stock-badge-warn">
-                <span className="dot dot-warn"></span>
-                Últimas {selectedVariant.stock} un.
-              </span>
+              <span className="stock-warn">¡Últimas {selectedVariant.stock} unidades en stock!</span>
             ) : selectedVariant.stock > 0 ? (
-              <span className="stock-badge-ok">
-                <span className="dot dot-ok"></span>
-                Stock Disponible
-              </span>
+              <span className="stock-ok">✓ En stock para entrega inmediata</span>
             ) : (
-              <span className="stock-badge-out">Sin Stock</span>
+              <span className="stock-out">Sin stock momentáneo</span>
             )}
           </div>
         </div>
 
-        {/* Add to Cart CTA */}
+        {/* CTA Button */}
         <button
           onClick={handleAddToCart}
           disabled={selectedVariant.stock <= 0}
-          className={`btn btn-block ${addedAnimation ? 'btn-secondary' : 'btn-primary'} add-to-cart-btn`}
+          className={`btn btn-block ${addedAnimation ? 'btn-secondary' : 'btn-primary'} add-btn`}
         >
           {addedAnimation ? (
             <>
-              <Check size={18} className="text-success" />
-              <span>¡AGREGADO AL CARRITO!</span>
+              <Check size={16} className="text-green-600" />
+              <span>¡Agregado al Carrito!</span>
             </>
           ) : selectedVariant.stock > 0 ? (
             <>
-              <ShoppingBag size={18} />
+              <ShoppingBag size={16} />
               <span>AGREGAR AL CARRITO</span>
             </>
           ) : (
-            <span>SIN STOCK MOMENTÁNEO</span>
+            <span>AGOTADO</span>
           )}
         </button>
       </div>
@@ -148,21 +144,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           display: flex;
           flex-direction: column;
           position: relative;
-          background: var(--color-bg-card);
+          background: #FFFFFF;
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-lg);
-          transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+          border-radius: var(--radius-md);
           overflow: hidden;
+          transition: box-shadow 0.2s, border-color 0.2s;
         }
         .product-card:hover {
-          transform: translateY(-5px);
-          border-color: var(--color-border-gold);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(229, 184, 105, 0.15);
+          border-color: #9CA3AF;
+          box-shadow: var(--shadow-md);
         }
         .card-badge-wrap {
           position: absolute;
-          top: 0.85rem;
-          left: 0.85rem;
+          top: 0.75rem;
+          left: 0.75rem;
           display: flex;
           flex-direction: column;
           gap: 0.35rem;
@@ -173,29 +168,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           width: 100%;
           aspect-ratio: 1;
           overflow: hidden;
-          background: #0B0E16;
+          background: #F9FAFB;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding: 1rem;
           border-bottom: 1px solid var(--color-border);
         }
         .product-main-img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s ease;
+          object-fit: contain;
+          transition: transform 0.25s ease;
         }
         .product-card:hover .product-main-img {
-          transform: scale(1.08);
-        }
-        .img-glow-overlay {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at center, transparent 40%, rgba(7, 9, 14, 0.4) 100%);
-          pointer-events: none;
+          transform: scale(1.04);
         }
         .product-card-body {
-          padding: 1.35rem;
+          padding: 1.25rem;
           display: flex;
           flex-direction: column;
           flex: 1;
@@ -204,137 +194,116 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 0.45rem;
+          margin-bottom: 0.4rem;
         }
         .product-brand {
-          font-family: var(--font-display);
+          font-size: 0.75rem;
           font-weight: 700;
-          font-size: 0.8rem;
-          color: var(--color-accent);
-          letter-spacing: 0.08em;
+          color: #6B7280;
           text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
         .product-rating {
           display: flex;
           align-items: center;
-          gap: 0.25rem;
-          font-size: 0.8rem;
+          gap: 0.2rem;
+          font-size: 0.775rem;
+        }
+        .star-icon {
+          color: #F59E0B;
+          fill: #F59E0B;
         }
         .rating-val {
           font-weight: 700;
-          color: #FFFFFF;
+          color: #111827;
         }
         .rating-count {
-          color: var(--color-text-subtle);
-        }
-        .fill-gold {
-          fill: var(--color-accent);
+          color: #9CA3AF;
         }
         .product-title {
-          font-size: 1.3rem;
-          line-height: 1.15;
-          margin-bottom: 0.35rem;
-          letter-spacing: 0.02em;
-        }
-        .product-title a {
-          color: #FFFFFF;
-          transition: color 0.15s;
-        }
-        .product-title a:hover {
-          color: var(--color-accent);
-        }
-        .product-tagline {
-          font-size: 0.8rem;
-          color: var(--color-text-muted);
-          line-height: 1.4;
-          margin-bottom: 1rem;
+          font-size: 1rem;
+          font-weight: 700;
+          color: #111827;
+          line-height: 1.35;
+          margin-bottom: 0.65rem;
+          min-height: 2.7rem;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
+        .product-title a {
+          color: #111827;
+        }
+        .product-title a:hover {
+          color: var(--color-brand-red);
+        }
         .variants-selector-grid {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.4rem;
-          margin-bottom: 1rem;
+          gap: 0.35rem;
+          margin-bottom: 0.85rem;
         }
         .variant-pill {
-          font-family: var(--font-display);
-          font-size: 0.8rem;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          padding: 0.25rem 0.65rem;
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 0.2rem 0.55rem;
           border-radius: var(--radius-sm);
-          background: #0B0E16;
-          color: var(--color-text-muted);
-          border: 1px solid var(--color-border);
+          background: #F3F4F6;
+          color: #4B5563;
+          border: 1px solid #E5E7EB;
           transition: all 0.15s;
         }
         .variant-pill:hover {
-          border-color: var(--color-accent);
-          color: #FFF;
+          border-color: #111827;
+          color: #111827;
         }
         .variant-pill.active {
-          background: rgba(229, 184, 105, 0.15);
-          color: var(--color-accent);
-          border-color: var(--color-accent);
+          background: #111827;
+          color: #FFFFFF;
+          border-color: #111827;
         }
-        .price-stock-row {
+        .price-block {
           margin-top: auto;
           display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          padding-top: 0.85rem;
-          margin-bottom: 1rem;
-          border-top: 1px solid var(--color-border);
-        }
-        .price-wrap {
-          display: flex;
           flex-direction: column;
+          gap: 0.25rem;
+          padding-top: 0.75rem;
+          margin-bottom: 1rem;
+          border-top: 1px solid #F3F4F6;
+        }
+        .price-row {
+          display: flex;
+          align-items: baseline;
+          gap: 0.65rem;
         }
         .current-price {
-          font-family: var(--font-display);
-          font-size: 1.7rem;
+          font-size: 1.45rem;
           font-weight: 800;
-          color: #FFFFFF;
-          letter-spacing: 0.02em;
+          color: #111827;
           line-height: 1;
         }
         .compare-price {
           font-size: 0.85rem;
-          color: var(--color-text-subtle);
+          color: #9CA3AF;
           text-decoration: line-through;
-          margin-top: 0.15rem;
         }
-        .stock-indicator {
-          font-size: 0.75rem;
+        .installments-text {
+          font-size: 0.8rem;
           font-weight: 700;
+          color: var(--color-success);
         }
-        .stock-badge-ok, .stock-badge-warn, .stock-badge-out {
-          display: flex;
-          align-items: center;
-          gap: 0.35rem;
+        .stock-info {
+          font-size: 0.725rem;
+          font-weight: 600;
+          margin-top: 0.2rem;
         }
-        .stock-badge-ok { color: #34D399; }
-        .stock-badge-warn { color: #FBBF24; }
-        .stock-badge-out { color: #F87171; }
-        .dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-        }
-        .dot-ok {
-          background: #10B981;
-          box-shadow: 0 0 8px #10B981;
-        }
-        .dot-warn {
-          background: #F59E0B;
-          box-shadow: 0 0 8px #F59E0B;
-        }
-        .add-to-cart-btn {
-          font-size: 1rem;
-          padding: 0.75rem 1rem;
+        .stock-ok { color: #059669; }
+        .stock-warn { color: #D97706; }
+        .stock-out { color: #DC2626; }
+        .add-btn {
+          font-size: 0.875rem;
+          padding: 0.65rem 1rem;
         }
       `}</style>
     </div>

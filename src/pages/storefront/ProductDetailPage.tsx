@@ -11,11 +11,12 @@ import {
   Plus, 
   Minus, 
   Sparkles, 
-  ArrowLeft 
+  ArrowLeft,
+  CreditCard
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { useCart } from '../../context/CartContext';
-import { formatARS, calculateDiscountPercentage } from '../../lib/utils';
+import { formatARS, formatInstallments, calculateDiscountPercentage } from '../../lib/utils';
 import { ProductVariant } from '../../types';
 
 export const ProductDetailPage: React.FC = () => {
@@ -69,11 +70,11 @@ export const ProductDetailPage: React.FC = () => {
     <div className="container product-detail-page">
       {/* Breadcrumb */}
       <nav className="detail-breadcrumb">
-        <Link to="/"><ArrowLeft size={14} /> INICIO</Link>
+        <Link to="/"><ArrowLeft size={14} /> Inicio</Link>
         <span>/</span>
-        <Link to={`/catalogo?categoria=${product.category.slug}`}>{product.category.name.toUpperCase()}</Link>
+        <Link to={`/catalogo?categoria=${product.category.slug}`}>{product.category.name}</Link>
         <span>/</span>
-        <span className="current-crumb">{product.name.toUpperCase()}</span>
+        <span className="current-crumb">{product.name}</span>
       </nav>
 
       <div className="product-detail-grid">
@@ -81,8 +82,8 @@ export const ProductDetailPage: React.FC = () => {
         <div className="gallery-section">
           <div className="main-image-wrap">
             {discountPercent > 0 && (
-              <span className="badge badge-gold discount-badge">
-                -{discountPercent}% OFF
+              <span className="badge badge-red discount-badge">
+                {discountPercent}% OFF
               </span>
             )}
             <img
@@ -106,20 +107,20 @@ export const ProductDetailPage: React.FC = () => {
             </div>
           )}
 
-          {/* Guarantees Box */}
+          {/* Guarantee Badges */}
           <div className="detail-guarantees-card">
             <div className="guarantee-item">
-              <ShieldCheck size={22} className="text-gold" />
+              <ShieldCheck size={22} className="text-red" />
               <div>
-                <strong>100% PUREZA CERTIFICADA</strong>
-                <p>Materias primas originales selladas de laboratorio.</p>
+                <strong>100% PUREZA Y CALIDAD</strong>
+                <p>Materias primas originales selladas de fábrica.</p>
               </div>
             </div>
             <div className="guarantee-item">
-              <Truck size={22} className="text-gold" />
+              <Truck size={22} className="text-red" />
               <div>
-                <strong>DESPACHO INMEDIATO</strong>
-                <p>Embalaje hermético protector desde Recoleta.</p>
+                <strong>DESPACHO EN EL DÍA</strong>
+                <p>Embalaje protector hermético desde Recoleta.</p>
               </div>
             </div>
           </div>
@@ -130,9 +131,9 @@ export const ProductDetailPage: React.FC = () => {
           <div className="brand-rating-header">
             <span className="product-brand-tag">{product.brand}</span>
             <div className="product-stars">
-              <Star size={15} className="text-gold fill-gold" />
-              <span className="font-bold text-white">{product.rating.toFixed(1)}</span>
-              <span className="text-muted">({product.reviewCount} opiniones de atletas)</span>
+              <Star size={15} className="star-icon" />
+              <span className="font-bold">{product.rating.toFixed(1)}</span>
+              <span className="text-gray-500">({product.reviewCount} opiniones)</span>
             </div>
           </div>
 
@@ -142,7 +143,7 @@ export const ProductDetailPage: React.FC = () => {
           {/* Price Box */}
           <div className="detail-price-box">
             <div className="price-values">
-              <span className="detail-current-price text-gold">
+              <span className="detail-current-price">
                 {formatARS(selectedVariant.priceInCents)}
               </span>
               {selectedVariant.compareAtPriceInCents && selectedVariant.compareAtPriceInCents > selectedVariant.priceInCents && (
@@ -151,16 +152,19 @@ export const ProductDetailPage: React.FC = () => {
                 </span>
               )}
             </div>
-            <span className="mp-installments-pill">
-              Hasta 3 cuotas sin interés con Mercado Pago
-            </span>
+
+            {/* Installments text (ENA style) */}
+            <div className="installments-callout">
+              <CreditCard size={18} className="text-green-600" />
+              <span><strong>{formatInstallments(selectedVariant.priceInCents, 3)}</strong> con Mercado Pago</span>
+            </div>
           </div>
 
           {/* Variant Selector: Flavor */}
           {product.variants.some((v) => v.flavor) && (
             <div className="variant-select-section">
               <label className="variant-label">
-                SABOR SELECCIONADO: <strong className="text-gold">{selectedVariant.flavor}</strong>
+                SABOR SELECCIONADO: <strong>{selectedVariant.flavor}</strong>
               </label>
               <div className="variants-buttons-grid">
                 {product.variants.map((v) => (
@@ -181,14 +185,14 @@ export const ProductDetailPage: React.FC = () => {
           {/* Stock Notification */}
           <div className="detail-stock-status">
             {selectedVariant.stock <= 0 ? (
-              <span className="text-danger font-bold">⚠️ Agotado momentáneamente</span>
+              <span className="text-red-600 font-bold">⚠️ Agotado momentáneamente</span>
             ) : selectedVariant.stock <= 5 ? (
-              <span className="text-warning font-bold">
+              <span className="text-amber-600 font-bold">
                 ⚠️ ¡ÚLTIMAS {selectedVariant.stock} UNIDADES EN STOCK!
               </span>
             ) : (
-              <span className="text-success font-bold">
-                ✓ En stock físico para entrega inmediata (SKU: {selectedVariant.sku})
+              <span className="text-green-600 font-bold">
+                ✓ En stock disponible para entrega inmediata (SKU: {selectedVariant.sku})
               </span>
             )}
           </div>
@@ -220,7 +224,7 @@ export const ProductDetailPage: React.FC = () => {
             >
               {addedSuccess ? (
                 <>
-                  <Check size={18} className="text-success" />
+                  <Check size={18} className="text-green-600" />
                   <span>¡AGREGADO AL CARRITO!</span>
                 </>
               ) : (
@@ -240,36 +244,36 @@ export const ProductDetailPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Delivery Location Info */}
+          {/* Delivery & Pickup Info */}
           <div className="delivery-highlights-box">
             <div className="delivery-card-item">
-              <MapPin size={22} className="text-gold flex-shrink-0" />
+              <MapPin size={22} className="text-red flex-shrink-0" />
               <div>
                 <strong>RETIRO HOY MISMO GRATIS EN RECOLETA</strong>
                 <p>{settings.pickupAddress}</p>
-                <small className="text-muted">Horarios: {settings.hoursDescription}</small>
+                <small className="text-gray-500">Horarios: {settings.hoursDescription}</small>
               </div>
             </div>
 
             <div className="delivery-card-item">
-              <Truck size={22} className="text-gold flex-shrink-0" />
+              <Truck size={22} className="text-red flex-shrink-0" />
               <div>
                 <strong>ENVÍOS A DOMICILIO A TODO EL PAÍS</strong>
                 <p>CABA, GBA e Interior con despacho prioritario.</p>
-                <small className="text-success font-bold">Envío gratis en compras mayores a $85.000</small>
+                <small className="text-green-600 font-bold">Envío gratis en compras mayores a $85.000</small>
               </div>
             </div>
 
             <div className="delivery-card-item whatsapp-box">
-              <Phone size={22} className="text-gold flex-shrink-0" />
+              <Phone size={22} className="text-green-600 flex-shrink-0" />
               <div>
                 <strong>¿CONSULTAS SOBRE ESTE SUPLEMENTO?</strong>
-                <p>Chateá en directo con nuestro equipo de asesores.</p>
+                <p>Chateá en directo con nuestro equipo deportivo.</p>
                 <a
                   href={`https://wa.me/5491165651990?text=${encodeURIComponent(`Hola! Quisiera consultar sobre el producto: ${product.name} (${selectedVariant.title})`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="whatsapp-inline-link text-gold"
+                  className="whatsapp-inline-link text-green-700"
                 >
                   Consultar por WhatsApp al 11 6565 1990 →
                 </a>
@@ -277,14 +281,14 @@ export const ProductDetailPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Description & Nutritional */}
+          {/* Description & Nutritional info */}
           <div className="product-description-wrap">
             <h3 className="section-subheading">DESCRIPCIÓN Y MODO DE USO</h3>
             <p className="description-text">{product.description}</p>
 
             {product.servingInfo && (
               <div className="serving-info-pill">
-                <Sparkles size={16} className="text-gold" />
+                <Sparkles size={16} className="text-red" />
                 <span><strong>RENDIMIENTO:</strong> {product.servingInfo}</span>
               </div>
             )}
@@ -295,7 +299,7 @@ export const ProductDetailPage: React.FC = () => {
                 <ul className="nutritional-bullets">
                   {product.nutritionalHighlights.map((hl, i) => (
                     <li key={i}>
-                      <Check size={14} className="text-gold" />
+                      <Check size={14} className="text-green-600" />
                       <span>{hl}</span>
                     </li>
                   ))}
@@ -315,10 +319,8 @@ export const ProductDetailPage: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          font-family: var(--font-display);
-          font-size: 0.9rem;
-          letter-spacing: 0.05em;
-          color: var(--color-text-muted);
+          font-size: 0.85rem;
+          color: #6B7280;
           margin-bottom: 2rem;
           flex-wrap: wrap;
         }
@@ -326,13 +328,14 @@ export const ProductDetailPage: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 0.35rem;
-          color: #FFF;
+          color: #111827;
+          font-weight: 500;
         }
         .detail-breadcrumb a:hover {
-          color: var(--color-accent);
+          color: var(--color-brand-red);
         }
         .current-crumb {
-          color: var(--color-accent);
+          color: #9CA3AF;
         }
         .product-detail-grid {
           display: grid;
@@ -351,20 +354,20 @@ export const ProductDetailPage: React.FC = () => {
         }
         .main-image-wrap {
           position: relative;
-          background: #0B0E16;
+          background: #F9FAFB;
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-lg);
+          border-radius: var(--radius-md);
           overflow: hidden;
           aspect-ratio: 1;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: var(--shadow-sm);
+          padding: 1.5rem;
         }
         .main-detail-img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
         }
         .discount-badge {
           position: absolute;
@@ -380,21 +383,22 @@ export const ProductDetailPage: React.FC = () => {
         .thumbnail-btn {
           width: 72px;
           height: 72px;
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           border: 1.5px solid var(--color-border);
           overflow: hidden;
-          background: #000;
+          background: #F9FAFB;
+          padding: 0.25rem;
         }
         .thumbnail-btn.active {
-          border-color: var(--color-accent);
+          border-color: #111827;
         }
         .thumbnail-btn img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
         }
         .detail-guarantees-card {
-          background: #121724;
+          background: #F8F9FA;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-md);
           padding: 1.25rem;
@@ -409,14 +413,12 @@ export const ProductDetailPage: React.FC = () => {
           font-size: 0.8rem;
         }
         .guarantee-item strong {
-          color: #FFF;
-          font-family: var(--font-display);
-          font-size: 0.9rem;
-          letter-spacing: 0.04em;
+          color: #111827;
           display: block;
+          font-size: 0.85rem;
         }
         .guarantee-item p {
-          color: var(--color-text-muted);
+          color: #6B7280;
         }
         .info-section {
           display: flex;
@@ -429,12 +431,11 @@ export const ProductDetailPage: React.FC = () => {
           margin-bottom: 0.5rem;
         }
         .product-brand-tag {
-          font-family: var(--font-display);
           font-weight: 800;
-          font-size: 0.95rem;
-          color: var(--color-accent);
-          letter-spacing: 0.08em;
+          font-size: 0.85rem;
+          color: #6B7280;
           text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
         .product-stars {
           display: flex;
@@ -442,18 +443,27 @@ export const ProductDetailPage: React.FC = () => {
           gap: 0.35rem;
           font-size: 0.85rem;
         }
+        .star-icon {
+          color: #F59E0B;
+          fill: #F59E0B;
+        }
+        .text-red {
+          color: var(--color-brand-red);
+        }
         .detail-product-title {
-          font-size: 2.6rem;
-          line-height: 1.05;
+          font-size: 2.2rem;
+          font-weight: 900;
+          line-height: 1.15;
           margin-bottom: 0.5rem;
+          color: #111827;
         }
         .detail-tagline {
           font-size: 1rem;
-          color: var(--color-text-muted);
+          color: #4B5563;
           margin-bottom: 1.5rem;
         }
         .detail-price-box {
-          background: #121724;
+          background: #F8F9FA;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-md);
           padding: 1.25rem 1.5rem;
@@ -465,34 +475,34 @@ export const ProductDetailPage: React.FC = () => {
         .price-values {
           display: flex;
           align-items: baseline;
-          gap: 1.25rem;
+          gap: 1rem;
         }
         .detail-current-price {
-          font-family: var(--font-display);
-          font-size: 2.6rem;
-          font-weight: 800;
+          font-size: 2.4rem;
+          font-weight: 900;
+          color: #111827;
           line-height: 1;
         }
         .detail-compare-price {
-          font-family: var(--font-display);
-          font-size: 1.4rem;
-          color: var(--color-text-subtle);
+          font-size: 1.25rem;
+          color: #9CA3AF;
           text-decoration: line-through;
         }
-        .mp-installments-pill {
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: #009EE3;
+        .installments-callout {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.9rem;
+          color: #065F46;
         }
         .variant-select-section {
           margin-bottom: 1.5rem;
         }
         .variant-label {
           display: block;
-          font-family: var(--font-display);
-          font-size: 0.95rem;
-          letter-spacing: 0.04em;
-          color: var(--color-text-muted);
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #374151;
           margin-bottom: 0.65rem;
         }
         .variants-buttons-grid {
@@ -502,29 +512,27 @@ export const ProductDetailPage: React.FC = () => {
         }
         .variant-option-btn {
           border: 1.5px solid var(--color-border);
-          background: #0B0E16;
-          color: #FFF;
-          padding: 0.75rem 1.2rem;
+          background: #FFFFFF;
+          color: #111827;
+          padding: 0.65rem 1rem;
           border-radius: var(--radius-sm);
-          font-family: var(--font-display);
-          font-size: 0.95rem;
-          font-weight: 700;
-          letter-spacing: 0.04em;
+          font-size: 0.9rem;
+          font-weight: 600;
           display: flex;
           align-items: center;
           gap: 0.35rem;
           transition: all 0.15s;
         }
         .variant-option-btn:hover {
-          border-color: var(--color-accent);
+          border-color: #111827;
         }
         .variant-option-btn.active {
-          border-color: var(--color-accent);
-          background: rgba(229, 184, 105, 0.15);
-          color: var(--color-accent);
+          border-color: #111827;
+          background: #111827;
+          color: #FFFFFF;
         }
         .variant-size-hint {
-          font-size: 0.8rem;
+          font-size: 0.775rem;
           opacity: 0.8;
         }
         .detail-stock-status {
@@ -540,30 +548,28 @@ export const ProductDetailPage: React.FC = () => {
         .quantity-box {
           display: flex;
           align-items: center;
-          border: 1px solid var(--color-border);
+          border: 1.5px solid var(--color-border);
           border-radius: var(--radius-sm);
-          background: #0B0E16;
+          background: #FFFFFF;
         }
         .qty-change-btn {
-          padding: 0.85rem 1.15rem;
-          color: #FFF;
+          padding: 0.75rem 1rem;
+          color: #111827;
         }
         .qty-change-btn:disabled {
           opacity: 0.3;
         }
         .qty-number {
-          font-family: var(--font-display);
-          font-size: 1.2rem;
-          font-weight: 800;
-          color: #FFF;
-          min-width: 30px;
+          font-size: 1.05rem;
+          font-weight: 700;
+          min-width: 25px;
           text-align: center;
         }
         .delivery-highlights-box {
           display: flex;
           flex-direction: column;
           gap: 1rem;
-          background: #121724;
+          background: #F8F9FA;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-md);
           padding: 1.25rem 1.5rem;
@@ -576,28 +582,22 @@ export const ProductDetailPage: React.FC = () => {
           font-size: 0.85rem;
         }
         .delivery-card-item strong {
-          color: #FFF;
-          font-family: var(--font-display);
-          font-size: 0.95rem;
-          letter-spacing: 0.04em;
+          color: #111827;
           display: block;
         }
         .delivery-card-item p {
-          color: var(--color-text-muted);
+          color: #4B5563;
         }
         .whatsapp-box {
-          background: rgba(229, 184, 105, 0.06);
-          border: 1px solid var(--color-border-gold);
-          padding: 0.95rem 1.25rem;
+          background: #ECFDF5;
+          border: 1px solid #A7F3D0;
+          padding: 0.85rem 1.25rem;
           border-radius: var(--radius-md);
         }
         .whatsapp-inline-link {
           display: inline-block;
           margin-top: 0.25rem;
-          font-family: var(--font-display);
           font-weight: 700;
-          font-size: 0.95rem;
-          letter-spacing: 0.04em;
           text-decoration: underline;
         }
         .product-description-wrap {
@@ -605,12 +605,12 @@ export const ProductDetailPage: React.FC = () => {
           padding-top: 1.5rem;
         }
         .section-subheading {
-          font-size: 1.35rem;
+          font-size: 1.25rem;
           margin-bottom: 0.85rem;
         }
         .description-text {
           font-size: 0.95rem;
-          color: var(--color-text-muted);
+          color: #4B5563;
           line-height: 1.7;
           margin-bottom: 1.5rem;
         }
@@ -618,16 +618,16 @@ export const ProductDetailPage: React.FC = () => {
           display: inline-flex;
           align-items: center;
           gap: 0.6rem;
-          background: #121724;
+          background: #F3F4F6;
           border: 1px solid var(--color-border);
           padding: 0.6rem 1rem;
           border-radius: var(--radius-md);
           font-size: 0.85rem;
-          color: #CBD5E1;
+          color: #111827;
           margin-bottom: 1.5rem;
         }
         .highlights-list-wrap h4 {
-          font-size: 1.05rem;
+          font-size: 1rem;
           margin-bottom: 0.65rem;
         }
         .nutritional-bullets {
@@ -645,7 +645,7 @@ export const ProductDetailPage: React.FC = () => {
           align-items: center;
           gap: 0.5rem;
           font-size: 0.875rem;
-          color: #E2E8F0;
+          color: #374151;
         }
       `}</style>
     </div>

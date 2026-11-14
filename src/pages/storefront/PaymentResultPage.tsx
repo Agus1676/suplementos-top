@@ -21,7 +21,7 @@ export const PaymentResultPage: React.FC = () => {
     return (
       <div className="container not-found-wrap">
         <h2>Pedido no encontrado</h2>
-        <Link to="/" className="btn btn-primary">Volver al inicio</Link>
+        <Link to="/" className="btn btn-primary mt-3">Volver al inicio</Link>
       </div>
     );
   }
@@ -32,7 +32,7 @@ export const PaymentResultPage: React.FC = () => {
 
   const addressText = order.shippingAddress 
     ? `${order.shippingAddress.street} ${order.shippingAddress.number}${order.shippingAddress.apartment ? ` (${order.shippingAddress.apartment})` : ''}, ${order.shippingAddress.neighborhood ? `${order.shippingAddress.neighborhood}, ` : ''}${order.shippingAddress.city}, ${order.shippingAddress.province} (CP: ${order.shippingAddress.postalCode})`
-    : 'Retiro en sucursal Uriburu 1163, CABA';
+    : `Retiro en sucursal ${settings.pickupAddress}`;
 
   const waDispatchLink = buildWhatsAppDispatchLink({
     orderNumber: order.orderNumber,
@@ -51,7 +51,7 @@ export const PaymentResultPage: React.FC = () => {
       <div className="card result-card">
         <div className="result-header">
           <div className="success-icon-wrap">
-            <CheckCircle2 size={54} className="text-success" />
+            <CheckCircle2 size={50} className="text-success" />
           </div>
           <span className="badge badge-success">PAGO ACREDITADO CON ÉXITO</span>
           <h1 className="result-title">¡GRACIAS POR TU COMPRA, {order.customerName.split(' ')[0].toUpperCase()}!</h1>
@@ -63,12 +63,12 @@ export const PaymentResultPage: React.FC = () => {
         {/* Priority Dispatch Notification Alert for Owner */}
         <div className="dispatch-alert-banner">
           <div className="alert-badge">
-            <Send size={16} />
+            <Send size={15} />
             <span>ALERTA DE DESPACHO INMEDIATO</span>
           </div>
           <h3 className="dispatch-title">Notificación para preparar el paquete</h3>
           <p className="dispatch-desc">
-            Al dueño se le envía una notificación formal por correo a <strong>{settings.supportEmail}</strong>. 
+            Se envió un correo automático con todos los datos a <strong>{settings.supportEmail}</strong>. 
             También podés enviar el comprobante directamente al WhatsApp del local para agilizar el retiro o entrega:
           </p>
           <a
@@ -86,27 +86,27 @@ export const PaymentResultPage: React.FC = () => {
         <div className="delivery-status-box">
           {order.deliveryMethod === 'pickup' ? (
             <div className="status-flex">
-              <MapPin size={26} className="text-gold flex-shrink-0" />
+              <MapPin size={24} className="text-primary flex-shrink-0" />
               <div>
                 <h4>MODALIDAD: RETIRO EN SUCURSAL RECOLETA</h4>
                 <p>
                   <strong>Punto de entrega:</strong> {settings.pickupAddress}
                 </p>
-                <p className="text-muted text-xs">
+                <p className="text-muted text-xs mt-1">
                   Horarios: {settings.hoursDescription}. Podés acercarte presentando tu DNI ({order.customerDni}).
                 </p>
               </div>
             </div>
           ) : (
             <div className="status-flex">
-              <Truck size={26} className="text-gold flex-shrink-0" />
+              <Truck size={24} className="text-primary flex-shrink-0" />
               <div>
                 <h4>MODALIDAD: ENVÍO A DOMICILIO</h4>
                 <p>
                   <strong>Destino:</strong> {addressText}
                 </p>
-                <p className="text-muted text-xs">
-                  El pedido será embalado con máxima protección y despachado desde nuestro centro en Uriburu 1163.
+                <p className="text-muted text-xs mt-1">
+                  El pedido será embalado con máxima protección y despachado desde nuestro centro en {settings.pickupAddress}.
                 </p>
               </div>
             </div>
@@ -124,7 +124,7 @@ export const PaymentResultPage: React.FC = () => {
                   <span className="text-xs text-muted">{item.variantTitle}</span>
                 </div>
                 <div className="item-qty">x{item.quantity}</div>
-                <div className="item-price text-gold">{formatARS(item.totalPriceInCents)}</div>
+                <div className="item-price">{formatARS(item.totalPriceInCents)}</div>
               </div>
             ))}
           </div>
@@ -142,7 +142,7 @@ export const PaymentResultPage: React.FC = () => {
             </div>
             <div className="total-line grand-total">
               <span>Total Abonado (MP):</span>
-              <span className="text-gold">{formatARS(order.totalInCents)}</span>
+              <span>{formatARS(order.totalInCents)}</span>
             </div>
           </div>
         </div>
@@ -166,6 +166,9 @@ export const PaymentResultPage: React.FC = () => {
         }
         .result-card {
           padding: 2.5rem;
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
         }
         .result-header {
           text-align: center;
@@ -178,60 +181,60 @@ export const PaymentResultPage: React.FC = () => {
           border-bottom: 1px solid var(--color-border);
         }
         .success-icon-wrap {
-          background: rgba(16, 185, 129, 0.15);
-          border: 1px solid rgba(16, 185, 129, 0.35);
-          padding: 1rem;
+          background: #ECFDF5;
+          border: 1px solid #A7F3D0;
+          padding: 0.85rem;
           border-radius: 50%;
         }
         .result-title {
-          font-size: 2.2rem;
+          font-size: 1.8rem;
+          font-weight: 800;
           margin-top: 0.25rem;
+          color: var(--color-text);
+          letter-spacing: -0.02em;
         }
         .order-num-text {
-          font-family: var(--font-display);
-          font-size: 1.05rem;
+          font-size: 0.95rem;
           color: var(--color-text-muted);
-          letter-spacing: 0.05em;
         }
         .dispatch-alert-banner {
-          background: #121724;
-          border: 1.5px solid var(--color-border-gold);
-          border-radius: var(--radius-md);
+          background: #FEF2F2;
+          border: 1px solid #FECACA;
+          border-radius: var(--radius-sm);
           padding: 1.5rem;
           margin-bottom: 2rem;
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
-          box-shadow: 0 0 20px rgba(229, 184, 105, 0.1);
         }
         .alert-badge {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          font-family: var(--font-display);
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           font-weight: 800;
           color: var(--color-accent);
-          letter-spacing: 0.08em;
+          letter-spacing: 0.05em;
         }
         .dispatch-title {
-          font-size: 1.35rem;
-          color: #FFF;
+          font-size: 1.2rem;
+          font-weight: 800;
+          color: var(--color-text);
           margin: 0;
         }
         .dispatch-desc {
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           color: var(--color-text-muted);
-          line-height: 1.6;
+          line-height: 1.5;
         }
         .wa-dispatch-btn {
           margin-top: 0.75rem;
           align-self: flex-start;
         }
         .delivery-status-box {
-          background: #0B0E16;
+          background: #F9FAFB;
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           padding: 1.25rem 1.5rem;
           margin-bottom: 2rem;
         }
@@ -241,22 +244,28 @@ export const PaymentResultPage: React.FC = () => {
           align-items: flex-start;
         }
         .status-flex h4 {
-          font-size: 1.15rem;
+          font-size: 1rem;
+          font-weight: 800;
           margin-bottom: 0.25rem;
+          color: var(--color-text);
         }
         .status-flex p {
-          font-size: 0.9rem;
+          font-size: 0.85rem;
+          color: var(--color-text-muted);
         }
         .order-items-breakdown {
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           padding: 1.5rem;
           margin-bottom: 2rem;
-          background: #121724;
+          background: #FFFFFF;
         }
         .order-items-breakdown h3 {
-          font-size: 1.2rem;
+          font-size: 1rem;
+          font-weight: 800;
           margin-bottom: 1.25rem;
+          color: var(--color-text);
+          letter-spacing: 0.03em;
         }
         .items-table {
           display: flex;
@@ -287,14 +296,13 @@ export const PaymentResultPage: React.FC = () => {
           font-family: var(--font-display);
           font-size: 1.05rem;
           font-weight: 800;
+          color: var(--color-text);
         }
         .order-totals-summary {
           display: flex;
           flex-direction: column;
           gap: 0.4rem;
-          font-family: var(--font-display);
           font-size: 0.95rem;
-          letter-spacing: 0.04em;
         }
         .total-line {
           display: flex;
@@ -302,9 +310,9 @@ export const PaymentResultPage: React.FC = () => {
           color: var(--color-text-muted);
         }
         .grand-total {
-          font-size: 1.35rem;
+          font-size: 1.3rem;
           font-weight: 800;
-          color: #FFFFFF;
+          color: var(--color-text);
           border-top: 1px solid var(--color-border);
           padding-top: 0.5rem;
           margin-top: 0.35rem;

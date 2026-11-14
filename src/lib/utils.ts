@@ -7,6 +7,11 @@ export function formatARS(cents: number): string {
   }).format(pesos);
 }
 
+export function formatInstallments(cents: number, installments = 3): string {
+  const installmentCents = Math.round(cents / installments);
+  return `${installments} cuotas sin interés de ${formatARS(installmentCents)}`;
+}
+
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat('es-AR', {
@@ -35,7 +40,7 @@ export function buildWhatsAppDispatchLink(order: {
   paymentStatus: string;
 }): string {
   const ownerNumber = '5491165651990';
-  const methodLabel = order.deliveryMethod === 'pickup' ? '📍 RETIRO EN LOCAL (Uriburu 1163)' : '🚚 ENVÍO A DOMICILIO';
+  const methodLabel = order.deliveryMethod === 'pickup' ? '📍 RETIRO EN LOCAL (Uriburu 1163, CABA)' : '🚚 ENVÍO A DOMICILIO';
   
   const text = `🚨 *NUEVO PEDIDO CONFIRMADO PARA DESPACHO* 🚨
 *Pedido:* #${order.orderNumber}
@@ -52,7 +57,7 @@ ${order.itemsText}
 
 💰 *TOTAL COBRADO:* ${order.totalText}
 
-_Ingresá al panel admin de Suplementos Top para imprimir o actualizar seguimiento._`;
+_Ingresá al panel admin de Suplementos Top para despachar o imprimir etiqueta._`;
 
   return `https://wa.me/${ownerNumber}?text=${encodeURIComponent(text)}`;
 }

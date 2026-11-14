@@ -4,13 +4,13 @@ import {
   MapPin, 
   ArrowRight, 
   Clock, 
-  Award,
+  ShieldCheck, 
+  Truck, 
+  CreditCard, 
   Phone,
-  ShieldCheck,
-  Truck,
-  CreditCard,
   Flame,
-  Star
+  Award,
+  Instagram
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../../components/storefront/ProductCard';
@@ -18,52 +18,37 @@ import { ProductCard } from '../../components/storefront/ProductCard';
 export const HomePage: React.FC = () => {
   const { products, categories, settings } = useStore();
 
-  const featuredProducts = products.filter((p) => p.isFeatured);
   const bestSellers = products.filter((p) => p.isBestSeller);
+  const featuredProducts = products.filter((p) => p.isFeatured);
 
   return (
     <div className="home-container">
-      {/* Cinematic Hero Section */}
-      <section className="hero-section">
-        <div className="hero-bg-glow"></div>
+      {/* Hero Banner (Clean, Professional Corporate Sports Style like ENA Sport) */}
+      <section className="hero-banner">
         <div className="container hero-inner">
-          <div className="hero-content">
-            <div className="hero-pill">
-              <Flame size={15} className="text-gold" />
-              <span>SUPLEMENTACIÓN DEPORTIVA PROFESIONAL</span>
+          <div className="hero-text-side">
+            <div className="hero-badge">
+              <Flame size={14} className="text-red" />
+              <span>TIENDA OFICIAL DE NUTRICIÓN DEPORTIVA</span>
             </div>
 
             <h1 className="hero-title">
-              POTENCIA. FUERZA. <br />
-              <span className="text-gold-gradient">RENDIMIENTO SIN LÍMITES.</span>
+              POTENCIÁ TU ENTRENAMIENTO AL MÁXIMO
             </h1>
 
-            <p className="hero-desc">
-              Proteínas de flujo cruzado CFM, creatinas micronizadas con sello Creapure® y pre-entrenos de máxima intensidad. Despachos diarios a todo el país y retiro presencial hoy mismo en nuestra sede de Recoleta.
+            <p className="hero-subtitle">
+              Proteínas microfiltradas CFM, creatinas puras Creapure® y fórmulas avanzadas para atletas exigentes.
             </p>
 
-            {/* Quick Metrics */}
-            <div className="hero-metrics-bar">
-              <div className="metric-box">
-                <span className="metric-num text-gold">100%</span>
-                <span className="metric-txt">Puras & Selladas</span>
-              </div>
-              <div className="metric-divider"></div>
-              <div className="metric-box">
-                <span className="metric-num text-gold">+15.000</span>
-                <span className="metric-txt">Atletas Satisfechos</span>
-              </div>
-              <div className="metric-divider"></div>
-              <div className="metric-box">
-                <span className="metric-num text-gold">24/48hs</span>
-                <span className="metric-txt">Despacho Express</span>
-              </div>
+            <div className="hero-installments-pill">
+              <CreditCard size={18} className="text-green-600" />
+              <span><strong>HASTA 3 CUOTAS SIN INTERÉS</strong> con todas las tarjetas en Mercado Pago</span>
             </div>
 
-            <div className="hero-cta-group">
+            <div className="hero-buttons">
               <Link to="/catalogo" className="btn btn-primary btn-lg">
-                <span>VER CATÁLOGO COMPLETO</span>
-                <ArrowRight size={20} />
+                <span>VER TODOS LOS PRODUCTOS</span>
+                <ArrowRight size={18} />
               </Link>
               <a 
                 href="https://wa.me/5491165651990?text=Hola!%20Quisiera%20asesoramiento%20sobre%20suplementos" 
@@ -71,45 +56,33 @@ export const HomePage: React.FC = () => {
                 rel="noopener noreferrer"
                 className="btn btn-secondary btn-lg"
               >
-                <Phone size={18} className="text-gold" />
+                <Phone size={18} />
                 <span>ASESORAMIENTO WHATSAPP</span>
               </a>
             </div>
 
-            {/* Location Banner Pill */}
-            <div className="hero-location-banner">
-              <MapPin size={22} className="text-gold flex-shrink-0" />
+            {/* Sede Retiro Info */}
+            <div className="hero-pickup-card">
+              <MapPin size={20} className="text-red flex-shrink-0" />
               <div>
-                <strong>Punto de Retiro Oficial en CABA:</strong>
-                <p>{settings.pickupAddress} • <em>{settings.hoursDescription}</em></p>
+                <strong>Punto de Retiro Oficial en Recoleta:</strong>
+                <p>{settings.pickupAddress} • <em>Lun a Vie 8 a 23hs | Sáb 10 a 18hs</em></p>
               </div>
             </div>
           </div>
 
-          {/* Hero Visual Card */}
-          <div className="hero-media">
-            <div className="hero-image-wrapper">
-              <div className="hero-emblem-card">
-                <img 
-                  src="/logo.jpg" 
-                  alt="Suplementos Top Emblem" 
-                  className="hero-badge-img"
-                />
-              </div>
-              
-              <div className="hero-floating-stat top-stat">
-                <Award size={20} className="text-gold" />
+          <div className="hero-image-side">
+            <div className="hero-image-card">
+              <img
+                src="https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=900&q=80"
+                alt="Nutrición deportiva Suplementos Top"
+                className="hero-main-photo"
+              />
+              <div className="floating-badge-award">
+                <Award size={22} className="text-red" />
                 <div>
-                  <span className="stat-title">CREAPURE® ORIGINAL</span>
-                  <span className="stat-sub">Sello alemán certificado</span>
-                </div>
-              </div>
-
-              <div className="hero-floating-stat bottom-stat">
-                <ShieldCheck size={20} className="text-success" />
-                <div>
-                  <span className="stat-title">PAGOS EN CUOTAS</span>
-                  <span className="stat-sub">Protección Mercado Pago</span>
+                  <strong>CALIDAD CERTIFICADA</strong>
+                  <span>Materias primas originales</span>
                 </div>
               </div>
             </div>
@@ -117,80 +90,75 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Trust Highlights Bar */}
-      <section className="trust-strip">
+      {/* Trust Strip (Clean 4-column like ENA Sport) */}
+      <section className="trust-section">
         <div className="container">
           <div className="trust-grid">
-            <div className="trust-card">
-              <div className="trust-icon-box">
+            <div className="trust-item">
+              <div className="trust-icon-wrap">
                 <Truck size={24} />
               </div>
-              <div className="trust-content">
-                <h4>ENVÍOS A TODO EL PAÍS</h4>
-                <p>Gratis en compras superiores a $85.000.</p>
+              <div className="trust-text">
+                <h4>ENVÍO GRATIS</h4>
+                <p>En compras superiores a $85.000 a todo el país.</p>
               </div>
             </div>
 
-            <div className="trust-card">
-              <div className="trust-icon-box">
-                <MapPin size={24} />
-              </div>
-              <div className="trust-content">
-                <h4>RETIRO INMEDIATO EN CABA</h4>
-                <p>Uriburu 1163 (entre Sta. Fe y Arenales).</p>
-              </div>
-            </div>
-
-            <div className="trust-card">
-              <div className="trust-icon-box">
+            <div className="trust-item">
+              <div className="trust-icon-wrap">
                 <CreditCard size={24} />
               </div>
-              <div className="trust-content">
-                <h4>MERCADO PAGO SEGURO</h4>
-                <p>3 cuotas con tarjetas y dinero en cuenta.</p>
+              <div className="trust-text">
+                <h4>3 CUOTAS SIN INTERÉS</h4>
+                <p>Con todas las tarjetas a través de Mercado Pago.</p>
               </div>
             </div>
 
-            <div className="trust-card">
-              <div className="trust-icon-box">
-                <Clock size={24} />
+            <div className="trust-item">
+              <div className="trust-icon-wrap">
+                <MapPin size={24} />
               </div>
-              <div className="trust-content">
-                <h4>AMPLIOS HORARIOS</h4>
-                <p>Lun a Vie 8 a 23hs | Sáb 10 a 18hs.</p>
+              <div className="trust-text">
+                <h4>RETIRO EN EL DÍA GRATIS</h4>
+                <p>Uriburu 1163, Recoleta (Lun a Vie 8 a 23hs).</p>
+              </div>
+            </div>
+
+            <div className="trust-item">
+              <div className="trust-icon-wrap">
+                <ShieldCheck size={24} />
+              </div>
+              <div className="trust-text">
+                <h4>100% ORIGINAL</h4>
+                <p>Productos sellados y con fecha de vencimiento visible.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Categories Grid */}
-      <section className="categories-section">
+      {/* Category Pills Circles (Clean ENA Sport style) */}
+      <section className="category-circles-section">
         <div className="container">
-          <div className="section-header">
-            <div>
-              <span className="section-eyebrow">SELECCIONÁ TU OBJETIVO</span>
-              <h2 className="section-title">CATEGORÍAS DE RENDIMIENTO</h2>
-            </div>
-            <Link to="/catalogo" className="section-link">
-              <span>EXPLORAR TODO</span>
-              <ArrowRight size={18} />
+          <div className="section-title-wrap">
+            <h2 className="section-heading">COMPRAR POR CATEGORÍA</h2>
+            <Link to="/catalogo" className="section-all-link">
+              <span>Ver todas</span>
+              <ArrowRight size={16} />
             </Link>
           </div>
 
-          <div className="categories-grid">
+          <div className="category-circles-grid">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 to={`/catalogo?categoria=${cat.slug}`}
-                className="category-card"
+                className="category-circle-item"
               >
-                <img src={cat.imageUrl} alt={cat.name} className="category-img" />
-                <div className="category-gradient"></div>
-                <div className="category-content">
-                  <h3 className="category-name">{cat.name}</h3>
-                  <span className="category-cta">VER PRODUCTOS →</span>
+                <div className="circle-image-wrap">
+                  <img src={cat.imageUrl} alt={cat.name} />
                 </div>
+                <span className="circle-title">{cat.name}</span>
               </Link>
             ))}
           </div>
@@ -198,16 +166,16 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Best Sellers Grid */}
-      <section className="products-section">
+      <section className="products-showcase-section">
         <div className="container">
-          <div className="section-header">
+          <div className="section-title-wrap">
             <div>
-              <span className="section-eyebrow">LOS FAVORITOS DE NUESTROS ATLETAS</span>
-              <h2 className="section-title">PRODUCTOS MÁS VENDIDOS</h2>
+              <span className="eyebrow-text">LOS FAVORITOS</span>
+              <h2 className="section-heading">PRODUCTOS MÁS VENDIDOS</h2>
             </div>
-            <Link to="/catalogo" className="section-link">
-              <span>VER CATÁLOGO COMPLETO</span>
-              <ArrowRight size={18} />
+            <Link to="/catalogo" className="section-all-link">
+              <span>Ver catálogo</span>
+              <ArrowRight size={16} />
             </Link>
           </div>
 
@@ -219,37 +187,77 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Athletic Location Showcase Banner */}
-      <section className="location-showcase-section">
+      {/* Objectives Grid (Comprar por Objetivo - ENA Sport standard) */}
+      <section className="objectives-section">
         <div className="container">
-          <div className="showcase-card">
-            <div className="showcase-content">
-              <span className="showcase-tag">SEDE CENTRAL Y RETIRO EXPRESS</span>
-              <h2 className="showcase-title">¿QUERÉS RETIRAR TUS SUPLEMENTOS HOY?</h2>
-              <p className="showcase-desc">
-                Te esperamos en nuestro exclusivo punto de entrega ubicado en <strong>Uriburu 1163 (entre Av. Santa Fe y Arenales), Recoleta, CABA</strong>.
-                Podés abonar por la tienda online con Mercado Pago y retirar en el acto presentando tu DNI.
+          <div className="section-title-wrap text-center-header">
+            <h2 className="section-heading">COMPRAR POR OBJETIVO</h2>
+            <p className="section-desc">Elegí la nutrición diseñada específicamente para tu meta física.</p>
+          </div>
+
+          <div className="objectives-grid">
+            <Link to="/catalogo?categoria=proteinas" className="objective-card">
+              <div className="objective-bg-img" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80')` }}></div>
+              <div className="objective-overlay"></div>
+              <div className="objective-content">
+                <h3>AUMENTO DE MASA MUSCULAR</h3>
+                <span>VER PRODUCTOS →</span>
+              </div>
+            </Link>
+
+            <Link to="/catalogo?categoria=creatinas" className="objective-card">
+              <div className="objective-bg-img" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=600&q=80')` }}></div>
+              <div className="objective-overlay"></div>
+              <div className="objective-content">
+                <h3>FUERZA Y POTENCIA EXPLOSIVA</h3>
+                <span>VER PRODUCTOS →</span>
+              </div>
+            </Link>
+
+            <Link to="/catalogo?categoria=pre-entrenos" className="objective-card">
+              <div className="objective-bg-img" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=600&q=80')` }}></div>
+              <div className="objective-overlay"></div>
+              <div className="objective-content">
+                <h3>ENERGÍA & RENDIMIENTO INTENSO</h3>
+                <span>VER PRODUCTOS →</span>
+              </div>
+            </Link>
+
+            <Link to="/catalogo?categoria=salud-vitaminas" className="objective-card">
+              <div className="objective-bg-img" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80')` }}></div>
+              <div className="objective-overlay"></div>
+              <div className="objective-content">
+                <h3>RECUPERACIÓN & SALUD INTEGRAL</h3>
+                <span>VER PRODUCTOS →</span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Sede Central Recoleta (Uriburu 1163) Callout */}
+      <section className="pickup-showcase-section">
+        <div className="container">
+          <div className="pickup-banner-card">
+            <div className="pickup-text-side">
+              <span className="badge badge-red">SEDE CENTRAL RECOLETA</span>
+              <h2>¿QUERÉS RETIRAR TU PEDIDO HOY MISMO?</h2>
+              <p>
+                Comprá online con Mercado Pago y retirá sin costo de envío en nuestro punto de entrega de <strong>Uriburu 1163 (entre Av. Santa Fe y Arenales), Recoleta, CABA</strong>.
               </p>
 
-              <div className="showcase-hours-grid">
-                <div className="hour-item">
-                  <Clock size={20} className="text-gold" />
-                  <div>
-                    <strong>Lunes a Viernes:</strong>
-                    <span>8:00 a 23:00 hs (Horario Corrido)</span>
-                  </div>
+              <div className="hours-list">
+                <div className="hour-row">
+                  <Clock size={18} className="text-red" />
+                  <span><strong>Lunes a Viernes:</strong> 8:00 a 23:00 hs</span>
                 </div>
-
-                <div className="hour-item">
-                  <Clock size={20} className="text-gold" />
-                  <div>
-                    <strong>Sábados:</strong>
-                    <span>10:00 a 18:00 hs</span>
-                  </div>
+                <div className="hour-row">
+                  <Clock size={18} className="text-red" />
+                  <span><strong>Sábados:</strong> 10:00 a 18:00 hs</span>
                 </div>
               </div>
 
-              <div className="showcase-actions">
+              <div className="pickup-actions">
                 <a
                   href="https://maps.google.com/?q=Uriburu+1163,+Recoleta,+CABA"
                   target="_blank"
@@ -257,7 +265,7 @@ export const HomePage: React.FC = () => {
                   className="btn btn-primary"
                 >
                   <MapPin size={18} />
-                  <span>VER EN GOOGLE MAPS</span>
+                  <span>CÓMO LLEGAR (GOOGLE MAPS)</span>
                 </a>
 
                 <a
@@ -266,8 +274,8 @@ export const HomePage: React.FC = () => {
                   rel="noopener noreferrer"
                   className="btn btn-secondary"
                 >
-                  <Phone size={18} className="text-gold" />
-                  <span>CONSULTAR AL 11 6565 1990</span>
+                  <Phone size={18} />
+                  <span>CONSULTAS: 11 6565 1990</span>
                 </a>
               </div>
             </div>
@@ -275,17 +283,17 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Products Showcase */}
-      <section className="products-section">
+      {/* More Products / New Arrivals */}
+      <section className="products-showcase-section">
         <div className="container">
-          <div className="section-header">
+          <div className="section-title-wrap">
             <div>
-              <span className="section-eyebrow">MÁXIMA PUREZA Y RECUPERACIÓN</span>
-              <h2 className="section-title">LANZAMIENTOS Y NOVEDADES</h2>
+              <span className="eyebrow-text">MÁXIMA RECUPERACIÓN</span>
+              <h2 className="section-heading">NOVEDADES Y LANZAMIENTOS</h2>
             </div>
-            <Link to="/catalogo" className="section-link">
-              <span>EXPLORAR CATÁLOGO ({products.length})</span>
-              <ArrowRight size={18} />
+            <Link to="/catalogo" className="section-all-link">
+              <span>Ver catálogo ({products.length})</span>
+              <ArrowRight size={16} />
             </Link>
           </div>
 
@@ -297,61 +305,13 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Athlete Testimonials / Social Proof */}
-      <section className="testimonials-section">
+      {/* Instagram Community Section */}
+      <section className="community-section">
         <div className="container">
-          <div className="section-header text-center">
-            <div>
-              <span className="section-eyebrow">EXPERIENCIAS REALES</span>
-              <h2 className="section-title">LO QUE DICEN NUESTROS ATLETAS</h2>
-            </div>
-          </div>
-
-          <div className="testimonials-grid">
-            <div className="card testimonial-card">
-              <div className="testimonial-rating">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="text-gold fill-gold" />
-                ))}
-              </div>
-              <p className="testimonial-quote">
-                "La calidad de la Creatina Creapure y el aislado de suero es superior a cualquier otra tienda. Retiré en el local de Uriburu a las 21hs sin demora. 10 de 10."
-              </p>
-              <div className="testimonial-author">
-                <strong>Matías Benítez</strong>
-                <span>Atleta de Fuerza & Powerlifting</span>
-              </div>
-            </div>
-
-            <div className="card testimonial-card">
-              <div className="testimonial-rating">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="text-gold fill-gold" />
-                ))}
-              </div>
-              <p className="testimonial-quote">
-                "Excelente atención por WhatsApp. Me asesoraron sobre qué pre-entreno tomar para mis turnos de crossfit y llegó a Córdoba en 48 horas impecable."
-              </p>
-              <div className="testimonial-author">
-                <strong>Camila Rossi</strong>
-                <span>CrossFit Competitor</span>
-              </div>
-            </div>
-
-            <div className="card testimonial-card">
-              <div className="testimonial-rating">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="text-gold fill-gold" />
-                ))}
-              </div>
-              <p className="testimonial-quote">
-                "Compro todos los meses. Los sabores belga y frutilla del aislado se mezclan al instante sin grumos. El mejor servicio de suplementos de Argentina."
-              </p>
-              <div className="testimonial-author">
-                <strong>Luciano Díaz</strong>
-                <span>Entrenador Personal</span>
-              </div>
-            </div>
+          <div className="community-header">
+            <Instagram size={28} className="text-red" />
+            <h2>SUMATE A NUESTRA COMUNIDAD</h2>
+            <p>Seguinos en Instagram <a href={settings.instagram} target="_blank" rel="noopener noreferrer">@suplementos_topp</a> y enterate de sorteos, lanzamientos y rutinas.</p>
           </div>
         </div>
       </section>
@@ -360,193 +320,142 @@ export const HomePage: React.FC = () => {
         .home-container {
           display: flex;
           flex-direction: column;
-          gap: 4.5rem;
+          gap: 4rem;
         }
-        .hero-section {
-          position: relative;
-          background: radial-gradient(circle at 75% 20%, rgba(229, 184, 105, 0.12) 0%, rgba(7, 9, 14, 0.95) 70%), #07090E;
-          padding: 4.5rem 0 5.5rem;
+        /* Hero Banner */
+        .hero-banner {
+          background-color: #F8F9FA;
           border-bottom: 1px solid var(--color-border);
-          overflow: hidden;
-        }
-        .hero-bg-glow {
-          position: absolute;
-          top: -200px;
-          right: -100px;
-          width: 600px;
-          height: 600px;
-          background: radial-gradient(circle, rgba(229, 184, 105, 0.15) 0%, transparent 70%);
-          pointer-events: none;
+          padding: 3.5rem 0 4rem;
         }
         .hero-inner {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 3.5rem;
+          gap: 3rem;
           align-items: center;
         }
         @media (min-width: 992px) {
           .hero-inner {
-            grid-template-columns: 1.2fr 1fr;
+            grid-template-columns: 1.15fr 1fr;
           }
         }
-        .hero-pill {
+        .hero-badge {
           display: inline-flex;
           align-items: center;
-          gap: 0.5rem;
-          background: rgba(229, 184, 105, 0.12);
-          border: 1px solid rgba(229, 184, 105, 0.35);
-          color: var(--color-accent);
-          font-family: var(--font-display);
-          font-weight: 700;
-          font-size: 0.85rem;
-          letter-spacing: 0.08em;
-          padding: 0.4rem 0.9rem;
+          gap: 0.4rem;
+          background: #FEE2E2;
+          color: var(--color-brand-red);
+          font-size: 0.75rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          padding: 0.35rem 0.75rem;
           border-radius: var(--radius-full);
-          margin-bottom: 1.25rem;
+          margin-bottom: 1rem;
         }
         .hero-title {
-          font-size: 2.8rem;
-          letter-spacing: 0.02em;
-          line-height: 1;
-          margin-bottom: 1.25rem;
+          font-size: 2.5rem;
+          font-weight: 900;
+          color: #111827;
+          line-height: 1.1;
+          margin-bottom: 1rem;
         }
         @media (min-width: 768px) {
           .hero-title {
-            font-size: 4.2rem;
+            font-size: 3.5rem;
           }
         }
-        .hero-desc {
-          font-size: 1.05rem;
-          color: var(--color-text-muted);
+        .hero-subtitle {
+          font-size: 1.1rem;
+          color: #4B5563;
           line-height: 1.6;
-          margin-bottom: 2rem;
-          max-width: 620px;
+          margin-bottom: 1.5rem;
+          max-width: 580px;
         }
-        .hero-metrics-bar {
-          display: flex;
+        .hero-installments-pill {
+          display: inline-flex;
           align-items: center;
-          gap: 1.5rem;
-          background: rgba(18, 23, 36, 0.6);
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
-          padding: 1rem 1.5rem;
+          gap: 0.6rem;
+          background: #ECFDF5;
+          border: 1px solid #A7F3D0;
+          color: #065F46;
+          padding: 0.65rem 1.15rem;
+          border-radius: var(--radius-sm);
+          font-size: 0.85rem;
           margin-bottom: 2rem;
-          width: fit-content;
         }
-        .metric-box {
-          display: flex;
-          flex-direction: column;
-        }
-        .metric-num {
-          font-family: var(--font-display);
-          font-size: 1.6rem;
-          font-weight: 800;
-          line-height: 1;
-        }
-        .metric-txt {
-          font-size: 0.75rem;
-          color: var(--color-text-muted);
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-        .metric-divider {
-          width: 1px;
-          height: 32px;
-          background: var(--color-border);
-        }
-        .hero-cta-group {
+        .hero-buttons {
           display: flex;
           flex-wrap: wrap;
           gap: 1rem;
-          margin-bottom: 2.25rem;
+          margin-bottom: 2rem;
         }
-        .hero-location-banner {
+        .hero-pickup-card {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 0.85rem;
-          background: rgba(18, 23, 36, 0.7);
+          background: #FFFFFF;
           border: 1px solid var(--color-border);
-          border-left: 3px solid var(--color-accent);
-          padding: 0.85rem 1.25rem;
-          border-radius: var(--radius-sm);
+          padding: 1rem 1.25rem;
+          border-radius: var(--radius-md);
           font-size: 0.85rem;
+          box-shadow: var(--shadow-sm);
         }
-        .hero-location-banner strong {
-          color: #FFF;
+        .hero-pickup-card strong {
+          color: #111827;
           display: block;
         }
-        .hero-location-banner p {
-          color: var(--color-text-muted);
+        .hero-pickup-card p {
+          color: #4B5563;
         }
-        .hero-media {
+        .hero-image-side {
           display: flex;
           justify-content: center;
         }
-        .hero-image-wrapper {
+        .hero-image-card {
           position: relative;
           width: 100%;
-          max-width: 440px;
+          max-width: 480px;
         }
-        .hero-emblem-card {
+        .hero-main-photo {
           width: 100%;
-          aspect-ratio: 1;
-          border-radius: var(--radius-lg);
-          overflow: hidden;
-          border: 2px solid var(--color-border-gold);
-          box-shadow: 0 0 35px rgba(229, 184, 105, 0.2);
-          background: #000;
-        }
-        .hero-badge-img {
-          width: 100%;
-          height: 100%;
+          height: auto;
+          aspect-ratio: 4/5;
           object-fit: cover;
-          transition: transform 0.4s ease;
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow-lg);
         }
-        .hero-image-wrapper:hover .hero-badge-img {
-          transform: scale(1.03);
-        }
-        .hero-floating-stat {
+        .floating-badge-award {
           position: absolute;
-          background: rgba(18, 23, 36, 0.95);
-          backdrop-filter: blur(8px);
-          border: 1px solid var(--color-border-gold);
-          padding: 0.75rem 1.15rem;
+          bottom: -15px;
+          left: -15px;
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
+          padding: 0.85rem 1.25rem;
           border-radius: var(--radius-md);
           display: flex;
           align-items: center;
           gap: 0.75rem;
-          box-shadow: var(--shadow-lg);
+          box-shadow: var(--shadow-md);
         }
-        .top-stat {
-          top: -20px;
-          right: -15px;
-        }
-        .bottom-stat {
-          bottom: -20px;
-          left: -15px;
-        }
-        .stat-title {
-          font-family: var(--font-display);
-          font-weight: 700;
-          font-size: 0.95rem;
-          color: #FFFFFF;
+        .floating-badge-award strong {
           display: block;
+          font-size: 0.85rem;
+          color: #111827;
         }
-        .stat-sub {
-          font-size: 0.725rem;
-          color: var(--color-text-muted);
+        .floating-badge-award span {
+          font-size: 0.75rem;
+          color: #6B7280;
         }
-        /* Trust Strip */
-        .trust-strip {
-          background: var(--color-bg-secondary);
-          border-top: 1px solid var(--color-border);
+        /* Trust Strip (ENA Style) */
+        .trust-section {
+          background-color: #FFFFFF;
           border-bottom: 1px solid var(--color-border);
           padding: 2.5rem 0;
         }
         .trust-grid {
           display: grid;
-          grid-template-columns: repeat(1, 1fr);
-          gap: 1.5rem;
+          grid-template-columns: 1fr;
+          gap: 2rem;
         }
         @media (min-width: 640px) {
           .trust-grid {
@@ -558,122 +467,109 @@ export const HomePage: React.FC = () => {
             grid-template-columns: repeat(4, 1fr);
           }
         }
-        .trust-card {
+        .trust-item {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 1rem;
         }
-        .trust-icon-box {
-          background: rgba(229, 184, 105, 0.1);
-          color: var(--color-accent);
-          border: 1px solid rgba(229, 184, 105, 0.25);
+        .trust-icon-wrap {
+          color: #111827;
+          background: #F3F4F6;
           width: 48px;
           height: 48px;
-          border-radius: var(--radius-md);
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
         }
-        .trust-content h4 {
-          font-size: 1.05rem;
-          color: #FFF;
-          margin-bottom: 0.15rem;
+        .trust-text h4 {
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #111827;
+          margin-bottom: 0.2rem;
         }
-        .trust-content p {
-          font-size: 0.8rem;
-          color: var(--color-text-muted);
+        .trust-text p {
+          font-size: 0.825rem;
+          color: #6B7280;
+          line-height: 1.4;
         }
-        /* Section Headers */
-        .section-header {
+        /* Category Circles */
+        .category-circles-section {
+          padding: 1rem 0;
+        }
+        .section-title-wrap {
           display: flex;
           justify-content: space-between;
           align-items: flex-end;
           margin-bottom: 2rem;
         }
-        .section-eyebrow {
-          font-family: var(--font-display);
-          font-size: 0.85rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          color: var(--color-accent);
-          display: block;
-          margin-bottom: 0.25rem;
+        .section-heading {
+          font-size: 1.75rem;
+          font-weight: 900;
+          color: #111827;
+          letter-spacing: -0.02em;
         }
-        .section-title {
-          font-size: 2.2rem;
-          margin: 0;
-        }
-        .section-link {
+        .section-all-link {
           display: flex;
           align-items: center;
-          gap: 0.4rem;
-          font-family: var(--font-display);
+          gap: 0.35rem;
+          font-size: 0.9rem;
           font-weight: 700;
-          font-size: 1rem;
-          color: var(--color-accent);
-          letter-spacing: 0.05em;
+          color: var(--color-brand-red);
         }
-        .section-link:hover {
-          color: #FFF;
+        .section-all-link:hover {
+          text-decoration: underline;
         }
-        /* Categories */
-        .categories-grid {
+        .category-circles-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1.25rem;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.5rem;
         }
         @media (min-width: 768px) {
-          .categories-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-        @media (min-width: 1024px) {
-          .categories-grid {
+          .category-circles-grid {
             grid-template-columns: repeat(6, 1fr);
           }
         }
-        .category-card {
-          position: relative;
-          aspect-ratio: 3/4;
-          border-radius: var(--radius-md);
-          overflow: hidden;
-          border: 1px solid var(--color-border);
-          box-shadow: var(--shadow-sm);
+        .category-circle-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 0.75rem;
         }
-        .category-img {
+        .circle-image-wrap {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          overflow: hidden;
+          background: #F3F4F6;
+          border: 2px solid var(--color-border);
+          transition: transform 0.2s, border-color 0.2s;
+        }
+        .category-circle-item:hover .circle-image-wrap {
+          transform: scale(1.06);
+          border-color: #111827;
+        }
+        .circle-image-wrap img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.4s ease;
         }
-        .category-card:hover .category-img {
-          transform: scale(1.08);
+        .circle-title {
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: #111827;
         }
-        .category-gradient {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, rgba(7, 9, 14, 0) 30%, rgba(7, 9, 14, 0.95) 100%);
-        }
-        .category-content {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          padding: 1rem;
-        }
-        .category-name {
-          font-size: 1.15rem;
-          margin-bottom: 0.25rem;
-        }
-        .category-cta {
-          font-size: 0.7rem;
+        /* Products Showcase */
+        .eyebrow-text {
+          font-size: 0.75rem;
           font-weight: 800;
-          color: var(--color-accent);
+          color: var(--color-brand-red);
           letter-spacing: 0.05em;
+          display: block;
+          margin-bottom: 0.2rem;
         }
-        /* Products Grid */
         .products-grid {
           display: grid;
           grid-template-columns: 1fr;
@@ -689,108 +585,153 @@ export const HomePage: React.FC = () => {
             grid-template-columns: repeat(3, 1fr);
           }
         }
-        /* Location Showcase */
-        .showcase-card {
-          background: radial-gradient(circle at top right, #1C2436 0%, #0D111A 100%);
-          border: 1.5px solid var(--color-border-gold);
-          border-radius: var(--radius-lg);
-          padding: 3.5rem 2.5rem;
-          box-shadow: var(--shadow-gold);
+        /* Objectives Grid (Comprar por Objetivo) */
+        .objectives-section {
+          background-color: #F8F9FA;
+          padding: 4rem 0;
+          border-top: 1px solid var(--color-border);
+          border-bottom: 1px solid var(--color-border);
         }
-        .showcase-tag {
-          font-family: var(--font-display);
-          font-weight: 700;
-          font-size: 0.85rem;
-          letter-spacing: 0.1em;
-          color: var(--color-accent);
-          display: block;
-          margin-bottom: 0.75rem;
-        }
-        .showcase-title {
-          font-size: 2.4rem;
-          margin-bottom: 1rem;
-        }
-        .showcase-desc {
-          color: var(--color-text-muted);
-          font-size: 1.1rem;
-          max-width: 720px;
-          line-height: 1.6;
-          margin-bottom: 2rem;
-        }
-        .showcase-hours-grid {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1.5rem;
-          margin-bottom: 2.25rem;
-        }
-        .hour-item {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          background: rgba(0, 0, 0, 0.4);
-          border: 1px solid var(--color-border);
-          padding: 0.85rem 1.25rem;
-          border-radius: var(--radius-md);
-        }
-        .hour-item strong {
-          display: block;
-          font-size: 0.9rem;
-          color: #FFF;
-        }
-        .hour-item span {
-          font-size: 0.8rem;
-          color: var(--color-text-muted);
-        }
-        .showcase-actions {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-        /* Testimonials */
-        .text-center {
+        .text-center-header {
           text-align: center;
-          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          margin-bottom: 2.5rem;
         }
-        .testimonials-grid {
+        .section-desc {
+          color: #6B7280;
+          font-size: 1rem;
+          margin-top: 0.25rem;
+        }
+        .objectives-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 1.5rem;
         }
-        @media (min-width: 768px) {
-          .testimonials-grid {
-            grid-template-columns: repeat(3, 1fr);
+        @media (min-width: 640px) {
+          .objectives-grid {
+            grid-template-columns: repeat(2, 1fr);
           }
         }
-        .testimonial-card {
-          padding: 2rem;
+        @media (min-width: 1024px) {
+          .objectives-grid {
+            grid-template-columns: repeat(4, 1fr);
+          }
+        }
+        .objective-card {
+          position: relative;
+          aspect-ratio: 4/5;
+          border-radius: var(--radius-md);
+          overflow: hidden;
+          box-shadow: var(--shadow-sm);
+        }
+        .objective-bg-img {
+          position: absolute;
+          inset: 0;
+          background-size: cover;
+          background-position: center;
+          transition: transform 0.3s ease;
+        }
+        .objective-card:hover .objective-bg-img {
+          transform: scale(1.06);
+        }
+        .objective-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(17, 24, 39, 0.1) 40%, rgba(17, 24, 39, 0.85) 100%);
+        }
+        .objective-content {
+          position: absolute;
+          inset: 0;
+          padding: 1.5rem;
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
-          border-color: var(--color-border);
+          justify-content: flex-end;
+          color: #FFFFFF;
         }
-        .testimonial-rating {
-          display: flex;
-          gap: 0.25rem;
+        .objective-content h3 {
+          color: #FFFFFF;
+          font-size: 1.15rem;
+          font-weight: 800;
+          line-height: 1.2;
+          margin-bottom: 0.4rem;
         }
-        .fill-gold {
-          fill: var(--color-accent);
-        }
-        .testimonial-quote {
-          font-size: 0.95rem;
-          color: #CBD5E1;
-          line-height: 1.6;
-          font-style: italic;
-          flex: 1;
-        }
-        .testimonial-author strong {
-          font-family: var(--font-display);
-          font-size: 1.05rem;
-          color: #FFF;
-          display: block;
-        }
-        .testimonial-author span {
+        .objective-content span {
           font-size: 0.775rem;
-          color: var(--color-accent);
+          font-weight: 700;
+          color: #F87171;
+          letter-spacing: 0.05em;
+        }
+        /* Sede Central Pickup Showcase */
+        .pickup-banner-card {
+          background-color: #FFFFFF;
+          border: 1.5px solid var(--color-border);
+          border-left: 5px solid var(--color-brand-red);
+          border-radius: var(--radius-md);
+          padding: 3rem 2.5rem;
+          box-shadow: var(--shadow-sm);
+        }
+        .pickup-text-side h2 {
+          font-size: 2.2rem;
+          font-weight: 900;
+          color: #111827;
+          margin-top: 0.75rem;
+          margin-bottom: 0.75rem;
+        }
+        .pickup-text-side p {
+          color: #4B5563;
+          font-size: 1.05rem;
+          line-height: 1.6;
+          max-width: 720px;
+          margin-bottom: 1.5rem;
+        }
+        .hours-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1.5rem;
+          margin-bottom: 2rem;
+        }
+        .hour-row {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: #F3F4F6;
+          padding: 0.6rem 1rem;
+          border-radius: var(--radius-sm);
+          font-size: 0.9rem;
+        }
+        .pickup-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+        /* Community Section */
+        .community-section {
+          text-align: center;
+          padding: 3rem 0;
+          background-color: #F8F9FA;
+          border-top: 1px solid var(--color-border);
+        }
+        .community-header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .community-header h2 {
+          font-size: 1.8rem;
+          font-weight: 900;
+        }
+        .community-header p {
+          color: #6B7280;
+          font-size: 1rem;
+        }
+        .community-header a {
+          color: var(--color-brand-red);
+          font-weight: 700;
+        }
+        .community-header a:hover {
+          text-decoration: underline;
         }
       `}</style>
     </div>

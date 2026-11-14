@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
-import { formatARS } from '../../lib/utils';
+import { formatARS, formatInstallments } from '../../lib/utils';
 import { Order, OrderItem } from '../../types';
 
 const checkoutSchema = z.object({
@@ -70,11 +70,11 @@ export const CheckoutPage: React.FC = () => {
   if (items.length === 0) {
     return (
       <div className="container empty-checkout-wrap">
-        <ShoppingBag size={48} className="text-subtle" />
-        <h2>NO HAY PRODUCTOS EN TU CARRITO</h2>
+        <ShoppingBag size={48} className="text-gray-400" />
+        <h2>No hay productos en tu carrito</h2>
         <p>Seleccioná al menos un suplemento para poder iniciar el proceso de checkout.</p>
         <Link to="/catalogo" className="btn btn-primary">
-          IR AL CATÁLOGO
+          Ir al Catálogo
         </Link>
       </div>
     );
@@ -150,322 +150,333 @@ export const CheckoutPage: React.FC = () => {
   };
 
   return (
-    <div className="container checkout-page">
-      <div className="checkout-top-bar">
-        <Link to="/catalogo" className="back-link">
-          <ArrowLeft size={16} /> VOLVER A LA TIENDA
-        </Link>
-        <div className="secure-badge">
-          <ShieldCheck size={16} className="text-success" />
-          <span>CHECKOUT CIFRADO SSL 256-BIT</span>
-        </div>
-      </div>
-
-      <h1 className="checkout-main-title">FINALIZAR COMPRA</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="checkout-grid">
-        {/* Left Column */}
-        <div className="checkout-form-column">
-          <div className="card checkout-card">
-            <h2 className="card-section-title">1. DATOS PERSONALES & FACTURACIÓN</h2>
-            <p className="section-note">
-              Comprás de forma rápida como invitado. Sin contraseñas obligatorias.
-            </p>
-
-            <div className="form-row-2">
-              <div className="form-group">
-                <label className="form-label">Nombre *</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Ej: Juan"
-                  {...register('firstName')}
-                />
-                {errors.firstName && <span className="form-error">{errors.firstName.message}</span>}
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Apellido *</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Ej: Pérez"
-                  {...register('lastName')}
-                />
-                {errors.lastName && <span className="form-error">{errors.lastName.message}</span>}
-              </div>
-            </div>
-
-            <div className="form-row-2">
-              <div className="form-group">
-                <label className="form-label">Email de confirmación *</label>
-                <input
-                  type="email"
-                  className="form-input"
-                  placeholder="juanperez@gmail.com"
-                  {...register('email')}
-                />
-                {errors.email && <span className="form-error">{errors.email.message}</span>}
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Celular / WhatsApp *</label>
-                <input
-                  type="tel"
-                  className="form-input"
-                  placeholder="Ej: 11 4455 6677"
-                  {...register('phone')}
-                />
-                {errors.phone && <span className="form-error">{errors.phone.message}</span>}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">DNI / CUIL * (Requerido para la factura y despacho)</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Ej: 36.123.456"
-                {...register('dni')}
-              />
-              {errors.dni && <span className="form-error">{errors.dni.message}</span>}
-            </div>
+    <div className="checkout-bg">
+      <div className="container checkout-page">
+        <div className="checkout-top-bar">
+          <Link to="/catalogo" className="back-link">
+            <ArrowLeft size={16} /> Volver a la tienda
+          </Link>
+          <div className="secure-badge">
+            <ShieldCheck size={16} className="text-green-600" />
+            <span>Checkout Seguro SSL 256-bit</span>
           </div>
+        </div>
 
-          {/* Section 2: Delivery */}
-          <div className="card checkout-card">
-            <h2 className="card-section-title">2. FORMA DE ENTREGA</h2>
+        <h1 className="checkout-main-title">Finalizar Compra</h1>
 
-            <div className="delivery-selector-grid">
-              <label className={`delivery-option-box ${selectedDeliveryMethod === 'shipping' ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  value="shipping"
-                  {...register('deliveryMethod')}
-                  className="hidden-radio"
-                />
-                <div className="delivery-box-inner">
-                  <div className="box-header">
-                    <Truck size={20} className="text-gold" />
-                    <span className="box-title">ENVÍO A DOMICILIO</span>
-                  </div>
-                  <span className="box-price text-gold">
-                    {isFreeShippingEligible ? (
-                      <strong className="text-success font-bold">¡GRATIS!</strong>
-                    ) : (
-                      formatARS(settings.flatShippingRateInCents)
-                    )}
-                  </span>
-                  <p className="box-detail">A todo el país por transporte y correo prioritario.</p>
-                </div>
-              </label>
+        <form onSubmit={handleSubmit(onSubmit)} className="checkout-grid">
+          {/* Left Column */}
+          <div className="checkout-form-column">
+            <div className="card checkout-card">
+              <h2 className="card-section-title">1. Datos Personales & Facturación</h2>
+              <p className="section-note">
+                Comprás de forma rápida como invitado. Sin contraseñas obligatorias.
+              </p>
 
-              <label className={`delivery-option-box ${selectedDeliveryMethod === 'pickup' ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  value="pickup"
-                  {...register('deliveryMethod')}
-                  className="hidden-radio"
-                />
-                <div className="delivery-box-inner">
-                  <div className="box-header">
-                    <MapPin size={20} className="text-gold" />
-                    <span className="box-title">RETIRO EN RECOLETA</span>
-                  </div>
-                  <span className="box-price text-success font-bold">¡GRATIS!</span>
-                  <p className="box-detail">Uriburu 1163 (entre Sta. Fe y Arenales), CABA.</p>
-                </div>
-              </label>
-            </div>
-
-            {selectedDeliveryMethod === 'pickup' ? (
-              <div className="pickup-info-alert">
-                <Clock size={20} className="text-gold flex-shrink-0" />
-                <div>
-                  <strong>DIRECCIÓN DE RETIRO: {settings.pickupAddress}</strong>
-                  <p>Horarios: {settings.hoursDescription}</p>
-                  <p className="text-xs text-muted mt-1">
-                    Te enviaremos un WhatsApp cuando tu pedido esté listo para retirar con tu DNI.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="shipping-address-fields">
-                <h3 className="sub-fields-title">DIRECCIÓN DE ENTREGA</h3>
-
-                <div className="form-row-2">
-                  <div className="form-group flex-2">
-                    <label className="form-label">Calle *</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Ej: Av. Santa Fe"
-                      {...register('street')}
-                    />
-                  </div>
-                  <div className="form-group flex-1">
-                    <label className="form-label">Número *</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Ej: 1420"
-                      {...register('number')}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row-2">
-                  <div className="form-group">
-                    <label className="form-label">Piso / Depto (Opcional)</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Ej: 4to B"
-                      {...register('apartment')}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Barrio (Opcional)</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Ej: Recoleta / Palermo"
-                      {...register('neighborhood')}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row-3">
-                  <div className="form-group">
-                    <label className="form-label">Provincia *</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="CABA, Buenos Aires, etc."
-                      {...register('province')}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Localidad / Ciudad *</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Ciudad"
-                      {...register('city')}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Código Postal *</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Ej: 1425"
-                      {...register('postalCode')}
-                    />
-                  </div>
+              <div className="form-row-2">
+                <div className="form-group">
+                  <label className="form-label">Nombre *</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Ej: Juan"
+                    {...register('firstName')}
+                  />
+                  {errors.firstName && <span className="form-error">{errors.firstName.message}</span>}
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Indicaciones de entrega (Opcional)</label>
-                  <textarea
-                    rows={2}
-                    className="form-textarea"
-                    placeholder="Ej: Tocar timbre en portería, dejar con encargado las 24hs..."
-                    {...register('deliveryNotes')}
+                  <label className="form-label">Apellido *</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Ej: Pérez"
+                    {...register('lastName')}
                   />
+                  {errors.lastName && <span className="form-error">{errors.lastName.message}</span>}
+                </div>
+              </div>
+
+              <div className="form-row-2">
+                <div className="form-group">
+                  <label className="form-label">Email para el comprobante *</label>
+                  <input
+                    type="email"
+                    className="form-input"
+                    placeholder="juanperez@gmail.com"
+                    {...register('email')}
+                  />
+                  {errors.email && <span className="form-error">{errors.email.message}</span>}
                 </div>
 
-                {errors.street && (
-                  <div className="error-alert">
-                    <AlertCircle size={16} />
-                    <span>{errors.street.message}</span>
-                  </div>
-                )}
+                <div className="form-group">
+                  <label className="form-label">Celular / WhatsApp *</label>
+                  <input
+                    type="tel"
+                    className="form-input"
+                    placeholder="Ej: 11 4455 6677"
+                    {...register('phone')}
+                  />
+                  {errors.phone && <span className="form-error">{errors.phone.message}</span>}
+                </div>
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Right Column: Order Summary */}
-        <div className="checkout-summary-column">
-          <div className="card summary-card">
-            <h2 className="card-section-title">RESUMEN DEL PEDIDO</h2>
+              <div className="form-group">
+                <label className="form-label">DNI / CUIL * (Requerido para la factura y despacho)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Ej: 36.123.456"
+                  {...register('dni')}
+                />
+                {errors.dni && <span className="form-error">{errors.dni.message}</span>}
+              </div>
+            </div>
 
-            <div className="summary-items-list">
-              {items.map((item) => (
-                <div key={item.id} className="summary-item-row">
-                  <img src={item.imageUrl} alt={item.productName} className="summary-item-img" />
-                  <div className="summary-item-details">
-                    <span className="summary-item-name">{item.productName}</span>
-                    <span className="summary-item-variant">{item.variantTitle}</span>
-                    <span className="summary-item-qty">Cant: {item.quantity}</span>
+            {/* Section 2: Delivery */}
+            <div className="card checkout-card">
+              <h2 className="card-section-title">2. Forma de Entrega</h2>
+
+              <div className="delivery-selector-grid">
+                <label className={`delivery-option-box ${selectedDeliveryMethod === 'shipping' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    value="shipping"
+                    {...register('deliveryMethod')}
+                    className="hidden-radio"
+                  />
+                  <div className="delivery-box-inner">
+                    <div className="box-header">
+                      <Truck size={20} className="text-gray-800" />
+                      <span className="box-title">Envío a Domicilio</span>
+                    </div>
+                    <span className="box-price">
+                      {isFreeShippingEligible ? (
+                        <strong className="text-green-600 font-bold">¡GRATIS!</strong>
+                      ) : (
+                        formatARS(settings.flatShippingRateInCents)
+                      )}
+                    </span>
+                    <p className="box-detail">A todo el país por correo y logística prioritaria.</p>
                   </div>
-                  <span className="summary-item-price text-gold">
-                    {formatARS(item.priceInCents * item.quantity)}
+                </label>
+
+                <label className={`delivery-option-box ${selectedDeliveryMethod === 'pickup' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    value="pickup"
+                    {...register('deliveryMethod')}
+                    className="hidden-radio"
+                  />
+                  <div className="delivery-box-inner">
+                    <div className="box-header">
+                      <MapPin size={20} className="text-red-600" />
+                      <span className="box-title">Retiro en Recoleta</span>
+                    </div>
+                    <span className="box-price text-green-600 font-bold">¡GRATIS!</span>
+                    <p className="box-detail">Uriburu 1163 (entre Sta. Fe y Arenales), CABA.</p>
+                  </div>
+                </label>
+              </div>
+
+              {selectedDeliveryMethod === 'pickup' ? (
+                <div className="pickup-info-alert">
+                  <Clock size={20} className="text-red-600 flex-shrink-0" />
+                  <div>
+                    <strong>PUNTO DE RETIRO: {settings.pickupAddress}</strong>
+                    <p>Horarios: {settings.hoursDescription}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Podés retirar hoy mismo presentando tu DNI una vez confirmado el pago.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="shipping-address-fields">
+                  <h3 className="sub-fields-title">Dirección de Entrega</h3>
+
+                  <div className="form-row-2">
+                    <div className="form-group flex-2">
+                      <label className="form-label">Calle *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Ej: Av. Santa Fe"
+                        {...register('street')}
+                      />
+                    </div>
+                    <div className="form-group flex-1">
+                      <label className="form-label">Número *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Ej: 1420"
+                        {...register('number')}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row-2">
+                    <div className="form-group">
+                      <label className="form-label">Piso / Depto (Opcional)</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Ej: 4to B"
+                        {...register('apartment')}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Barrio (Opcional)</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Ej: Recoleta / Palermo"
+                        {...register('neighborhood')}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row-3">
+                    <div className="form-group">
+                      <label className="form-label">Provincia *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="CABA, Buenos Aires..."
+                        {...register('province')}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Localidad / Ciudad *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Ciudad"
+                        {...register('city')}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Código Postal *</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Ej: 1425"
+                        {...register('postalCode')}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Indicaciones para el transportista (Opcional)</label>
+                    <textarea
+                      rows={2}
+                      className="form-textarea"
+                      placeholder="Ej: Tocar timbre en portería, dejar con encargado las 24hs..."
+                      {...register('deliveryNotes')}
+                    />
+                  </div>
+
+                  {errors.street && (
+                    <div className="error-alert">
+                      <AlertCircle size={16} />
+                      <span>{errors.street.message}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column: Order Summary */}
+          <div className="checkout-summary-column">
+            <div className="card summary-card">
+              <h2 className="card-section-title">Resumen del Pedido</h2>
+
+              <div className="summary-items-list">
+                {items.map((item) => (
+                  <div key={item.id} className="summary-item-row">
+                    <img src={item.imageUrl} alt={item.productName} className="summary-item-img" />
+                    <div className="summary-item-details">
+                      <span className="summary-item-name">{item.productName}</span>
+                      <span className="summary-item-variant">{item.variantTitle}</span>
+                      <span className="summary-item-qty">Cant: {item.quantity}</span>
+                    </div>
+                    <span className="summary-item-price">
+                      {formatARS(item.priceInCents * item.quantity)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="summary-financials">
+                <div className="financial-row">
+                  <span>Subtotal:</span>
+                  <span>{formatARS(subtotalInCents)}</span>
+                </div>
+
+                <div className="financial-row">
+                  <span>Costo de envío:</span>
+                  <span>
+                    {effectiveShippingCost === 0 ? (
+                      <strong className="text-green-600 font-bold">GRATIS</strong>
+                    ) : (
+                      formatARS(effectiveShippingCost)
+                    )}
                   </span>
                 </div>
-              ))}
-            </div>
 
-            <div className="summary-financials">
-              <div className="financial-row">
-                <span>SUBTOTAL:</span>
-                <span>{formatARS(subtotalInCents)}</span>
+                <div className="financial-total-row">
+                  <span>Total a Pagar:</span>
+                  <span className="final-total-amount">
+                    {formatARS(finalTotalInCents)}
+                  </span>
+                </div>
+
+                {/* Installments text */}
+                <div className="summary-installments">
+                  <span>💳 {formatInstallments(finalTotalInCents, 3)} con Mercado Pago</span>
+                </div>
               </div>
 
-              <div className="financial-row">
-                <span>COSTO DE ENVÍO:</span>
-                <span>
-                  {effectiveShippingCost === 0 ? (
-                    <strong className="text-success font-bold">GRATIS</strong>
+              {/* Mercado Pago CTA Box */}
+              <div className="mp-card-cta-box">
+                <div className="mp-badge-header">
+                  <CreditCard size={18} className="text-blue-600" />
+                  <span>Pago Seguro con <strong>Mercado Pago</strong></span>
+                </div>
+                <p className="text-xs text-gray-500">
+                  Aboná con tarjetas de crédito, débito o dinero en cuenta en hasta 3 cuotas con total protección oficial.
+                </p>
+
+                <button
+                  type="submit"
+                  disabled={isProcessing}
+                  className="btn btn-primary btn-block btn-lg pay-submit-btn"
+                >
+                  {isProcessing ? (
+                    <span>Conectando con Mercado Pago...</span>
                   ) : (
-                    formatARS(effectiveShippingCost)
+                    <span>PAGAR {formatARS(finalTotalInCents)} CON MERCADO PAGO</span>
                   )}
+                </button>
+              </div>
+
+              <div className="post-payment-guarantee">
+                <ShieldCheck size={16} className="text-green-600 flex-shrink-0" />
+                <span>
+                  Al confirmarse el pago, recibirás tu comprobante y se enviará la alerta a nuestro depósito en Uriburu 1163 para despachar de inmediato.
                 </span>
               </div>
-
-              <div className="financial-total-row">
-                <span>TOTAL A PAGAR:</span>
-                <span className="final-total-amount text-gold">
-                  {formatARS(finalTotalInCents)}
-                </span>
-              </div>
-            </div>
-
-            {/* Mercado Pago CTA Box */}
-            <div className="mp-card-cta-box">
-              <div className="mp-badge-header">
-                <CreditCard size={18} className="text-gold" />
-                <span>PAGO PROCESADO POR <strong>MERCADO PAGO</strong></span>
-              </div>
-              <p className="text-xs text-muted">
-                Hasta 3 cuotas con tarjetas de crédito, débito o dinero disponible en cuenta con total protección al comprador.
-              </p>
-
-              <button
-                type="submit"
-                disabled={isProcessing}
-                className="btn btn-primary btn-block btn-lg pay-submit-btn"
-              >
-                {isProcessing ? (
-                  <span>CONECTANDO CON MERCADO PAGO...</span>
-                ) : (
-                  <span>PAGAR {formatARS(finalTotalInCents)} CON MERCADO PAGO</span>
-                )}
-              </button>
-            </div>
-
-            <div className="post-payment-guarantee">
-              <ShieldCheck size={16} className="text-success flex-shrink-0" />
-              <span>
-                Al confirmarse el pago, recibirás tu comprobante y se enviará la alerta a nuestro depósito en Uriburu 1163 para despachar de inmediato.
-              </span>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
 
       <style>{`
+        .checkout-bg {
+          background-color: #F8F9FA;
+          min-height: 100vh;
+        }
         .checkout-page {
           padding-top: 2rem;
           padding-bottom: 5rem;
@@ -480,23 +491,26 @@ export const CheckoutPage: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          font-family: var(--font-display);
-          font-size: 0.95rem;
-          letter-spacing: 0.05em;
-          color: var(--color-accent);
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #374151;
+        }
+        .back-link:hover {
+          color: #111827;
         }
         .secure-badge {
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          font-family: var(--font-display);
-          font-size: 0.85rem;
-          color: var(--color-success);
-          letter-spacing: 0.05em;
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #059669;
         }
         .checkout-main-title {
-          font-size: 2.6rem;
+          font-size: 2.2rem;
+          font-weight: 900;
           margin-bottom: 2rem;
+          color: #111827;
         }
         .checkout-grid {
           display: grid;
@@ -515,14 +529,18 @@ export const CheckoutPage: React.FC = () => {
         }
         .checkout-card {
           padding: 1.75rem;
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
         }
         .card-section-title {
-          font-size: 1.35rem;
-          margin-bottom: 0.4rem;
+          font-size: 1.25rem;
+          font-weight: 800;
+          margin-bottom: 0.35rem;
+          color: #111827;
         }
         .section-note {
           font-size: 0.825rem;
-          color: var(--color-text-muted);
+          color: #6B7280;
           margin-bottom: 1.25rem;
         }
         .form-row-2 {
@@ -563,63 +581,60 @@ export const CheckoutPage: React.FC = () => {
         }
         .delivery-option-box {
           border: 1.5px solid var(--color-border);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           padding: 1.15rem;
           cursor: pointer;
-          transition: all 0.2s;
-          background: #0B0E16;
+          transition: all 0.15s;
+          background: #FFFFFF;
         }
         .delivery-option-box:hover {
-          border-color: var(--color-accent);
+          border-color: #111827;
         }
         .delivery-option-box.selected {
-          border-color: var(--color-accent);
-          background: rgba(229, 184, 105, 0.08);
-          box-shadow: 0 0 15px rgba(229, 184, 105, 0.15);
+          border-color: #111827;
+          background: #F9FAFB;
+          box-shadow: 0 0 0 1px #111827;
         }
         .delivery-box-inner {
           display: flex;
           flex-direction: column;
-          gap: 0.35rem;
+          gap: 0.3rem;
         }
         .box-header {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          gap: 0.4rem;
         }
         .box-title {
-          font-family: var(--font-display);
-          font-size: 1.05rem;
+          font-size: 0.95rem;
           font-weight: 700;
-          color: #FFF;
+          color: #111827;
         }
         .box-price {
-          font-family: var(--font-display);
-          font-size: 1.25rem;
+          font-size: 1.15rem;
           font-weight: 800;
+          color: #111827;
         }
         .box-detail {
           font-size: 0.775rem;
-          color: var(--color-text-muted);
+          color: #6B7280;
         }
         .pickup-info-alert {
           display: flex;
           align-items: flex-start;
           gap: 0.85rem;
-          background: #0B0E16;
-          border: 1px solid var(--color-border-gold);
+          background: #F8F9FA;
+          border: 1px solid #E5E7EB;
           padding: 1rem;
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           font-size: 0.85rem;
         }
         .pickup-info-alert strong {
-          color: var(--color-accent);
-          font-family: var(--font-display);
-          font-size: 0.95rem;
+          color: #111827;
           display: block;
         }
         .pickup-info-alert p {
-          color: var(--color-text-muted);
+          color: #4B5563;
         }
         .shipping-address-fields {
           border-top: 1px solid var(--color-border);
@@ -627,14 +642,15 @@ export const CheckoutPage: React.FC = () => {
           margin-top: 0.5rem;
         }
         .sub-fields-title {
-          font-size: 1.15rem;
+          font-size: 1rem;
+          font-weight: 800;
           margin-bottom: 1rem;
         }
         .error-alert {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          color: var(--color-danger);
+          color: #DC2626;
           font-size: 0.85rem;
           margin-top: 0.75rem;
         }
@@ -642,6 +658,8 @@ export const CheckoutPage: React.FC = () => {
           padding: 1.75rem;
           position: sticky;
           top: 5.5rem;
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
         }
         .summary-items-list {
           display: flex;
@@ -660,11 +678,11 @@ export const CheckoutPage: React.FC = () => {
         .summary-item-img {
           width: 52px;
           height: 52px;
-          object-fit: cover;
+          object-fit: contain;
           border-radius: var(--radius-sm);
           border: 1px solid var(--color-border);
           flex-shrink: 0;
-          background: #000;
+          background: #F9FAFB;
         }
         .summary-item-details {
           flex: 1;
@@ -672,23 +690,20 @@ export const CheckoutPage: React.FC = () => {
           flex-direction: column;
         }
         .summary-item-name {
-          font-family: var(--font-display);
-          font-size: 0.95rem;
           font-weight: 700;
-          color: #FFF;
+          color: #111827;
         }
         .summary-item-variant {
-          color: var(--color-text-muted);
+          color: #6B7280;
           font-size: 0.75rem;
         }
         .summary-item-qty {
-          color: var(--color-text-subtle);
+          color: #9CA3AF;
           font-size: 0.75rem;
         }
         .summary-item-price {
-          font-family: var(--font-display);
-          font-size: 1.05rem;
           font-weight: 800;
+          color: #111827;
         }
         .summary-financials {
           border-top: 1px solid var(--color-border);
@@ -696,14 +711,13 @@ export const CheckoutPage: React.FC = () => {
           display: flex;
           flex-direction: column;
           gap: 0.65rem;
-          font-family: var(--font-display);
-          font-size: 1rem;
+          font-size: 0.95rem;
           margin-bottom: 1.5rem;
         }
         .financial-row {
           display: flex;
           justify-content: space-between;
-          color: var(--color-text-muted);
+          color: #4B5563;
         }
         .financial-total-row {
           display: flex;
@@ -711,30 +725,35 @@ export const CheckoutPage: React.FC = () => {
           align-items: center;
           border-top: 1px solid var(--color-border);
           padding-top: 0.75rem;
-          font-size: 1.2rem;
+          font-size: 1.15rem;
           font-weight: 800;
-          color: #FFFFFF;
+          color: #111827;
         }
         .final-total-amount {
-          font-size: 1.8rem;
+          font-size: 1.6rem;
+        }
+        .summary-installments {
+          font-size: 0.825rem;
+          font-weight: 700;
+          color: #059669;
+          margin-top: 0.2rem;
         }
         .mp-card-cta-box {
-          background: #0B0E16;
+          background: #F9FAFB;
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           padding: 1.25rem;
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: 0.65rem;
           margin-bottom: 1.25rem;
         }
         .mp-badge-header {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          font-family: var(--font-display);
-          font-size: 0.95rem;
-          color: #FFF;
+          gap: 0.4rem;
+          font-size: 0.9rem;
+          color: #111827;
         }
         .pay-submit-btn {
           margin-top: 0.5rem;
@@ -744,7 +763,7 @@ export const CheckoutPage: React.FC = () => {
           align-items: flex-start;
           gap: 0.5rem;
           font-size: 0.775rem;
-          color: var(--color-text-muted);
+          color: #6B7280;
         }
         .empty-checkout-wrap {
           display: flex;

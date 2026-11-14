@@ -6,7 +6,7 @@ import { ProductCard } from '../../components/storefront/ProductCard';
 
 export const CatalogPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { products, categories } = useStore();
+  const { products, categories, settings } = useStore();
 
   const activeCategory = searchParams.get('categoria') || 'all';
   const searchQuery = searchParams.get('q') || '';
@@ -58,10 +58,10 @@ export const CatalogPage: React.FC = () => {
       {/* Top Header */}
       <div className="catalog-header">
         <div>
-          <span className="section-eyebrow">CATÁLOGO OFICIAL</span>
+          <span className="section-eyebrow">CATÁLOGO COMPLETO</span>
           <h1 className="catalog-title">SUPLEMENTOS & NUTRICIÓN</h1>
           <p className="catalog-subtitle">
-            Mostrando <strong>{filteredProducts.length}</strong> fórmulas de élite disponibles con despacho a todo el país o retiro en <strong>Uriburu 1163, CABA</strong>.
+            Mostrando <strong>{filteredProducts.length}</strong> productos disponibles con despacho a todo el país o retiro en <strong>{settings.pickupAddress}</strong>.
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export const CatalogPage: React.FC = () => {
               onChange={(e) => setSortBy(e.target.value as any)}
               className="sort-select"
             >
-              <option value="featured">DESTACADOS</option>
+              <option value="featured">MÁS DESTACADOS</option>
               <option value="price-asc">MENOR PRECIO</option>
               <option value="price-desc">MAYOR PRECIO</option>
               <option value="rating">MEJOR VALORADOS</option>
@@ -98,64 +98,78 @@ export const CatalogPage: React.FC = () => {
           {activeCategory !== 'all' && (
             <span className="filter-chip">
               Categoría: {categories.find((c) => c.slug === activeCategory)?.name}
-              <button onClick={() => handleSelectCategory('all')}><X size={12} /></button>
+              <button onClick={() => handleSelectCategory('all')} aria-label="Quitar filtro">
+                <X size={14} />
+              </button>
             </span>
           )}
           {searchQuery && (
             <span className="filter-chip">
               Búsqueda: "{searchQuery}"
-              <button onClick={() => { searchParams.delete('q'); setSearchParams(searchParams); }}><X size={12} /></button>
+              <button 
+                onClick={() => {
+                  searchParams.delete('q');
+                  setSearchParams(searchParams);
+                }} 
+                aria-label="Quitar filtro"
+              >
+                <X size={14} />
+              </button>
             </span>
           )}
           {onlyInStock && (
             <span className="filter-chip">
-              Solo con stock
-              <button onClick={() => setOnlyInStock(false)}><X size={12} /></button>
+              Solo con stock inmediato
+              <button onClick={() => setOnlyInStock(false)} aria-label="Quitar filtro">
+                <X size={14} />
+              </button>
             </span>
           )}
           <button onClick={handleClearFilters} className="clear-all-btn">
-            LIMPIAR TODOS
+            Limpiar todos
           </button>
         </div>
       )}
 
-      {/* Main Layout */}
+      {/* Main Catalog Layout */}
       <div className="catalog-layout">
         {/* Sidebar Filters */}
         <aside className={`catalog-sidebar ${mobileFiltersOpen ? 'mobile-open' : ''}`}>
           <div className="sidebar-header-mobile">
-            <h3 className="font-display">FILTRAR CATÁLOGO</h3>
-            <button onClick={() => setMobileFiltersOpen(false)}><X size={22} /></button>
+            <h3>Filtros</h3>
+            <button onClick={() => setMobileFiltersOpen(false)} aria-label="Cerrar">
+              <X size={20} />
+            </button>
           </div>
 
+          {/* Categories */}
           <div className="filter-group">
             <h4 className="filter-group-title">CATEGORÍAS</h4>
             <div className="category-filter-list">
               <button
-                type="button"
-                className={`category-filter-btn ${activeCategory === 'all' ? 'active' : ''}`}
                 onClick={() => handleSelectCategory('all')}
+                className={`category-filter-btn ${activeCategory === 'all' ? 'active' : ''}`}
               >
-                <span>TODAS LAS CATEGORÍAS</span>
-                <span className="cat-count">({products.length})</span>
+                <span>Todas las categorías</span>
+                <span className="cat-count">{products.length}</span>
               </button>
               {categories.map((cat) => {
-                const count = products.filter((p) => p.categoryId === cat.id).length;
+                const count = products.filter((p) => p.category.slug === cat.slug).length;
                 return (
                   <button
                     key={cat.id}
-                    type="button"
-                    className={`category-filter-btn ${activeCategory === cat.slug ? 'active' : ''}`}
                     onClick={() => handleSelectCategory(cat.slug)}
+                    className={`category-filter-btn ${activeCategory === cat.slug ? 'active' : ''}`}
                   >
-                    <span>{cat.name.toUpperCase()}</span>
-                    <span className="cat-count">({count})</span>
+                    <span>{cat.name}</span>
+                    <span className="cat-count">{count}</span>
                   </button>
                 );
               })}
             </div>
           </div>
 
+          {/* Stock filter */}
           <div className="filter-group">
             <h4 className="filter-group-title">DISPONIBILIDAD</h4>
             <label className="checkbox-label">
@@ -164,34 +178,39 @@ export const CatalogPage: React.FC = () => {
                 checked={onlyInStock}
                 onChange={(e) => setOnlyInStock(e.target.checked)}
               />
-              <span>Mostrar solo productos con stock</span>
+              <span>Solo productos con stock</span>
             </label>
           </div>
 
+          {/* WhatsApp Direct Help Widget */}
           <div className="filter-group sidebar-info-box">
-            <strong className="text-gold">¿DUDAS SOBRE TU DOSIFICACIÓN?</strong>
-            <p>Escribinos a nuestro WhatsApp oficial y un asesor deportivo te orienta en el acto.</p>
+            <strong>¿DUDAS SOBRE TU SUPLEMENTACIÓN?</strong>
+            <p>
+              Escribinos por WhatsApp y nuestro equipo te asesora de forma personalizada sobre qué suplemento se adapta a tu objetivo.
+            </p>
             <a
               href="https://wa.me/5491165651990"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-secondary btn-sm"
+              className="btn btn-outline btn-sm"
             >
-              <Phone size={14} className="text-gold" />
-              <span>CONSULTAR AL 11 6565 1990</span>
+              <Phone size={14} />
+              <span>CONSULTAR POR WHATSAPP</span>
             </a>
           </div>
         </aside>
 
-        {/* Products Grid */}
-        <main className="catalog-products-main">
+        {/* Product Grid Area */}
+        <main className="catalog-main">
           {filteredProducts.length === 0 ? (
-            <div className="no-products-card card">
-              <Search size={40} className="text-subtle" />
-              <h3>NO SE ENCONTRARON PRODUCTOS</h3>
-              <p>Probá modificando los filtros o realizando otra búsqueda.</p>
-              <button onClick={handleClearFilters} className="btn btn-primary btn-sm">
-                RESTABLECER FILTROS
+            <div className="card no-products-card">
+              <Search size={44} className="text-muted" />
+              <h3>No se encontraron productos</h3>
+              <p className="text-muted">
+                Probá cambiando los filtros o buscando con otros términos en el catálogo.
+              </p>
+              <button onClick={handleClearFilters} className="btn btn-primary btn-sm mt-3">
+                Ver todos los productos
               </button>
             </div>
           ) : (
@@ -206,17 +225,17 @@ export const CatalogPage: React.FC = () => {
 
       <style>{`
         .catalog-page-container {
-          padding-top: 2.5rem;
+          padding-top: 2rem;
           padding-bottom: 5rem;
         }
         .section-eyebrow {
-          font-family: var(--font-display);
-          font-size: 0.85rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
+          font-family: var(--font-body);
+          font-size: 0.75rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
           color: var(--color-accent);
           display: block;
-          margin-bottom: 0.2rem;
+          margin-bottom: 0.25rem;
         }
         .catalog-header {
           display: flex;
@@ -232,12 +251,15 @@ export const CatalogPage: React.FC = () => {
           }
         }
         .catalog-title {
-          font-size: 2.6rem;
-          margin-bottom: 0.25rem;
+          font-size: 2.2rem;
+          font-weight: 800;
+          margin-bottom: 0.35rem;
+          color: var(--color-text);
+          letter-spacing: -0.02em;
         }
         .catalog-subtitle {
           color: var(--color-text-muted);
-          font-size: 1rem;
+          font-size: 0.95rem;
         }
         .catalog-controls {
           display: flex;
@@ -248,15 +270,13 @@ export const CatalogPage: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          background: #121724;
+          background: #FFFFFF;
           border: 1px solid var(--color-border);
-          color: #FFF;
+          color: var(--color-text);
           padding: 0.65rem 1rem;
           border-radius: var(--radius-sm);
-          font-family: var(--font-display);
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           font-weight: 700;
-          letter-spacing: 0.05em;
         }
         @media (min-width: 900px) {
           .mobile-filter-btn {
@@ -271,24 +291,22 @@ export const CatalogPage: React.FC = () => {
         .sort-icon {
           position: absolute;
           left: 0.85rem;
-          color: var(--color-accent);
+          color: var(--color-text-muted);
           pointer-events: none;
         }
         .sort-select {
           appearance: none;
-          background: #121724;
+          background: #FFFFFF;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-sm);
           padding: 0.65rem 2rem 0.65rem 2.4rem;
-          font-family: var(--font-display);
-          font-size: 0.95rem;
+          font-size: 0.85rem;
           font-weight: 700;
-          letter-spacing: 0.05em;
-          color: #FFFFFF;
+          color: var(--color-text);
           cursor: pointer;
         }
         .sort-select:focus {
-          border-color: var(--color-accent);
+          border-color: var(--color-text);
           outline: none;
         }
         .active-filters-bar {
@@ -296,9 +314,9 @@ export const CatalogPage: React.FC = () => {
           flex-wrap: wrap;
           align-items: center;
           gap: 0.65rem;
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
           padding: 0.85rem 1.25rem;
-          background: #121724;
+          background: #F9FAFB;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-sm);
         }
@@ -306,9 +324,9 @@ export const CatalogPage: React.FC = () => {
           display: inline-flex;
           align-items: center;
           gap: 0.4rem;
-          background: #1C2436;
-          border: 1px solid var(--color-border-gold);
-          color: #FFF;
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
+          color: var(--color-text);
           padding: 0.25rem 0.75rem;
           border-radius: var(--radius-full);
           font-size: 0.8rem;
@@ -317,15 +335,16 @@ export const CatalogPage: React.FC = () => {
         .filter-chip button {
           display: flex;
           align-items: center;
+          color: var(--color-text-muted);
+        }
+        .filter-chip button:hover {
           color: var(--color-accent);
         }
         .clear-all-btn {
-          font-family: var(--font-display);
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           font-weight: 700;
-          color: var(--color-danger);
+          color: var(--color-accent);
           margin-left: 0.5rem;
-          letter-spacing: 0.05em;
         }
         .clear-all-btn:hover {
           text-decoration: underline;
@@ -343,7 +362,7 @@ export const CatalogPage: React.FC = () => {
         .catalog-sidebar {
           display: none;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 1.25rem;
         }
         @media (min-width: 900px) {
           .catalog-sidebar {
@@ -358,11 +377,11 @@ export const CatalogPage: React.FC = () => {
           width: 85%;
           max-width: 320px;
           height: 100vh;
-          background: #0D111A;
+          background: #FFFFFF;
           border-right: 1px solid var(--color-border);
           z-index: 1000;
           padding: 1.5rem;
-          box-shadow: var(--shadow-xl);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
           overflow-y: auto;
         }
         .sidebar-header-mobile {
@@ -378,65 +397,62 @@ export const CatalogPage: React.FC = () => {
           }
         }
         .filter-group {
-          background: #121724;
+          background: #FFFFFF;
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           padding: 1.25rem;
         }
         .filter-group-title {
-          font-family: var(--font-display);
-          font-size: 1.05rem;
-          font-weight: 700;
+          font-size: 0.85rem;
+          font-weight: 800;
           margin-bottom: 0.85rem;
-          color: #FFF;
+          color: var(--color-text);
           letter-spacing: 0.05em;
         }
         .category-filter-list {
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 0.35rem;
         }
         .category-filter-btn {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0.5rem 0.75rem;
+          padding: 0.5rem 0.65rem;
           border-radius: var(--radius-sm);
-          font-family: var(--font-display);
-          font-size: 0.95rem;
-          letter-spacing: 0.04em;
+          font-size: 0.85rem;
           color: var(--color-text-muted);
           text-align: left;
           transition: all 0.15s;
         }
         .category-filter-btn:hover {
-          background: #182032;
-          color: #FFF;
+          background: #F3F4F6;
+          color: var(--color-text);
         }
         .category-filter-btn.active {
-          background: rgba(229, 184, 105, 0.15);
+          background: #FEE2E2;
           color: var(--color-accent);
-          border: 1px solid var(--color-border-gold);
           font-weight: 700;
         }
         .category-filter-btn.active .cat-count {
           color: var(--color-accent);
+          font-weight: 700;
         }
         .cat-count {
           font-size: 0.75rem;
-          color: var(--color-text-subtle);
+          color: var(--color-text-muted);
         }
         .checkbox-label {
           display: flex;
           align-items: center;
           gap: 0.6rem;
           font-size: 0.85rem;
-          color: #CBD5E1;
+          color: var(--color-text);
           cursor: pointer;
         }
         .sidebar-info-box {
-          background: #0B0E16;
-          border-color: var(--color-border-gold);
+          background: #F9FAFB;
+          border-color: var(--color-border);
           font-size: 0.85rem;
           display: flex;
           flex-direction: column;
@@ -470,6 +486,7 @@ export const CatalogPage: React.FC = () => {
           padding: 4.5rem 2rem;
           text-align: center;
           gap: 0.85rem;
+          background: #FFFFFF;
         }
       `}</style>
     </div>

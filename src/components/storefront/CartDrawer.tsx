@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
+import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Truck, CreditCard } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { formatARS } from '../../lib/utils';
+import { formatARS, formatInstallments } from '../../lib/utils';
 
 export const CartDrawer: React.FC = () => {
   const {
@@ -33,18 +33,18 @@ export const CartDrawer: React.FC = () => {
         {/* Drawer Header */}
         <div className="cart-drawer-header">
           <div className="header-title-wrap">
-            <ShoppingBag size={22} className="text-gold" />
+            <ShoppingBag size={20} className="text-primary" />
             <h3 className="cart-drawer-title">TU CARRITO ({totalItemsCount})</h3>
           </div>
           <button onClick={closeCartDrawer} className="close-btn" aria-label="Cerrar carrito">
-            <X size={22} />
+            <X size={20} />
           </button>
         </div>
 
         {/* Free Shipping Progress Indicator */}
         <div className="free-shipping-bar-wrap">
           <div className="free-shipping-text">
-            <Truck size={16} className={isFreeShippingEligible ? 'text-success' : 'text-gold'} />
+            <Truck size={16} className={isFreeShippingEligible ? 'text-success' : 'text-primary'} />
             {isFreeShippingEligible ? (
               <span className="text-success font-bold">¡ENVÍO GRATIS A TODO EL PAÍS CONSEGUIDO! 🎉</span>
             ) : (
@@ -55,7 +55,7 @@ export const CartDrawer: React.FC = () => {
           </div>
           <div className="progress-track">
             <div 
-              className={`progress-fill ${isFreeShippingEligible ? 'bg-success' : 'bg-gold'}`}
+              className={`progress-fill ${isFreeShippingEligible ? 'bg-success' : 'bg-primary'}`}
               style={{ width: `${freeShippingProgress}%` }}
             />
           </div>
@@ -66,13 +66,13 @@ export const CartDrawer: React.FC = () => {
           {items.length === 0 ? (
             <div className="cart-empty-state">
               <div className="empty-icon-wrap">
-                <ShoppingBag size={48} className="text-subtle" />
+                <ShoppingBag size={42} className="text-muted" />
               </div>
               <h4>TU CARRITO ESTÁ VACÍO</h4>
-              <p>Descubrí nuestras proteínas CFM, creatinas Creapure® y suplementos de élite.</p>
+              <p>Descubrí nuestras proteínas, creatinas Creapure® y suplementos de alta calidad.</p>
               <button 
                 onClick={() => { closeCartDrawer(); navigate('/catalogo'); }}
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm mt-3"
               >
                 EXPLORAR CATÁLOGO
               </button>
@@ -98,7 +98,7 @@ export const CartDrawer: React.FC = () => {
                         className="qty-btn"
                         aria-label="Disminuir"
                       >
-                        <Minus size={13} />
+                        <Minus size={12} />
                       </button>
                       <span className="qty-val">{item.quantity}</span>
                       <button 
@@ -107,7 +107,7 @@ export const CartDrawer: React.FC = () => {
                         disabled={item.quantity >= item.maxStock}
                         aria-label="Aumentar"
                       >
-                        <Plus size={13} />
+                        <Plus size={12} />
                       </button>
                     </div>
 
@@ -128,18 +128,23 @@ export const CartDrawer: React.FC = () => {
         {/* Drawer Footer / Checkout CTA */}
         {items.length > 0 && (
           <div className="cart-drawer-footer">
+            <div className="installments-cart-pill">
+              <CreditCard size={15} className="text-success" />
+              <span><strong>{formatInstallments(subtotalInCents, 3)}</strong> con Mercado Pago</span>
+            </div>
+
             <div className="summary-line">
-              <span className="text-muted">SUBTOTAL:</span>
-              <span className="summary-amount text-gold">{formatARS(subtotalInCents)}</span>
+              <span className="summary-label">SUBTOTAL:</span>
+              <span className="summary-amount">{formatARS(subtotalInCents)}</span>
             </div>
             
             <div className="summary-line text-xs">
-              <span className="text-muted">ENVÍO ESTIMADO:</span>
+              <span className="text-muted">ENVÍO:</span>
               <span>
                 {isFreeShippingEligible ? (
                   <strong className="text-success font-bold">¡GRATIS!</strong>
                 ) : (
-                  <span>A calcular en checkout (o retiro gratis en Uriburu 1163)</span>
+                  <span>A calcular en checkout (o retiro en Uriburu 1163)</span>
                 )}
               </span>
             </div>
@@ -148,12 +153,12 @@ export const CartDrawer: React.FC = () => {
               onClick={handleCheckoutClick}
               className="btn btn-primary btn-block btn-lg checkout-cta"
             >
-              <span>INICIAR CHECKOUT</span>
-              <ArrowRight size={20} />
+              <span>INICIAR COMPRA</span>
+              <ArrowRight size={18} />
             </button>
 
             <div className="cart-security-badge">
-              <ShieldCheck size={16} className="text-success" />
+              <ShieldCheck size={15} className="text-success" />
               <span>Compra 100% segura con Mercado Pago</span>
             </div>
           </div>
@@ -164,22 +169,22 @@ export const CartDrawer: React.FC = () => {
         .cart-drawer-backdrop {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.75);
-          backdrop-filter: blur(4px);
+          background: rgba(17, 24, 39, 0.6);
+          backdrop-filter: blur(3px);
           z-index: 1000;
           display: flex;
           justify-content: flex-end;
         }
         .cart-drawer-panel {
           width: 100%;
-          max-width: 440px;
+          max-width: 420px;
           height: 100%;
-          background: #0D111A;
+          background: #FFFFFF;
           border-left: 1px solid var(--color-border);
           display: flex;
           flex-direction: column;
-          box-shadow: var(--shadow-xl);
-          animation: slideLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow: -10px 0 25px rgba(0, 0, 0, 0.1);
+          animation: slideLeft 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes slideLeft {
           from { transform: translateX(100%); }
@@ -191,6 +196,7 @@ export const CartDrawer: React.FC = () => {
           align-items: center;
           padding: 1.25rem 1.5rem;
           border-bottom: 1px solid var(--color-border);
+          background: #FFFFFF;
         }
         .header-title-wrap {
           display: flex;
@@ -198,21 +204,26 @@ export const CartDrawer: React.FC = () => {
           gap: 0.6rem;
         }
         .cart-drawer-title {
-          font-size: 1.25rem;
+          font-size: 1.05rem;
+          font-weight: 800;
           margin: 0;
-          color: #FFF;
+          color: var(--color-text);
+          letter-spacing: 0.04em;
         }
         .close-btn {
           color: var(--color-text-muted);
           padding: 0.35rem;
           border-radius: var(--radius-sm);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .close-btn:hover {
-          color: #FFF;
-          background: #182032;
+          color: var(--color-text);
+          background: #F3F4F6;
         }
         .free-shipping-bar-wrap {
-          background-color: #121724;
+          background-color: #F9FAFB;
           padding: 0.85rem 1.5rem;
           border-bottom: 1px solid var(--color-border);
         }
@@ -222,12 +233,12 @@ export const CartDrawer: React.FC = () => {
           gap: 0.5rem;
           font-size: 0.8rem;
           margin-bottom: 0.5rem;
-          color: #CBD5E1;
+          color: var(--color-text-muted);
         }
         .progress-track {
           width: 100%;
           height: 6px;
-          background: #1E2638;
+          background: #E5E7EB;
           border-radius: var(--radius-full);
           overflow: hidden;
         }
@@ -235,8 +246,8 @@ export const CartDrawer: React.FC = () => {
           height: 100%;
           transition: width 0.3s ease;
         }
-        .bg-gold {
-          background: linear-gradient(90deg, #F3C77D, #E5B869);
+        .bg-primary {
+          background-color: var(--color-accent);
         }
         .bg-success {
           background-color: var(--color-success);
@@ -256,19 +267,26 @@ export const CartDrawer: React.FC = () => {
           justify-content: center;
           text-align: center;
           height: 100%;
-          gap: 0.75rem;
+          gap: 0.65rem;
           color: var(--color-text-muted);
           padding: 2rem 1rem;
         }
         .cart-empty-state h4 {
-          font-size: 1.25rem;
-          color: #FFF;
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: var(--color-text);
+          letter-spacing: 0.03em;
+        }
+        .cart-empty-state p {
+          font-size: 0.85rem;
+          line-height: 1.5;
         }
         .empty-icon-wrap {
-          background: #121724;
-          padding: 1.5rem;
+          background: #F3F4F6;
+          padding: 1.25rem;
           border-radius: 50%;
           border: 1px solid var(--color-border);
+          margin-bottom: 0.5rem;
         }
         .cart-item-row {
           display: flex;
@@ -277,13 +295,14 @@ export const CartDrawer: React.FC = () => {
           border-bottom: 1px solid var(--color-border);
         }
         .cart-item-img {
-          width: 76px;
-          height: 76px;
-          object-fit: cover;
+          width: 72px;
+          height: 72px;
+          object-fit: contain;
           border-radius: var(--radius-sm);
           border: 1px solid var(--color-border);
           flex-shrink: 0;
-          background: #000;
+          background: #F9FAFB;
+          padding: 0.35rem;
         }
         .cart-item-info {
           flex: 1;
@@ -292,11 +311,11 @@ export const CartDrawer: React.FC = () => {
           gap: 0.2rem;
         }
         .cart-item-name {
-          font-family: var(--font-display);
-          font-size: 1.05rem;
+          font-family: var(--font-body);
+          font-size: 0.95rem;
           font-weight: 700;
-          color: #FFFFFF;
-          line-height: 1.2;
+          color: var(--color-text);
+          line-height: 1.25;
         }
         .cart-item-variant {
           font-size: 0.75rem;
@@ -304,9 +323,9 @@ export const CartDrawer: React.FC = () => {
         }
         .cart-item-price {
           font-family: var(--font-display);
-          font-size: 1.15rem;
+          font-size: 1.1rem;
           font-weight: 800;
-          color: var(--color-accent);
+          color: var(--color-text);
           margin-top: 0.2rem;
         }
         .cart-item-actions {
@@ -318,59 +337,77 @@ export const CartDrawer: React.FC = () => {
         .qty-controls {
           display: flex;
           align-items: center;
-          background: #07090E;
+          background: #FFFFFF;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-sm);
         }
         .qty-btn {
-          padding: 0.3rem 0.65rem;
+          padding: 0.3rem 0.6rem;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #CBD5E1;
+          color: var(--color-text);
         }
         .qty-btn:disabled {
           opacity: 0.3;
         }
         .qty-val {
-          font-family: var(--font-display);
-          font-size: 0.95rem;
+          font-family: var(--font-body);
+          font-size: 0.9rem;
           font-weight: 700;
           padding: 0 0.4rem;
           min-width: 20px;
           text-align: center;
-          color: #FFF;
+          color: var(--color-text);
         }
         .remove-btn {
-          color: var(--color-text-subtle);
+          color: var(--color-text-muted);
           padding: 0.35rem;
           transition: color 0.15s;
         }
         .remove-btn:hover {
-          color: var(--color-danger);
+          color: var(--color-accent);
         }
         .cart-drawer-footer {
-          padding: 1.5rem;
+          padding: 1.25rem 1.5rem;
           border-top: 1px solid var(--color-border);
-          background: #0B0E16;
+          background: #FAFAFA;
           display: flex;
           flex-direction: column;
           gap: 0.75rem;
+        }
+        .installments-cart-pill {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: #ECFDF5;
+          border: 1px solid #A7F3D0;
+          color: #065F46;
+          padding: 0.5rem 0.75rem;
+          border-radius: var(--radius-sm);
+          font-size: 0.8rem;
+          font-weight: 600;
         }
         .summary-line {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-family: var(--font-display);
-          font-size: 1.05rem;
-          letter-spacing: 0.04em;
+          font-size: 0.95rem;
+        }
+        .summary-label {
+          font-weight: 700;
+          color: var(--color-text-muted);
+          font-size: 0.85rem;
+          letter-spacing: 0.05em;
         }
         .summary-amount {
-          font-size: 1.5rem;
+          font-family: var(--font-display);
+          font-size: 1.45rem;
           font-weight: 800;
+          color: var(--color-text);
         }
         .checkout-cta {
-          margin-top: 0.5rem;
+          margin-top: 0.25rem;
         }
         .cart-security-badge {
           display: flex;
@@ -379,7 +416,7 @@ export const CartDrawer: React.FC = () => {
           gap: 0.4rem;
           font-size: 0.75rem;
           color: var(--color-text-muted);
-          margin-top: 0.25rem;
+          margin-top: 0.15rem;
         }
       `}</style>
     </div>
