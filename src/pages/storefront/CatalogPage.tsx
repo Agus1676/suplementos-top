@@ -9,14 +9,22 @@ export const CatalogPage: React.FC = () => {
   const { products, categories, settings } = useStore();
 
   const activeCategory = searchParams.get('categoria') || 'all';
+  const selectedBrand = searchParams.get('marca') || 'all';
   const searchQuery = searchParams.get('q') || '';
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
   const [onlyInStock, setOnlyInStock] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  const allBrands = useMemo(() => {
+    return Array.from(new Set(products.map((p) => p.brand))).filter(Boolean);
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
       if (activeCategory !== 'all' && p.category.slug !== activeCategory) {
+        return false;
+      }
+      if (selectedBrand !== 'all' && p.brand.toLowerCase() !== selectedBrand.toLowerCase()) {
         return false;
       }
       if (searchQuery.trim()) {
@@ -37,13 +45,22 @@ export const CatalogPage: React.FC = () => {
       if (sortBy === 'rating') return b.rating - a.rating;
       return 0;
     });
-  }, [products, activeCategory, searchQuery, onlyInStock, sortBy]);
+  }, [products, activeCategory, selectedBrand, searchQuery, onlyInStock, sortBy]);
 
   const handleSelectCategory = (catSlug: string) => {
     if (catSlug === 'all') {
       searchParams.delete('categoria');
     } else {
       searchParams.set('categoria', catSlug);
+    }
+    setSearchParams(searchParams);
+  };
+
+  const handleSelectBrand = (brand: string) => {
+    if (brand === 'all') {
+      searchParams.delete('marca');
+    } else {
+      searchParams.set('marca', brand);
     }
     setSearchParams(searchParams);
   };
@@ -92,13 +109,21 @@ export const CatalogPage: React.FC = () => {
       </div>
 
       {/* Active Filter Chips */}
-      {(activeCategory !== 'all' || searchQuery || onlyInStock) && (
+      {(activeCategory !== 'all' || selectedBrand !== 'all' || searchQuery || onlyInStock) && (
         <div className="active-filters-bar">
           <span className="text-xs text-muted font-bold">FILTROS ACTIVOS:</span>
           {activeCategory !== 'all' && (
             <span className="filter-chip">
               Categoría: {categories.find((c) => c.slug === activeCategory)?.name}
               <button onClick={() => handleSelectCategory('all')} aria-label="Quitar filtro">
+                <X size={14} />
+              </button>
+            </span>
+          )}
+          {selectedBrand !== 'all' && (
+            <span className="filter-chip">
+              Marca: {selectedBrand}
+              <button onClick={() => handleSelectBrand('all')} aria-label="Quitar filtro">
                 <X size={14} />
               </button>
             </span>
@@ -162,6 +187,33 @@ export const CatalogPage: React.FC = () => {
                     className={`category-filter-btn ${activeCategory === cat.slug ? 'active' : ''}`}
                   >
                     <span>{cat.name}</span>
+                    <span className="cat-count">{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Brands Filter */}
+          <div className="filter-group">
+            <h4 className="filter-group-title">MARCAS OFICIALES</h4>
+            <div className="category-filter-list">
+              <button
+                onClick={() => handleSelectBrand('all')}
+                className={`category-filter-btn ${selectedBrand === 'all' ? 'active' : ''}`}
+              >
+                <span>Todas las marcas</span>
+                <span className="cat-count">{products.length}</span>
+              </button>
+              {allBrands.map((brand) => {
+                const count = products.filter((p) => p.brand.toLowerCase() === brand.toLowerCase()).length;
+                return (
+                  <button
+                    key={brand}
+                    onClick={() => handleSelectBrand(brand)}
+                    className={`category-filter-btn ${selectedBrand.toLowerCase() === brand.toLowerCase() ? 'active' : ''}`}
+                  >
+                    <span>{brand}</span>
                     <span className="cat-count">{count}</span>
                   </button>
                 );
