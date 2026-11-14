@@ -1,0 +1,56 @@
+:root {
+  /* Brand Palette - Suplementos Top (Premium athletic dark navy + vibrant amber gold / electric lime accents + clean slate) */
+  --color-primary: #0F172A;        /* Slate 900 - Deep, athletic, premium */
+  --color-primary-light: #1E293B;  /* Slate 800 */
+  --color-primary-dark: #020617;   /* Slate 950 */
+  
+  --color-accent: #F59E0B;         /* Amber 500 - Energy, premium performance */
+  --color-accent-hover: #D97706;   /* Amber 600 */
+  --color-accent-light: #FEF3C7;   /* Amber 100 */
+
+  --color-secondary: #0D9488;      /* Teal 600 - Vitality & health */
+  --color-secondary-light: #CCFBF1;
+  
+  --color-success: #10B981;        /* Emerald 500 */
+  --color-success-light: #D1FAE5;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;         /* Rose/Red 500 */
+  --color-danger-light: #FEE2E2;
+
+  /* Neutrals & Surfaces */
+  --color-bg-main: #F8FAFC;        /* Slate 50 - Fondo claro premium */
+  --color-bg-card: #FFFFFF;        /* Pure white */
+  --color-bg-muted: #F1F5F9;       /* Slate 100 */
+  --color-border: #E2E8F0;         /* Slate 200 */
+  --color-border-hover: #CBD5E1;   /* Slate 300 */
+
+  /* Text Hierarchy */
+  --color-text-main: #0F172A;      /* Slate 900 */
+  --color-text-muted: #64748B;     /* Slate 500 */
+  --color-text-subtle: #94A3B8;    /* Slate 400 */
+  --color-text-inverse: #FFFFFF;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Container */
+  --container-max-width: 1240px;
+}
