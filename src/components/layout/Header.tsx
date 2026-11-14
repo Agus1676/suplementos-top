@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ShoppingBag, 
@@ -6,411 +6,662 @@ import {
   Menu, 
   X, 
   Phone, 
-  ShieldCheck, 
-  ChevronDown, 
-  LayoutDashboard, 
-  Zap,
-  MapPin
+  MapPin, 
+  Truck, 
+  CreditCard,
+  ChevronRight,
+  Flame
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
+import { formatARS } from '../../lib/utils';
 
 export const Header: React.FC = () => {
-  const { totalItemsCount, openCartDrawer } = useCart();
-  const { categories } = useStore();
+  const { totalItemsCount, subtotalInCents, openCartDrawer } = useCart();
+  const { categories, products } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const handleSearch = (e: React.FormEvent) => {
+  // Announcement Bar Rotation
+  const announcements = [
+    { text: '3 Y 6 CUOTAS SIN INTERÉS CON TODAS LAS TARJETAS Y MERCADO PAGO', icon: CreditCard },
+    { text: 'ENVÍO GRATIS A TODO EL PAÍS EN COMPRAS SUPERIORES A $85.000', icon: Truck },
+    { text: 'RETIRO GRATIS HOY EN RECOLETA (URIBURU 1163) — 8 A 23 HS', icon: MapPin },
+    { text: 'WHATSAPP DIRECTO Y ASESORAMIENTO OFICIAL: 11 6565 1990', icon: Phone }
+  ];
+  const [currentAnnouncementIndex, setCurrentAnnouncementIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentAnnouncementIndex((prev) => (prev + 1) % announcements.length);
+    }, 4200);
+    return () => clearInterval(timer);
+  }, [announcements.length]);
+
+  // Click outside search listener to close results
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Filter products for live predictive search
+  const liveSearchResults = searchQuery.trim().length >= 2
+    ? products.filter((p) => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 5)
+    : [];
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      setIsSearchFocused(false);
       navigate(`/catalogo?q=${encodeURIComponent(searchQuery.trim())}`);
-      setMobileMenuOpen(false);
     }
   };
 
+  const currentAnnouncement = announcements[currentAnnouncementIndex];
+  const CurrentIcon = currentAnnouncement.icon;
+
   return (
     <header className="header-root">
-      {/* Top Corporate Promo Bar */}
-      <div className="top-promo-bar">
-        <div className="container promo-inner">
-          <div className="promo-text-item">
-            <span>💳 <strong>3 CUOTAS SIN INTERÉS</strong> con Mercado Pago en toda la tienda</span>
+      {/* 1. Top Commercial Announcement Bar */}
+      <div className="top-announcement-bar">
+        <div className="container announcement-content">
+          <div className="announcement-item">
+            <CurrentIcon size={14} className="announcement-icon" />
+            <span className="announcement-text">{currentAnnouncement.text}</span>
           </div>
-          <div className="promo-text-item hidden-mobile">
-            <MapPin size={13} className="text-red" />
-            <span>Retiro gratis en Recoleta: <strong>Uriburu 1163, CABA</strong> (Lun a Vie 8 a 23hs)</span>
-          </div>
-          <div className="promo-links">
+
+          <div className="announcement-links-right">
             <a 
               href="https://wa.me/5491165651990" 
               target="_blank" 
-              rel="noopener noreferrer"
-              className="top-wa-link"
+              rel="noopener noreferrer" 
+              className="announcement-link"
             >
               <Phone size={12} />
               <span>WhatsApp: 11 6565 1990</span>
             </a>
+            <span className="announcement-divider">•</span>
+            <Link to="/seguimiento" className="announcement-link">
+              <span>Seguimiento de Pedido</span>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Main Navbar */}
-      <div className="main-navbar">
-        <div className="container main-navbar-inner">
-          {/* Mobile Menu Toggle */}
+      {/* 2. Main Header Bar (Brand, Live Search, Actions) */}
+      <div className="main-header-bar">
+        <div className="container header-grid">
+          {/* Mobile Menu Toggle Button */}
           <button 
-            className="mobile-toggle"
+            className="mobile-toggle-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Abrir menú"
           >
-            {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
 
-          {/* Clean Corporate Brand Logo */}
-          <Link to="/" className="brand-logo-container">
-            <img 
-              src="/logo.jpg" 
-              alt="Suplementos Top Logo" 
-              className="brand-logo-img"
-            />
+          {/* Logo & Emblem */}
+          <Link to="/" className="brand-logo-wrap">
+            <div className="brand-logo-img-wrap">
+              <img 
+                src="/logo.jpg" 
+                alt="Suplementos Top Logo" 
+                className="brand-logo-img" 
+              />
+            </div>
             <div className="brand-text-block">
-              <span className="brand-main-title">SUPLEMENTOS <span className="text-red">TOP</span></span>
-              <span className="brand-sub-tag">NUTRICIÓN & RENDIMIENTO</span>
+              <span className="brand-title">
+                SUPLEMENTOS <span className="brand-title-accent">TOP</span>
+              </span>
+              <span className="brand-tagline">SPORT NUTRITION • CABA</span>
             </div>
           </Link>
 
-          {/* Search Bar (Clean ENA Sport style) */}
-          <form className="desktop-search" onSubmit={handleSearch}>
-            <input
-              type="text"
-              placeholder="Buscar proteínas, creatina, pre-entreno, vitaminas..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
-            <button type="submit" className="search-btn" aria-label="Buscar">
-              <Search size={18} />
-            </button>
-          </form>
+          {/* Live Search Bar with Predictive Dropdown */}
+          <div className="header-search-wrap" ref={searchRef}>
+            <form onSubmit={handleSearchSubmit} className="search-form">
+              <input
+                type="text"
+                placeholder="Buscar proteínas, creatinas, pre-entrenos, marcas..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                className="search-input"
+              />
+              <button type="submit" className="search-submit-btn" aria-label="Buscar">
+                <Search size={18} />
+              </button>
+            </form>
 
-          {/* Action Links */}
-          <div className="header-actions">
-            <Link to="/seguimiento" className="action-link hidden-mobile">
-              <ShieldCheck size={18} />
-              <span>Seguimiento</span>
-            </Link>
-
-            <Link to="/admin" className="admin-link hidden-mobile" title="Panel Administrador">
-              <LayoutDashboard size={16} />
-              <span>Admin</span>
-            </Link>
-
-            {/* Shopping Cart Button */}
-            <button 
-              onClick={openCartDrawer} 
-              className="cart-trigger-btn" 
-              aria-label="Ver carrito"
-            >
-              <div className="cart-icon-wrap">
-                <ShoppingBag size={24} />
-                {totalItemsCount > 0 && (
-                  <span className="cart-badge">{totalItemsCount}</span>
+            {/* Predictive Results Dropdown */}
+            {isSearchFocused && searchQuery.trim().length >= 2 && (
+              <div className="search-dropdown-results">
+                {liveSearchResults.length > 0 ? (
+                  <>
+                    <div className="search-results-list">
+                      {liveSearchResults.map((prod) => (
+                        <Link
+                          key={prod.id}
+                          to={`/producto/${prod.slug}`}
+                          onClick={() => setIsSearchFocused(false)}
+                          className="search-result-item"
+                        >
+                          <img src={prod.images[0]?.url || '/logo.jpg'} alt={prod.name} className="search-result-thumb" />
+                          <div className="search-result-info">
+                            <span className="search-result-brand">{prod.brand}</span>
+                            <span className="search-result-title">{prod.name}</span>
+                            <span className="search-result-price">{formatARS(prod.basePriceInCents)}</span>
+                          </div>
+                          <ChevronRight size={16} className="search-result-arrow" />
+                        </Link>
+                      ))}
+                    </div>
+                    <button 
+                      onClick={handleSearchSubmit} 
+                      className="search-view-all-btn"
+                    >
+                      Ver todos los resultados para "{searchQuery}" →
+                    </button>
+                  </>
+                ) : (
+                  <div className="search-no-results">
+                    No encontramos productos para "{searchQuery}". Intentá con otra búsqueda.
+                  </div>
                 )}
-              </div>
-              <div className="cart-label-block hidden-mobile">
-                <span className="cart-title">Mi Carrito</span>
-                <span className="cart-sub">{totalItemsCount} producto(s)</span>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Secondary Clean Categories Nav (like enasport.com) */}
-      <nav className="categories-nav hidden-mobile">
-        <div className="container categories-nav-inner">
-          <div 
-            className="nav-dropdown-wrap"
-            onMouseEnter={() => setCategoriesOpen(true)}
-            onMouseLeave={() => setCategoriesOpen(false)}
-          >
-            <button className="nav-dropdown-btn">
-              <Zap size={15} className="text-red" />
-              <span>CATEGORÍAS</span>
-              <ChevronDown size={14} />
-            </button>
-            {categoriesOpen && (
-              <div className="nav-dropdown-menu">
-                <Link to="/catalogo" className="nav-dropdown-item font-bold text-red">
-                  Ver Todo el Catálogo
-                </Link>
-                {categories.map((cat) => (
-                  <Link 
-                    key={cat.id} 
-                    to={`/catalogo?categoria=${cat.slug}`} 
-                    className="nav-dropdown-item"
-                  >
-                    {cat.name}
-                  </Link>
-                ))}
               </div>
             )}
           </div>
 
-          <Link to="/catalogo" className="nav-link">TODOS LOS PRODUCTOS</Link>
-          <Link to="/catalogo?categoria=proteinas" className="nav-link">PROTEÍNAS WHEY</Link>
-          <Link to="/catalogo?categoria=creatinas" className="nav-link">CREATINAS</Link>
-          <Link to="/catalogo?categoria=pre-entrenos" className="nav-link">PRE-ENTRENO</Link>
-          <Link to="/catalogo?categoria=aminoacidos" className="nav-link">AMINOÁCIDOS & BCAA</Link>
-          <Link to="/catalogo?categoria=salud-vitaminas" className="nav-link">SALUD & VITAMINAS</Link>
-          <Link to="/envios" className="nav-link highlight">📍 RETIRO EN RECOLETA</Link>
-          <Link to="/contacto" className="nav-link">CONTACTO</Link>
+          {/* Header Actions (Location, Phone & Cart) */}
+          <div className="header-actions">
+            {/* Pickup Location Badge (Desktop) */}
+            <Link to="/contacto" className="header-badge-link hide-mobile">
+              <MapPin size={18} className="text-accent" />
+              <div className="badge-text-wrap">
+                <span className="badge-micro">LOCAL RECOLETA</span>
+                <span className="badge-strong">Uriburu 1163</span>
+              </div>
+            </Link>
+
+            {/* Cart Button with Count Badge and Subtotal */}
+            <button 
+              onClick={openCartDrawer} 
+              className="header-cart-btn"
+              aria-label="Abrir carrito"
+            >
+              <div className="cart-icon-wrap">
+                <ShoppingBag size={22} />
+                {totalItemsCount > 0 && (
+                  <span className="cart-counter-pill">{totalItemsCount}</span>
+                )}
+              </div>
+              <div className="cart-text-wrap hide-mobile">
+                <span className="cart-micro">MI CARRITO</span>
+                <span className="cart-amount">{formatARS(subtotalInCents)}</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Secondary Category Navigation Bar */}
+      <nav className="category-nav-bar">
+        <div className="container category-nav-container">
+          <ul className="category-nav-list">
+            <li>
+              <Link to="/catalogo" className="nav-item-link">
+                <span>TODOS LOS PRODUCTOS</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/catalogo?categoria=proteinas" className="nav-item-link">
+                <span>PROTEÍNAS</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/catalogo?categoria=creatinas" className="nav-item-link">
+                <span>CREATINAS</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/catalogo?categoria=pre-entrenos" className="nav-item-link">
+                <span>PRE-ENTRENOS</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/catalogo?categoria=aminoacidos" className="nav-item-link">
+                <span>AMINOÁCIDOS</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/catalogo?categoria=salud-vitaminas" className="nav-item-link">
+                <span>SALUD & VITAMINAS</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/catalogo?categoria=combos" className="nav-item-link nav-highlight">
+                <Flame size={14} className="nav-icon-flame" />
+                <span>COMBOS & OFERTAS</span>
+              </Link>
+            </li>
+            <li className="nav-spacer"></li>
+            <li>
+              <Link to="/contacto" className="nav-item-link nav-store-link">
+                <MapPin size={14} />
+                <span>RETIRO EN RECOLETA</span>
+              </Link>
+            </li>
+          </ul>
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="mobile-drawer-overlay" onClick={() => setMobileMenuOpen(false)}>
-          <div className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="mobile-menu-backdrop" onClick={() => setMobileMenuOpen(false)}>
+          <div className="mobile-menu-drawer" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-drawer-header">
-              <div className="flex items-center gap-2">
-                <img src="/logo.jpg" alt="Logo" className="w-8 h-8 rounded" />
-                <span className="font-bold text-lg">SUPLEMENTOS TOP</span>
-              </div>
-              <button onClick={() => setMobileMenuOpen(false)}><X size={24} /></button>
+              <span className="mobile-drawer-title">MENÚ PRINCIPAL</span>
+              <button 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="close-drawer-btn"
+                aria-label="Cerrar menú"
+              >
+                <X size={20} />
+              </button>
             </div>
 
-            <form className="mobile-search-form" onSubmit={handleSearch}>
-              <input
-                type="text"
-                placeholder="Buscar suplementos..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button type="submit"><Search size={18} /></button>
-            </form>
+            <div className="mobile-drawer-body">
+              <ul className="mobile-nav-list">
+                <li>
+                  <Link to="/" onClick={() => setMobileMenuOpen(false)}>Inicio</Link>
+                </li>
+                <li>
+                  <Link to="/catalogo" onClick={() => setMobileMenuOpen(false)}>Todos los Productos</Link>
+                </li>
+                {categories.map((cat) => (
+                  <li key={cat.id}>
+                    <Link 
+                      to={`/catalogo?categoria=${cat.slug}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {cat.name}
+                    </Link>
+                  </li>
+                ))}
+                <li className="divider-line"></li>
+                <li>
+                  <Link to="/seguimiento" onClick={() => setMobileMenuOpen(false)}>
+                    Rastrear Mi Pedido
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/envios" onClick={() => setMobileMenuOpen(false)}>
+                    Envíos y Retiro en Local
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contacto" onClick={() => setMobileMenuOpen(false)}>
+                    Contacto & Ubicación
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="admin-link">
+                    Panel Administrador
+                  </Link>
+                </li>
+              </ul>
 
-            <div className="mobile-nav-links">
-              <Link to="/catalogo" onClick={() => setMobileMenuOpen(false)} className="mobile-link text-red font-bold">
-                🔥 Catálogo Completo
-              </Link>
-              {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  to={`/catalogo?categoria=${cat.slug}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="mobile-link-sub"
+              <div className="mobile-contact-box">
+                <p className="mobile-contact-title">¿DUDAS CON TU COMPRA?</p>
+                <p className="mobile-contact-desc">Atención de Lun a Vie de 8 a 23 hs</p>
+                <a 
+                  href="https://wa.me/5491165651990" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-primary btn-block btn-sm mt-2"
                 >
-                  {cat.name}
-                </Link>
-              ))}
-              <hr className="my-2 border-gray-200" />
-              <Link to="/seguimiento" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
-                📦 Seguimiento de Pedido
-              </Link>
-              <Link to="/envios" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
-                📍 Retiro en Recoleta (Uriburu 1163)
-              </Link>
-              <Link to="/contacto" onClick={() => setMobileMenuOpen(false)} className="mobile-link">
-                💬 WhatsApp Oficial (11 6565 1990)
-              </Link>
-              <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="mobile-link text-gray-700">
-                ⚙️ Panel Administrador
-              </Link>
-            </div>
-
-            <div className="mobile-drawer-footer">
-              <p className="text-xs text-gray-500"><strong>Uriburu 1163, Recoleta CABA</strong></p>
-              <p className="text-xs text-gray-500">Lun a Vie 8 a 23hs | Sáb 10 a 18hs</p>
+                  <Phone size={15} />
+                  <span>WhatsApp: 11 6565 1990</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* Embedded Component Styles */}
       <style>{`
         .header-root {
           position: sticky;
           top: 0;
-          z-index: 100;
+          z-index: 50;
           background: #FFFFFF;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
         }
-        /* Top Promo Bar (Black ENA Style) */
-        .top-promo-bar {
-          background-color: #111827;
-          color: #F3F4F6;
-          font-size: 0.775rem;
-          padding: 0.4rem 0;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+        /* 1. Top Announcement Bar */
+        .top-announcement-bar {
+          background-color: var(--color-primary);
+          color: #FFFFFF;
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          padding: 0.45rem 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .promo-inner {
+        .announcement-content {
           display: flex;
+          align-items: center;
           justify-content: space-between;
-          align-items: center;
         }
-        .promo-text-item {
+        .announcement-item {
           display: flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 0.5rem;
+          animation: fadeIn 0.3s ease;
         }
-        .text-red {
-          color: var(--color-brand-red);
+        .announcement-icon {
+          color: var(--color-accent);
+          flex-shrink: 0;
         }
-        .top-wa-link {
+        .announcement-text {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .announcement-links-right {
+          display: none;
+          align-items: center;
+          gap: 0.75rem;
+        }
+        @media (min-width: 900px) {
+          .announcement-links-right {
+            display: flex;
+          }
+        }
+        .announcement-link {
           display: flex;
           align-items: center;
           gap: 0.35rem;
-          color: #9CA3AF;
-          font-weight: 500;
-          transition: color 0.15s;
+          color: #E2E8F0;
+          font-size: 0.72rem;
+          font-weight: 600;
         }
-        .top-wa-link:hover {
+        .announcement-link:hover {
           color: #FFFFFF;
         }
-        /* Main Navbar */
-        .main-navbar {
-          padding: 0.85rem 0;
-          border-bottom: 1px solid var(--color-border);
-          background: #FFFFFF;
+        .announcement-divider {
+          color: #64748B;
         }
-        .main-navbar-inner {
+
+        /* 2. Main Header Bar */
+        .main-header-bar {
+          padding: 0.85rem 0;
+          background: #FFFFFF;
+          border-bottom: 1px solid var(--color-border);
+        }
+        .header-grid {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 2rem;
+          gap: 1.25rem;
         }
-        .brand-logo-container {
+        .mobile-toggle-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.35rem;
+          color: var(--color-primary);
+        }
+        @media (min-width: 1024px) {
+          .mobile-toggle-btn {
+            display: none;
+          }
+        }
+
+        /* Logo */
+        .brand-logo-wrap {
           display: flex;
           align-items: center;
           gap: 0.75rem;
           text-decoration: none;
+          flex-shrink: 0;
         }
-        .brand-logo-img {
+        .brand-logo-img-wrap {
           width: 44px;
           height: 44px;
           border-radius: var(--radius-sm);
+          overflow: hidden;
+          border: 1.5px solid var(--color-primary);
+          background: #000000;
+        }
+        .brand-logo-img {
+          width: 100%;
+          height: 100%;
           object-fit: cover;
-          border: 1px solid var(--color-border);
         }
         .brand-text-block {
           display: flex;
           flex-direction: column;
         }
-        .brand-main-title {
+        .brand-title {
           font-family: var(--font-display);
           font-weight: 900;
-          font-size: 1.45rem;
-          letter-spacing: -0.03em;
-          color: #111827;
-          line-height: 1;
+          font-size: 1.25rem;
+          line-height: 1.1;
+          color: var(--color-primary);
+          letter-spacing: -0.02em;
         }
-        .brand-sub-tag {
+        .brand-title-accent {
+          color: var(--color-accent);
+        }
+        .brand-tagline {
           font-size: 0.65rem;
-          font-weight: 700;
+          font-weight: 800;
           letter-spacing: 0.08em;
-          color: #6B7280;
-          margin-top: 0.15rem;
+          color: var(--color-text-muted);
         }
-        /* Desktop Search */
-        .desktop-search {
-          display: none;
-          position: relative;
+
+        /* Search Bar */
+        .header-search-wrap {
           flex: 1;
-          max-width: 540px;
+          max-width: 580px;
+          position: relative;
+          display: none;
         }
-        @media (min-width: 900px) {
-          .desktop-search {
-            display: flex;
+        @media (min-width: 640px) {
+          .header-search-wrap {
+            display: block;
           }
+        }
+        .search-form {
+          position: relative;
+          width: 100%;
+          display: flex;
         }
         .search-input {
           width: 100%;
-          padding: 0.7rem 3.5rem 0.7rem 1.15rem;
-          background: #F9FAFB;
-          border: 1.5px solid #E5E7EB;
+          padding: 0.65rem 3rem 0.65rem 1rem;
+          border: 1.5px solid var(--color-border);
           border-radius: var(--radius-full);
-          font-size: 0.9rem;
-          color: #111827;
-          outline: none;
-          transition: all 0.2s;
+          font-size: 0.88rem;
+          background: var(--color-bg-secondary);
+          color: var(--color-text-main);
+          transition: all var(--transition-fast);
         }
         .search-input:focus {
+          outline: none;
+          border-color: var(--color-primary);
           background: #FFFFFF;
-          border-color: #111827;
-          box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+          box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
         }
-        .search-btn {
+        .search-submit-btn {
           position: absolute;
-          right: 0.4rem;
+          right: 0.5rem;
           top: 50%;
           transform: translateY(-50%);
-          background: #111827;
-          color: #FFFFFF;
-          width: 34px;
-          height: 34px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
+          background: var(--color-primary);
+          color: #FFFFFF;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background 0.15s;
+          transition: background var(--transition-fast);
         }
-        .search-btn:hover {
-          background: #000000;
+        .search-submit-btn:hover {
+          background: var(--color-primary-hover);
         }
+
+        /* Search Dropdown */
+        .search-dropdown-results {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
+          right: 0;
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
+          box-shadow: var(--shadow-xl);
+          overflow: hidden;
+          z-index: 100;
+        }
+        .search-results-list {
+          max-height: 340px;
+          overflow-y: auto;
+        }
+        .search-result-item {
+          display: flex;
+          align-items: center;
+          gap: 0.85rem;
+          padding: 0.65rem 1rem;
+          border-bottom: 1px solid var(--color-border);
+          transition: background var(--transition-fast);
+        }
+        .search-result-item:hover {
+          background: var(--color-bg-secondary);
+        }
+        .search-result-thumb {
+          width: 44px;
+          height: 44px;
+          object-fit: contain;
+          border-radius: var(--radius-xs);
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
+          padding: 2px;
+        }
+        .search-result-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        .search-result-brand {
+          font-size: 0.68rem;
+          font-weight: 800;
+          color: var(--color-accent);
+          text-transform: uppercase;
+        }
+        .search-result-title {
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: var(--color-text-main);
+          line-height: 1.25;
+        }
+        .search-result-price {
+          font-size: 0.85rem;
+          font-weight: 800;
+          color: var(--color-text-main);
+          margin-top: 0.15rem;
+        }
+        .search-result-arrow {
+          color: var(--color-text-subtle);
+        }
+        .search-view-all-btn {
+          width: 100%;
+          padding: 0.75rem;
+          background: var(--color-bg-secondary);
+          color: var(--color-primary);
+          font-size: 0.82rem;
+          font-weight: 700;
+          text-align: center;
+          border-top: 1px solid var(--color-border);
+        }
+        .search-view-all-btn:hover {
+          background: #E2E8F0;
+        }
+        .search-no-results {
+          padding: 1.5rem;
+          text-align: center;
+          font-size: 0.85rem;
+          color: var(--color-text-muted);
+        }
+
+        /* Header Actions */
         .header-actions {
           display: flex;
           align-items: center;
-          gap: 1.5rem;
+          gap: 1.25rem;
         }
-        .action-link {
+        .header-badge-link {
           display: flex;
           align-items: center;
-          gap: 0.4rem;
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: #374151;
+          gap: 0.5rem;
+          text-decoration: none;
         }
-        .action-link:hover {
-          color: var(--color-brand-red);
-        }
-        .admin-link {
+        .badge-text-wrap {
           display: flex;
-          align-items: center;
-          gap: 0.35rem;
-          font-size: 0.8rem;
-          font-weight: 600;
-          color: #4B5563;
-          background: #F3F4F6;
-          padding: 0.35rem 0.65rem;
-          border-radius: var(--radius-sm);
+          flex-direction: column;
         }
-        .admin-link:hover {
-          background: #E5E7EB;
-          color: #111827;
+        .badge-micro {
+          font-size: 0.62rem;
+          font-weight: 800;
+          color: var(--color-text-muted);
+          letter-spacing: 0.06em;
         }
-        .cart-trigger-btn {
+        .badge-strong {
+          font-size: 0.82rem;
+          font-weight: 800;
+          color: var(--color-text-main);
+        }
+        .header-cart-btn {
           display: flex;
           align-items: center;
           gap: 0.75rem;
-          color: #111827;
-          padding: 0.2rem;
+          background: var(--color-bg-secondary);
+          border: 1px solid var(--color-border);
+          padding: 0.5rem 0.85rem;
+          border-radius: var(--radius-full);
+          transition: all var(--transition-fast);
+        }
+        .header-cart-btn:hover {
+          background: #E2E8F0;
+          border-color: var(--color-border-hover);
         }
         .cart-icon-wrap {
           position: relative;
-          display: flex;
-          align-items: center;
+          color: var(--color-primary);
         }
-        .cart-badge {
+        .cart-counter-pill {
           position: absolute;
           top: -6px;
           right: -8px;
-          background: var(--color-brand-red);
+          background-color: var(--color-accent);
           color: #FFFFFF;
+          font-size: 0.68rem;
           font-weight: 800;
-          font-size: 0.7rem;
           width: 18px;
           height: 18px;
           border-radius: 50%;
@@ -418,162 +669,167 @@ export const Header: React.FC = () => {
           align-items: center;
           justify-content: center;
         }
-        .cart-label-block {
+        .cart-text-wrap {
           display: flex;
           flex-direction: column;
           text-align: left;
         }
-        .cart-title {
+        .cart-micro {
+          font-size: 0.62rem;
+          font-weight: 800;
+          color: var(--color-text-muted);
+          letter-spacing: 0.05em;
+        }
+        .cart-amount {
+          font-family: var(--font-display);
           font-size: 0.85rem;
-          font-weight: 700;
-          line-height: 1.1;
+          font-weight: 800;
+          color: var(--color-primary);
         }
-        .cart-sub {
-          font-size: 0.725rem;
-          color: #6B7280;
-        }
-        .mobile-toggle {
-          color: #111827;
-        }
-        @media (min-width: 900px) {
-          .mobile-toggle {
-            display: none;
+        @media (max-width: 768px) {
+          .hide-mobile {
+            display: none !important;
+          }
+          .header-cart-btn {
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
           }
         }
-        /* Categories Nav Bar */
-        .categories-nav {
+
+        /* 3. Secondary Category Navigation Bar */
+        .category-nav-bar {
           background: #FFFFFF;
           border-bottom: 1px solid var(--color-border);
-        }
-        .categories-nav-inner {
-          display: flex;
-          align-items: center;
-          gap: 1.75rem;
-          padding: 0.6rem 0;
-          font-size: 0.85rem;
-          font-weight: 700;
-          letter-spacing: 0.02em;
-        }
-        .nav-link {
-          color: #374151;
-          transition: color 0.15s;
-        }
-        .nav-link:hover {
-          color: var(--color-brand-red);
-        }
-        .nav-link.highlight {
-          color: var(--color-brand-red);
-        }
-        .nav-dropdown-wrap {
-          position: relative;
-        }
-        .nav-dropdown-btn {
-          display: flex;
-          align-items: center;
-          gap: 0.35rem;
-          font-weight: 800;
-          color: #111827;
-        }
-        .nav-dropdown-menu {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 240px;
-          background: #FFFFFF;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
-          box-shadow: var(--shadow-lg);
-          padding: 0.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-          z-index: 100;
-        }
-        .nav-dropdown-item {
-          padding: 0.5rem 0.75rem;
-          border-radius: var(--radius-sm);
-          color: #374151;
-          font-size: 0.85rem;
-          transition: background 0.15s;
-        }
-        .nav-dropdown-item:hover {
-          background: #F3F4F6;
-          color: var(--color-brand-red);
-        }
-        .hidden-mobile {
           display: none;
         }
-        @media (min-width: 900px) {
-          .hidden-mobile {
-            display: flex;
+        @media (min-width: 1024px) {
+          .category-nav-bar {
+            display: block;
           }
         }
+        .category-nav-list {
+          display: flex;
+          align-items: center;
+          list-style: none;
+          gap: 1.5rem;
+          margin: 0;
+          padding: 0;
+        }
+        .nav-item-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          padding: 0.75rem 0;
+          font-size: 0.8rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          color: var(--color-text-main);
+          position: relative;
+          text-transform: uppercase;
+        }
+        .nav-item-link:hover {
+          color: var(--color-accent);
+        }
+        .nav-highlight {
+          color: var(--color-accent);
+        }
+        .nav-icon-flame {
+          color: var(--color-accent);
+        }
+        .nav-spacer {
+          flex: 1;
+        }
+        .nav-store-link {
+          color: var(--color-text-muted);
+          font-size: 0.75rem;
+        }
+        .nav-store-link:hover {
+          color: var(--color-primary);
+        }
+
         /* Mobile Drawer */
-        .mobile-drawer-overlay {
+        .mobile-menu-backdrop {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.6);
+          background: rgba(15, 23, 42, 0.6);
           backdrop-filter: blur(2px);
           z-index: 1000;
           display: flex;
         }
-        .mobile-drawer {
+        .mobile-menu-drawer {
           width: 82%;
           max-width: 320px;
-          background: #FFFFFF;
           height: 100%;
+          background: #FFFFFF;
           display: flex;
           flex-direction: column;
-          padding: 1.5rem;
-          box-shadow: var(--shadow-lg);
+          box-shadow: var(--shadow-xl);
+          animation: slideRight 0.2s ease;
+        }
+        @keyframes slideRight {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
         }
         .mobile-drawer-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding-bottom: 1rem;
+          padding: 1.25rem;
           border-bottom: 1px solid var(--color-border);
         }
-        .mobile-search-form {
-          display: flex;
-          margin: 1.25rem 0;
-          position: relative;
+        .mobile-drawer-title {
+          font-size: 0.95rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
         }
-        .mobile-search-form input {
-          width: 100%;
-          padding: 0.65rem 2.4rem 0.65rem 0.85rem;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-sm);
-          font-size: 0.9rem;
+        .close-drawer-btn {
+          color: var(--color-text-muted);
+          padding: 0.25rem;
         }
-        .mobile-search-form button {
-          position: absolute;
-          right: 0.6rem;
-          top: 50%;
-          transform: translateY(-50%);
-          color: #6B7280;
-        }
-        .mobile-nav-links {
-          display: flex;
-          flex-direction: column;
-          gap: 0.6rem;
+        .mobile-drawer-body {
           flex: 1;
           overflow-y: auto;
-          font-size: 0.95rem;
+          padding: 1.25rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
         }
-        .mobile-link {
-          color: #111827;
+        .mobile-nav-list {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 0.85rem;
+        }
+        .mobile-nav-list a {
+          display: block;
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: var(--color-text-main);
           padding: 0.35rem 0;
         }
-        .mobile-link-sub {
-          padding-left: 0.75rem;
-          font-size: 0.85rem;
-          color: #4B5563;
+        .mobile-nav-list .divider-line {
+          height: 1px;
+          background: var(--color-border);
+          margin: 0.5rem 0;
         }
-        .mobile-drawer-footer {
-          margin-top: auto;
-          padding-top: 1rem;
-          border-top: 1px solid var(--color-border);
+        .admin-link {
+          color: var(--color-accent) !important;
+        }
+        .mobile-contact-box {
+          background: var(--color-bg-secondary);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          padding: 1rem;
+          margin-top: 1.5rem;
+        }
+        .mobile-contact-title {
+          font-size: 0.75rem;
+          font-weight: 800;
+          color: var(--color-primary);
+        }
+        .mobile-contact-desc {
+          font-size: 0.75rem;
+          color: var(--color-text-muted);
         }
       `}</style>
     </header>

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { CartDrawer } from '../storefront/CartDrawer';
+import { WhatsAppFloat } from '../storefront/WhatsAppFloat';
 
 export const StoreLayout: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ export const StoreLayout: React.FC = () => {
         <Outlet />
       </main>
       <CartDrawer />
+      <WhatsAppFloat />
       <Footer />
 
       <style>{`
@@ -19,6 +21,7 @@ export const StoreLayout: React.FC = () => {
           display: flex;
           flex-direction: column;
           min-height: 100vh;
+          background-color: var(--color-bg-main);
         }
         .store-main-content {
           flex: 1;
