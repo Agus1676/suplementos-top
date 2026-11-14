@@ -20,43 +20,49 @@ export const HomePage: React.FC = () => {
   const bestSellers = products.filter((p) => p.isBestSeller).slice(0, 4);
   const featuredProducts = products.filter((p) => p.isFeatured).slice(0, 4);
 
-  // Official Category Circles
-  const categoryCircles = [
+  // High-Impact Category Banner Cards (Estilo Entreno / Athletic Ecommerce)
+  const categoryBanners = [
     {
-      name: 'Proteínas',
+      title: 'PROTEÍNAS',
+      subtitle: 'CFM Isolate & Concentrados Whey',
+      tag: 'MATERIA PRIMA IMPORTADA',
       slug: 'proteinas',
-      imageUrl: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=300&q=80',
-      badge: 'CFM Isolate'
+      imageUrl: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=800&q=80',
     },
     {
-      name: 'Creatinas',
+      title: 'CREATINAS',
+      subtitle: '100% Creapure® & Monohidrato',
+      tag: 'MÁXIMA PUREZA ALEMÁN',
       slug: 'creatinas',
-      imageUrl: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=300&q=80',
-      badge: 'Creapure®'
+      imageUrl: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=800&q=80',
     },
     {
-      name: 'Pre-Entrenos',
+      title: 'PRE-ENTRENOS',
+      subtitle: 'Fuerza, Focus & Congestión Muscular',
+      tag: 'ENERGÍA EXPLOSIVA',
       slug: 'pre-entrenos',
-      imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=300&q=80',
-      badge: 'Pump & Fuerza'
+      imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80',
     },
     {
-      name: 'Aminoácidos',
+      title: 'COMBOS & OFERTAS',
+      subtitle: 'Packs armados con envío bonificado',
+      tag: 'HASTA 20% OFF',
+      slug: 'combos',
+      imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      title: 'AMINOÁCIDOS',
+      subtitle: 'BCAA 4:1:1, EAA & Glutamina Pura',
+      tag: 'RECUPERACIÓN RÁPIDA',
       slug: 'aminoacidos',
-      imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=300&q=80',
-      badge: 'BCAA & EAA'
+      imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
     },
     {
-      name: 'Salud & Vitaminas',
+      title: 'SALUD & VITAMINAS',
+      subtitle: 'Citrato de Magnesio, Omega 3 & Multi',
+      tag: 'RENDIMIENTO INTEGRAL',
       slug: 'salud-vitaminas',
-      imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=300&q=80',
-      badge: 'Omega & Zinc'
-    },
-    {
-      name: 'Accesorios & Shakers',
-      slug: 'accesorios',
-      imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80',
-      badge: 'Acero Inox'
+      imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=800&q=80',
     }
   ];
 
@@ -122,32 +128,42 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. Circular Visual Categories Grid */}
+      {/* 3. High-Impact Category Mosaic (Entreno / Athletic Standard) */}
       <section className="categories-section">
         <div className="container">
           <div className="section-header">
             <div>
-              <span className="section-eyebrow">EXPLORÁ POR OBJETIVO</span>
-              <h2 className="section-title">CATEGORÍAS DESTACADAS</h2>
+              <span className="section-eyebrow">LÍNEAS DE SUPLEMENTACIÓN</span>
+              <h2 className="section-title">COMPRÁ POR CATEGORÍA</h2>
             </div>
             <Link to="/catalogo" className="section-link">
-              <span>Ver todas las categorías</span>
+              <span>Ver catálogo completo</span>
               <ArrowRight size={16} />
             </Link>
           </div>
 
-          <div className="category-circles-grid">
-            {categoryCircles.map((cat) => (
+          <div className="category-mosaic-grid">
+            {categoryBanners.map((cat) => (
               <Link 
                 key={cat.slug} 
                 to={`/catalogo?categoria=${cat.slug}`} 
-                className="category-circle-card"
+                className="category-mosaic-card"
               >
-                <div className="category-circle-thumb-wrap">
-                  <img src={cat.imageUrl} alt={cat.name} className="category-circle-img" />
+                <div className="category-mosaic-bg">
+                  <img src={cat.imageUrl} alt={cat.title} className="category-mosaic-img" />
+                  <div className="category-mosaic-overlay"></div>
                 </div>
-                <span className="category-circle-title">{cat.name}</span>
-                <span className="category-circle-badge">{cat.badge}</span>
+
+                <div className="category-mosaic-content">
+                  <span className="category-mosaic-tag">{cat.tag}</span>
+                  <h3 className="category-mosaic-title">{cat.title}</h3>
+                  <p className="category-mosaic-sub">{cat.subtitle}</p>
+                  
+                  <span className="category-mosaic-cta">
+                    <span>EXPLORAR</span>
+                    <ArrowRight size={14} className="category-mosaic-arrow" />
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
@@ -438,70 +454,110 @@ export const HomePage: React.FC = () => {
           line-height: 1.35;
         }
 
-        /* 3. Circular Categories */
+        /* 3. Category Mosaic Grid (Entreno / Athletic Standard) */
         .categories-section {
-          padding: 3.5rem 0 2rem;
+          padding: 3rem 0;
           background-color: #FFFFFF;
         }
-        .category-circles-grid {
+        .category-mosaic-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.5rem;
+          grid-template-columns: 1fr;
+          gap: 1.25rem;
         }
-        @media (min-width: 768px) {
-          .category-circles-grid {
-            grid-template-columns: repeat(6, 1fr);
+        @media (min-width: 640px) {
+          .category-mosaic-grid {
+            grid-template-columns: repeat(2, 1fr);
           }
         }
-        .category-circle-card {
+        @media (min-width: 1024px) {
+          .category-mosaic-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+        .category-mosaic-card {
+          position: relative;
+          height: 240px;
+          border-radius: var(--radius-sm);
+          overflow: hidden;
           display: flex;
           flex-direction: column;
-          align-items: center;
-          text-align: center;
+          justify-content: flex-end;
+          padding: 1.5rem;
           text-decoration: none;
-          gap: 0.5rem;
-          transition: transform var(--transition-fast);
-        }
-        .category-circle-card:hover {
-          transform: translateY(-4px);
-        }
-        .category-circle-thumb-wrap {
-          width: 90px;
-          height: 90px;
-          border-radius: 50%;
-          overflow: hidden;
-          background-color: var(--color-bg-secondary);
-          border: 2px solid var(--color-border);
           box-shadow: var(--shadow-sm);
-          transition: border-color var(--transition-fast);
+          border: 1px solid var(--color-border);
+          transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
-        @media (min-width: 768px) {
-          .category-circle-thumb-wrap {
-            width: 110px;
-            height: 110px;
-          }
+        .category-mosaic-card:hover {
+          transform: translateY(-3px);
+          box-shadow: var(--shadow-lg);
+          border-color: #CBD5E1;
         }
-        .category-circle-card:hover .category-circle-thumb-wrap {
-          border-color: var(--color-accent);
+        .category-mosaic-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
         }
-        .category-circle-img {
+        .category-mosaic-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          transition: transform 0.5s ease;
         }
-        .category-circle-title {
-          font-size: 0.85rem;
+        .category-mosaic-card:hover .category-mosaic-img {
+          transform: scale(1.06);
+        }
+        .category-mosaic-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.45) 55%, rgba(15, 23, 42, 0.15) 100%);
+        }
+        .category-mosaic-content {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.25rem;
+        }
+        .category-mosaic-tag {
+          font-size: 0.65rem;
           font-weight: 800;
-          color: var(--color-text-main);
-          line-height: 1.2;
+          letter-spacing: 0.08em;
+          color: #FDA4AF;
+          text-transform: uppercase;
         }
-        .category-circle-badge {
-          font-size: 0.68rem;
-          font-weight: 700;
-          color: var(--color-accent);
-          background-color: var(--color-accent-light);
-          padding: 0.15rem 0.45rem;
-          border-radius: var(--radius-xs);
+        .category-mosaic-title {
+          font-family: var(--font-display);
+          font-size: 1.45rem;
+          font-weight: 900;
+          color: #FFFFFF;
+          margin: 0;
+          letter-spacing: -0.01em;
+          line-height: 1.15;
+        }
+        .category-mosaic-sub {
+          font-size: 0.78rem;
+          color: #CBD5E1;
+          margin: 0;
+          line-height: 1.35;
+        }
+        .category-mosaic-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-size: 0.75rem;
+          font-weight: 800;
+          color: #FFFFFF;
+          margin-top: 0.5rem;
+          letter-spacing: 0.05em;
+          transition: color 0.15s ease;
+        }
+        .category-mosaic-arrow {
+          transition: transform 0.2s ease;
+        }
+        .category-mosaic-card:hover .category-mosaic-arrow {
+          transform: translateX(4px);
         }
 
         /* 4. Products Showcase */
