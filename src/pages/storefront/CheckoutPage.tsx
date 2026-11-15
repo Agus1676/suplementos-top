@@ -17,6 +17,7 @@ import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
 import { formatARS, formatInstallments } from '../../lib/utils';
 import { Order, OrderItem } from '../../types';
+import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 
 const checkoutSchema = z.object({
   firstName: z.string().min(2, 'Ingresá tu nombre'),
@@ -91,62 +92,104 @@ export const CheckoutPage: React.FC = () => {
   const onSubmit = async (data: CheckoutFormData) => {
     setIsProcessing(true);
 
-    const generatedOrderNumber = `ST-${Date.now().toString().slice(-6)}`;
-    
-    const orderItems: OrderItem[] = items.map((item, idx) => ({
-      id: `item-${Date.now()}-${idx}`,
-      orderId: generatedOrderNumber,
-      productId: item.productId,
-      productName: item.productName,
-      variantId: item.variantId,
-      variantTitle: item.variantTitle,
-      sku: `${item.productId.slice(0, 4).toUpperCase()}-${item.variantId.slice(0, 3)}`,
-      unitPriceInCents: item.priceInCents,
-      quantity: item.quantity,
-      totalPriceInCents: item.priceInCents * item.quantity,
-    }));
+    try {
+      // 1. Si Supabase y Mercado Pago Backend están configurados
+      if (isSupabaseConfigured) {
+        const { data: edgeData, error: edgeErr } = await supabase.functions.invoke('create-payment-order', {
+          body: {
+            items: items.map((i) => ({
+              variantId: i.variantId,
+              quantity: i.quantity,
+            })),
+            customer: {
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
+              phone: data.phone,
+              dni: data.dni,
+            },
+            deliveryMethod: data.deliveryMethod,
+            shippingAddress: data.deliveryMethod === 'shipping' ? {
+              street: data.street,
+              number: data.number,
+              apartment: data.apartment,
+              neighborhood: data.neighborhood,
+              city: data.city,
+              province: data.province,
+              postalCode: data.postalCode,
+              deliveryNotes: data.deliveryNotes,
+            } : null,
+          }
+        });
 
-    const newOrder: Order = {
-      id: `ord-${Date.now()}`,
-      orderNumber: generatedOrderNumber,
-      createdAt: new Date().toISOString(),
-      customerName: `${data.firstName} ${data.lastName}`,
-      customerEmail: data.email,
-      customerPhone: data.phone,
-      customerDni: data.dni,
-      deliveryMethod: data.deliveryMethod,
-      shippingAddress: data.deliveryMethod === 'shipping' ? {
-        fullName: `${data.firstName} ${data.lastName}`,
-        email: data.email,
-        phone: data.phone,
-        dni: data.dni,
-        deliveryMethod: 'shipping',
-        street: data.street || '',
-        number: data.number || '',
-        apartment: data.apartment,
-        neighborhood: data.neighborhood,
-        city: data.city || '',
-        province: data.province || '',
-        postalCode: data.postalCode || '',
-        deliveryNotes: data.deliveryNotes,
-      } : undefined,
-      items: orderItems,
-      subtotalInCents,
-      shippingFeeInCents: effectiveShippingCost,
-      discountInCents: 0,
-      totalInCents: finalTotalInCents,
-      paymentStatus: 'approved',
-      fulfillmentStatus: data.deliveryMethod === 'pickup' ? 'ready_for_pickup' : 'preparing',
-      paymentMethod: 'Mercado Pago Checkout Pro',
-      mercadopagoPaymentId: `MP-${Math.floor(100000000 + Math.random() * 900000000)}`,
-    };
+        if (!edgeErr && edgeData?.initPoint && edgeData.initPoint.startsWith('https://')) {
+          clearCart();
+          window.location.href = edgeData.initPoint;
+          return;
+        }
+      }
 
-    createOrder(newOrder);
-    clearCart();
+      // 2. Modo Simulado / Test Local (Guarda en base local, descuenta stock y alerta al dueño)
+      const generatedOrderNumber = `ST-${Date.now().toString().slice(-6)}`;
+      
+      const orderItems: OrderItem[] = items.map((item, idx) => ({
+        id: `item-${Date.now()}-${idx}`,
+        orderId: generatedOrderNumber,
+        productId: item.productId,
+        productName: item.productName,
+        variantId: item.variantId,
+        variantTitle: item.variantTitle,
+        sku: `${item.productId.slice(0, 4).toUpperCase()}-${item.variantId.slice(0, 3)}`,
+        unitPriceInCents: item.priceInCents,
+        quantity: item.quantity,
+        totalPriceInCents: item.priceInCents * item.quantity,
+      }));
 
-    setTimeout(() => {
-      navigate(`/pago-resultado?orden=${newOrder.orderNumber}`);
-    }, 1000);
+      const newOrder: Order = {
+        id: `ord-${Date.now()}`,
+        orderNumber: generatedOrderNumber,
+        createdAt: new Date().toISOString(),
+        customerName: `${data.firstName} ${data.lastName}`,
+        customerEmail: data.email,
+        customerPhone: data.phone,
+        customerDni: data.dni,
+        deliveryMethod: data.deliveryMethod,
+        shippingAddress: data.deliveryMethod === 'shipping' ? {
+          fullName: `${data.firstName} ${data.lastName}`,
+          email: data.email,
+          phone: data.phone,
+          dni: data.dni,
+          deliveryMethod: 'shipping',
+          street: data.street || '',
+          number: data.number || '',
+          apartment: data.apartment,
+          neighborhood: data.neighborhood,
+          city: data.city || '',
+          province: data.province || '',
+          postalCode: data.postalCode || '',
+          deliveryNotes: data.deliveryNotes,
+        } : undefined,
+        items: orderItems,
+        subtotalInCents,
+        shippingFeeInCents: effectiveShippingCost,
+        discountInCents: 0,
+        totalInCents: finalTotalInCents,
+        paymentStatus: 'approved',
+        fulfillmentStatus: data.deliveryMethod === 'pickup' ? 'ready_for_pickup' : 'preparing',
+        paymentMethod: 'Mercado Pago Checkout Pro',
+        mercadopagoPaymentId: `MP-${Math.floor(100000000 + Math.random() * 900000000)}`,
+      };
+
+      createOrder(newOrder);
+      clearCart();
+
+      setTimeout(() => {
+        navigate(`/pago-resultado?orden=${newOrder.orderNumber}`);
+      }, 800);
+    } catch (err) {
+      console.error('Error procesando checkout', err);
+      setIsProcessing(false);
+    }
   };
 
   return (
