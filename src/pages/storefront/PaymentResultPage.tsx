@@ -5,7 +5,10 @@ import {
   MapPin, 
   Truck, 
   Phone, 
-  Send
+  Send,
+  Clock,
+  AlertCircle,
+  RotateCcw
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatARS, buildWhatsAppDispatchLink, formatDate } from '../../lib/utils';
@@ -13,7 +16,11 @@ import { formatARS, buildWhatsAppDispatchLink, formatDate } from '../../lib/util
 export const PaymentResultPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { orders, settings } = useStore();
-  const orderNumber = searchParams.get('orden');
+  
+  // Read params from internal router or Mercado Pago return redirect
+  const orderNumber = searchParams.get('orden') || searchParams.get('external_reference');
+  const mpStatus = searchParams.get('collection_status') || searchParams.get('status') || 'approved';
+  const mpPaymentId = searchParams.get('payment_id') || searchParams.get('collection_id');
 
   const order = orders.find((o) => o.orderNumber === orderNumber) || orders[0];
 
@@ -21,6 +28,7 @@ export const PaymentResultPage: React.FC = () => {
     return (
       <div className="container not-found-wrap">
         <h2>Pedido no encontrado</h2>
+        <p>No se pudo localizar el pedido solicitado. Podés revisar tu historial o contactarte con nosotros.</p>
         <Link to="/" className="btn btn-primary mt-3">Volver al inicio</Link>
       </div>
     );
@@ -43,44 +51,93 @@ export const PaymentResultPage: React.FC = () => {
     addressText,
     itemsText,
     totalText: formatARS(order.totalInCents),
-    paymentStatus: order.paymentStatus,
+    paymentStatus: mpStatus === 'approved' ? 'approved' : mpStatus,
   });
+
+  const isApproved = mpStatus === 'approved';
+  const isPending = mpStatus === 'pending' || mpStatus === 'in_process';
+  const isRejected = mpStatus === 'rejected' || mpStatus === 'failure';
 
   return (
     <div className="container payment-result-page">
       <div className="card result-card">
+        {/* Status Header */}
         <div className="result-header">
-          <div className="success-icon-wrap">
-            <CheckCircle2 size={50} className="text-success" />
-          </div>
-          <span className="badge badge-success">PAGO ACREDITADO CON ÉXITO</span>
-          <h1 className="result-title">¡GRACIAS POR TU COMPRA, {order.customerName.split(' ')[0].toUpperCase()}!</h1>
-          <p className="order-num-text">
-            NÚMERO DE PEDIDO: <strong>#{order.orderNumber}</strong> • {formatDate(order.createdAt)}
-          </p>
+          {isApproved && (
+            <>
+              <div className="success-icon-wrap">
+                <CheckCircle2 size={50} className="text-success" />
+              </div>
+              <span className="badge badge-success">PAGO ACREDITADO CON MERCADO PAGO</span>
+              <h1 className="result-title">¡GRACIAS POR TU COMPRA, {order.customerName.split(' ')[0].toUpperCase()}!</h1>
+              <p className="order-num-text">
+                NÚMERO DE PEDIDO: <strong>#{order.orderNumber}</strong> • {formatDate(order.createdAt)}
+              </p>
+              {mpPaymentId && (
+                <span className="mp-id-tag">ID Transacción Mercado Pago: #{mpPaymentId}</span>
+              )}
+            </>
+          )}
+
+          {isPending && (
+            <>
+              <div className="warning-icon-wrap">
+                <Clock size={50} className="text-amber-500" />
+              </div>
+              <span className="badge badge-warning">PAGO EN PROCESO DE ACREDITACIÓN</span>
+              <h1 className="result-title">PEDIDO GENERADO — ESPERANDO PAGO</h1>
+              <p className="order-num-text">
+                NÚMERO DE PEDIDO: <strong>#{order.orderNumber}</strong>
+              </p>
+              <p className="status-note-text">
+                Si abonaste por Pago Fácil, Rapipago o Transferencia, la acreditación puede demorar hasta 24 hs hábiles. Una vez impactado, comenzamos a empaquetar tu pedido.
+              </p>
+            </>
+          )}
+
+          {isRejected && (
+            <>
+              <div className="danger-icon-wrap">
+                <AlertCircle size={50} className="text-danger" />
+              </div>
+              <span className="badge badge-danger">EL PAGO NO PUDO COMPLETARSE</span>
+              <h1 className="result-title">TRANSACCIÓN RECHAZADA</h1>
+              <p className="order-num-text">
+                La entidad bancaria o Mercado Pago no autorizó el cobro.
+              </p>
+              <div className="retry-btn-box mt-3">
+                <Link to="/checkout" className="btn btn-primary">
+                  <RotateCcw size={16} />
+                  <span>Reintentar con otro medio de pago</span>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Priority Dispatch Notification Alert for Owner */}
-        <div className="dispatch-alert-banner">
-          <div className="alert-badge">
-            <Send size={15} />
-            <span>ALERTA DE DESPACHO INMEDIATO</span>
+        {!isRejected && (
+          <div className="dispatch-alert-banner">
+            <div className="alert-badge">
+              <Send size={15} />
+              <span>ALERTA DE DESPACHO INMEDIATO</span>
+            </div>
+            <h3 className="dispatch-title">Notificación para preparar el paquete</h3>
+            <p className="dispatch-desc">
+              Se envió un comprobante automático con todos los datos a <strong>{settings.supportEmail}</strong>. 
+              También podés avisar directamente al WhatsApp del local para agilizar el retiro o despacho:
+            </p>
+            <a
+              href={waDispatchLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary btn-lg wa-dispatch-btn"
+            >
+              <Phone size={18} />
+              <span>AVISAR AL WHATSAPP DE DESPACHO (11 6565 1990)</span>
+            </a>
           </div>
-          <h3 className="dispatch-title">Notificación para preparar el paquete</h3>
-          <p className="dispatch-desc">
-            Se envió un correo automático con todos los datos a <strong>{settings.supportEmail}</strong>. 
-            También podés enviar el comprobante directamente al WhatsApp del local para agilizar el retiro o entrega:
-          </p>
-          <a
-            href={waDispatchLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary btn-lg wa-dispatch-btn"
-          >
-            <Phone size={18} />
-            <span>ENVIAR DATOS DE DESPACHO AL WHATSAPP (11 6565 1990)</span>
-          </a>
-        </div>
+        )}
 
         {/* Delivery / Pickup Status Box */}
         <div className="delivery-status-box">
@@ -93,7 +150,7 @@ export const PaymentResultPage: React.FC = () => {
                   <strong>Punto de entrega:</strong> {settings.pickupAddress}
                 </p>
                 <p className="text-muted text-xs mt-1">
-                  Horarios: {settings.hoursDescription}. Podés acercarte presentando tu DNI ({order.customerDni}).
+                  Horarios: {settings.hoursDescription}. Podés acercarte presentando tu DNI ({order.customerDni}) o indicando tu número #{order.orderNumber}.
                 </p>
               </div>
             </div>
@@ -141,7 +198,7 @@ export const PaymentResultPage: React.FC = () => {
               </span>
             </div>
             <div className="total-line grand-total">
-              <span>Total Abonado (MP):</span>
+              <span>Total Abonado (Mercado Pago):</span>
               <span>{formatARS(order.totalInCents)}</span>
             </div>
           </div>
@@ -181,105 +238,151 @@ export const PaymentResultPage: React.FC = () => {
           border-bottom: 1px solid var(--color-border);
         }
         .success-icon-wrap {
-          background: #ECFDF5;
-          border: 1px solid #A7F3D0;
-          padding: 0.85rem;
+          width: 72px;
+          height: 72px;
           border-radius: 50%;
+          background: #DCFCE7;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 0.5rem;
+        }
+        .warning-icon-wrap {
+          width: 72px;
+          height: 72px;
+          border-radius: 50%;
+          background: #FEF3C7;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 0.5rem;
+        }
+        .danger-icon-wrap {
+          width: 72px;
+          height: 72px;
+          border-radius: 50%;
+          background: #FEE2E2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 0.5rem;
         }
         .result-title {
+          font-family: var(--font-display);
           font-size: 1.8rem;
           font-weight: 800;
-          margin-top: 0.25rem;
-          color: var(--color-text);
-          letter-spacing: -0.02em;
+          color: var(--color-text-main);
+          margin: 0;
+          letter-spacing: -0.01em;
         }
         .order-num-text {
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           color: var(--color-text-muted);
+          margin: 0;
+        }
+        .mp-id-tag {
+          font-size: 0.75rem;
+          color: var(--color-text-subtle);
+          font-family: monospace;
+        }
+        .status-note-text {
+          font-size: 0.85rem;
+          color: var(--color-text-muted);
+          max-width: 500px;
+          line-height: 1.45;
         }
         .dispatch-alert-banner {
-          background: #FEF2F2;
-          border: 1px solid #FECACA;
-          border-radius: var(--radius-sm);
+          background: #FFF1F2;
+          border: 1px solid #FECDD3;
+          border-radius: var(--radius-md);
           padding: 1.5rem;
           margin-bottom: 2rem;
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.75rem;
         }
         .alert-badge {
           display: inline-flex;
           align-items: center;
-          gap: 0.35rem;
-          font-size: 0.8rem;
+          gap: 0.4rem;
+          font-size: 0.7rem;
           font-weight: 800;
-          color: var(--color-accent);
-          letter-spacing: 0.05em;
+          color: #E11D48;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
         }
         .dispatch-title {
-          font-size: 1.2rem;
+          font-size: 1.15rem;
           font-weight: 800;
-          color: var(--color-text);
+          color: #9F1239;
           margin: 0;
         }
         .dispatch-desc {
           font-size: 0.85rem;
-          color: var(--color-text-muted);
-          line-height: 1.5;
+          color: #4B5563;
+          line-height: 1.45;
+          margin: 0;
         }
         .wa-dispatch-btn {
-          margin-top: 0.75rem;
-          align-self: flex-start;
+          margin-top: 0.5rem;
+          background: #25D366 !important;
+          border-color: #25D366 !important;
+          color: #FFFFFF !important;
+          font-weight: 800 !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 0.5rem !important;
+        }
+        .wa-dispatch-btn:hover {
+          background: #1EBE5D !important;
+          border-color: #1EBE5D !important;
         }
         .delivery-status-box {
-          background: #F9FAFB;
+          background: #F8FAFC;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-sm);
-          padding: 1.25rem 1.5rem;
+          padding: 1.25rem;
           margin-bottom: 2rem;
         }
         .status-flex {
           display: flex;
-          gap: 1rem;
           align-items: flex-start;
+          gap: 1rem;
         }
         .status-flex h4 {
-          font-size: 1rem;
+          font-size: 0.85rem;
           font-weight: 800;
-          margin-bottom: 0.25rem;
-          color: var(--color-text);
+          margin: 0 0 0.35rem 0;
+          letter-spacing: 0.04em;
         }
         .status-flex p {
           font-size: 0.85rem;
-          color: var(--color-text-muted);
+          margin: 0;
+          line-height: 1.4;
         }
         .order-items-breakdown {
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-sm);
-          padding: 1.5rem;
           margin-bottom: 2rem;
-          background: #FFFFFF;
         }
         .order-items-breakdown h3 {
-          font-size: 1rem;
+          font-size: 0.85rem;
           font-weight: 800;
-          margin-bottom: 1.25rem;
-          color: var(--color-text);
-          letter-spacing: 0.03em;
+          letter-spacing: 0.04em;
+          margin-bottom: 1rem;
         }
         .items-table {
           display: flex;
           flex-direction: column;
-          gap: 0.85rem;
+          gap: 0.75rem;
           border-bottom: 1px solid var(--color-border);
           padding-bottom: 1rem;
           margin-bottom: 1rem;
         }
         .item-row {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          font-size: 0.9rem;
+          justify-content: space-between;
+          font-size: 0.85rem;
         }
         .item-main {
           display: flex;
@@ -287,41 +390,35 @@ export const PaymentResultPage: React.FC = () => {
           flex: 1;
         }
         .item-qty {
-          width: 50px;
-          text-align: center;
           color: var(--color-text-muted);
-          font-weight: 700;
+          margin: 0 1.5rem;
         }
         .item-price {
-          font-family: var(--font-display);
-          font-size: 1.05rem;
-          font-weight: 800;
-          color: var(--color-text);
+          font-weight: 700;
         }
         .order-totals-summary {
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
-          font-size: 0.95rem;
+          gap: 0.5rem;
+          font-size: 0.85rem;
         }
         .total-line {
           display: flex;
           justify-content: space-between;
-          color: var(--color-text-muted);
         }
         .grand-total {
-          font-size: 1.3rem;
+          font-size: 1.1rem;
           font-weight: 800;
-          color: var(--color-text);
           border-top: 1px solid var(--color-border);
-          padding-top: 0.5rem;
-          margin-top: 0.35rem;
+          padding-top: 0.75rem;
+          margin-top: 0.5rem;
+          color: var(--color-text-main);
         }
         .result-actions-row {
           display: flex;
           gap: 1rem;
           justify-content: center;
-          flex-wrap: wrap;
+          margin-top: 2rem;
         }
       `}</style>
     </div>

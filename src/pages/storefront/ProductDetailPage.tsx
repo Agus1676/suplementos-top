@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   Star, 
@@ -51,6 +51,21 @@ export const ProductDetailPage: React.FC = () => {
   // Shipping calculator state
   const [postalCode, setPostalCode] = useState('');
   const [shippingCalculated, setShippingCalculated] = useState(false);
+
+  // Mobile Sticky Bar state & ref
+  const [showStickyBar, setShowStickyBar] = useState(false);
+  const purchaseSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (purchaseSectionRef.current) {
+        const rect = purchaseSectionRef.current.getBoundingClientRect();
+        setShowStickyBar(rect.bottom < 0);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const discountPercent = calculateDiscountPercentage(
     selectedVariant.priceInCents,
@@ -242,7 +257,7 @@ export const ProductDetailPage: React.FC = () => {
           </div>
 
           {/* Quantity & Purchase Action Buttons */}
-          <div className="purchase-controls-row">
+          <div ref={purchaseSectionRef} className="purchase-controls-row">
             <div className="quantity-box">
               <button 
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -498,8 +513,128 @@ export const ProductDetailPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Mobile Sticky Action Bar */}
+      <div className={`mobile-sticky-buy-bar ${showStickyBar ? 'visible' : ''}`}>
+        <div className="sticky-bar-inner">
+          <div className="sticky-product-meta">
+            <img 
+              src={product.images[0]?.url || '/logo.jpg'} 
+              alt={product.name} 
+              className="sticky-product-thumb" 
+            />
+            <div className="sticky-product-texts">
+              <span className="sticky-product-title">{product.name}</span>
+              <div className="sticky-pricing-row">
+                <span className="sticky-price">{formatARS(selectedVariant.priceInCents)}</span>
+                <span className="sticky-installments">{formatInstallments(selectedVariant.priceInCents, 3)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="sticky-actions-group">
+            <button
+              onClick={handleAddToCart}
+              disabled={selectedVariant.stock <= 0}
+              className="btn btn-primary sticky-add-btn"
+            >
+              <ShoppingBag size={15} />
+              <span>{selectedVariant.stock <= 0 ? 'SIN STOCK' : 'COMPRAR'}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Embedded Component Styles */}
       <style>{`
+        .mobile-sticky-buy-bar {
+          display: none;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(15, 23, 42, 0.96);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-top: 1px solid #1E293B;
+          padding: 0.65rem 1rem;
+          z-index: 998;
+          transform: translateY(110%);
+          transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+        }
+        @media (max-width: 900px) {
+          .mobile-sticky-buy-bar {
+            display: block;
+          }
+        }
+        .mobile-sticky-buy-bar.visible {
+          transform: translateY(0);
+        }
+        .sticky-bar-inner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.75rem;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+        .sticky-product-meta {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          min-width: 0;
+        }
+        .sticky-product-thumb {
+          width: 40px;
+          height: 40px;
+          border-radius: 4px;
+          object-fit: cover;
+          background: #000;
+          border: 1px solid #334155;
+          flex-shrink: 0;
+        }
+        .sticky-product-texts {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+        }
+        .sticky-product-title {
+          font-weight: 700;
+          font-size: 0.8rem;
+          color: #FFFFFF;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 170px;
+        }
+        .sticky-pricing-row {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+        .sticky-price {
+          font-weight: 800;
+          font-size: 0.9rem;
+          color: #FFFFFF;
+        }
+        .sticky-installments {
+          font-size: 0.68rem;
+          color: #4ADE80;
+          font-weight: 600;
+        }
+        .sticky-actions-group {
+          flex-shrink: 0;
+        }
+        .sticky-add-btn {
+          padding: 0.55rem 1rem !important;
+          font-size: 0.82rem !important;
+          border-radius: var(--radius-sm) !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 0.4rem !important;
+          background: #E11D48 !important;
+          font-weight: 800 !important;
+        }
         .product-detail-page {
           padding-top: 2rem;
           padding-bottom: 5rem;
