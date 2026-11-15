@@ -15,9 +15,9 @@ interface StoreContextType {
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
-const ORDERS_KEY = 'suplementos_top_orders_v1';
-const PRODUCTS_KEY = 'suplementos_top_products_v1';
-const SETTINGS_KEY = 'suplementos_top_settings_v1';
+const ORDERS_KEY = 'suplementos_top_orders_v2';
+const PRODUCTS_KEY = 'suplementos_top_products_v2';
+const SETTINGS_KEY = 'suplementos_top_settings_v2';
 
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(() => {
