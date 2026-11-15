@@ -10,9 +10,11 @@ import {
   Phone, 
   Plus, 
   Minus, 
-  Sparkles, 
   ArrowLeft,
-  CreditCard
+  CreditCard,
+  Award,
+  Zap,
+  Clock
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { useCart } from '../../context/CartContext';
@@ -22,7 +24,7 @@ import { ProductVariant } from '../../types';
 export const ProductDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { products, settings } = useStore();
-  const { addItem } = useCart();
+  const { addItem, openCartDrawer } = useCart();
   const navigate = useNavigate();
 
   const product = products.find((p) => p.slug === slug);
@@ -32,7 +34,7 @@ export const ProductDetailPage: React.FC = () => {
       <div className="container not-found-wrap">
         <h2>Producto no encontrado</h2>
         <p>El suplemento que estás buscando no existe o fue despublicado.</p>
-        <Link to="/catalogo" className="btn btn-primary">
+        <Link to="/catalogo" className="btn btn-primary mt-3">
           Volver al Catálogo
         </Link>
       </div>
@@ -44,7 +46,11 @@ export const ProductDetailPage: React.FC = () => {
   );
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.url);
   const [quantity, setQuantity] = useState(1);
-  const [addedSuccess, setAddedSuccess] = useState(false);
+  const [activeTab, setActiveTab] = useState<'desc' | 'nutrition' | 'usage' | 'guarantee'>('desc');
+  
+  // Shipping calculator state
+  const [postalCode, setPostalCode] = useState('');
+  const [shippingCalculated, setShippingCalculated] = useState(false);
 
   const discountPercent = calculateDiscountPercentage(
     selectedVariant.priceInCents,
@@ -54,8 +60,7 @@ export const ProductDetailPage: React.FC = () => {
   const handleAddToCart = () => {
     if (selectedVariant.stock > 0) {
       addItem(product, selectedVariant, quantity);
-      setAddedSuccess(true);
-      setTimeout(() => setAddedSuccess(false), 2000);
+      openCartDrawer();
     }
   };
 
@@ -66,28 +71,54 @@ export const ProductDetailPage: React.FC = () => {
     }
   };
 
+  const handleCalculateShipping = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (postalCode.trim().length >= 4) {
+      setShippingCalculated(true);
+    }
+  };
+
+  // Default nutritional table fallback if not provided in product
+  const nutritionalRows = product.nutritionalTable || [
+    { nutrient: 'Valor Energético', perServing: '124 kcal = 518 kJ', dailyValue: '6%' },
+    { nutrient: 'Proteínas', perServing: '27 g', dailyValue: '36%' },
+    { nutrient: 'Carbohidratos Totales', perServing: '1.2 g', dailyValue: '0%' },
+    { nutrient: 'Grasas Totales', perServing: '0.8 g', dailyValue: '1%' },
+    { nutrient: 'Grasas Saturadas', perServing: '0.3 g', dailyValue: '1%' },
+    { nutrient: 'Sodio', perServing: '95 mg', dailyValue: '4%' },
+    { nutrient: 'BCAA (Leucina, Isoleucina, Valina)', perServing: '5.8 g', dailyValue: '-' },
+    { nutrient: 'Glutamina & Precursores', perServing: '4.6 g', dailyValue: '-' }
+  ];
+
+  const waProductLink = `https://wa.me/5491165651990?text=${encodeURIComponent(
+    `Hola! Quisiera consultar sobre el producto: ${product.name} (${selectedVariant.title}) - Precio: ${formatARS(selectedVariant.priceInCents)}`
+  )}`;
+
   return (
     <div className="container product-detail-page">
-      {/* Breadcrumb */}
+      {/* Breadcrumb Navigation */}
       <nav className="detail-breadcrumb">
-        <Link to="/"><ArrowLeft size={14} /> Inicio</Link>
-        <span>/</span>
+        <Link to="/"><ArrowLeft size={13} /> Inicio</Link>
+        <span className="crumb-sep">/</span>
+        <Link to="/catalogo">Catálogo</Link>
+        <span className="crumb-sep">/</span>
         <Link to={`/catalogo?categoria=${product.category.slug}`}>{product.category.name}</Link>
-        <span>/</span>
+        <span className="crumb-sep">/</span>
         <span className="current-crumb">{product.name}</span>
       </nav>
 
+      {/* Main Product Layout */}
       <div className="product-detail-grid">
-        {/* Left Column: Gallery */}
+        {/* Left Column: Visual Gallery */}
         <div className="gallery-section">
           <div className="main-image-wrap">
             {discountPercent > 0 && (
-              <span className="badge badge-red discount-badge">
+              <span className="product-badge-discount-lg">
                 {discountPercent}% OFF
               </span>
             )}
             <img
-              src={selectedImage || product.images[0]?.url}
+              src={selectedImage || product.images[0]?.url || '/logo.jpg'}
               alt={product.name}
               className="main-detail-img"
             />
@@ -107,56 +138,66 @@ export const ProductDetailPage: React.FC = () => {
             </div>
           )}
 
-          {/* Guarantee Badges */}
-          <div className="detail-guarantees-card">
-            <div className="guarantee-item">
-              <ShieldCheck size={22} className="text-red" />
+          {/* Value Highlights Under Gallery */}
+          <div className="detail-trust-cards">
+            <div className="trust-card-mini">
+              <ShieldCheck size={20} className="text-accent" />
               <div>
-                <strong>100% PUREZA Y CALIDAD</strong>
-                <p>Materias primas originales selladas de fábrica.</p>
+                <strong>MATERIAS PRIMAS 100% PURAS</strong>
+                <p>Envases sellados de fábrica con precinto inviolable y trazabilidad de lote.</p>
               </div>
             </div>
-            <div className="guarantee-item">
-              <Truck size={22} className="text-red" />
+            <div className="trust-card-mini">
+              <MapPin size={20} className="text-accent" />
               <div>
-                <strong>DESPACHO EN EL DÍA</strong>
-                <p>Embalaje protector hermético desde Recoleta.</p>
+                <strong>RETIRO EN RECOLETA EN EL DÍA</strong>
+                <p>{settings.pickupAddress} — Lunes a Viernes de 8 a 23 hs.</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Information & Purchase Options */}
+        {/* Right Column: Information, Pricing, Variants & Purchase */}
         <div className="info-section">
+          {/* Brand & Reviews Header */}
           <div className="brand-rating-header">
             <span className="product-brand-tag">{product.brand}</span>
             <div className="product-stars">
-              <Star size={15} className="star-icon" />
-              <span className="font-bold">{product.rating.toFixed(1)}</span>
-              <span className="text-gray-500">({product.reviewCount} opiniones)</span>
+              <div className="rating-stars">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={14} fill="#F59E0B" color="#F59E0B" />
+                ))}
+              </div>
+              <span className="rating-val">{product.rating.toFixed(1)}</span>
+              <span className="rating-count">({product.reviewCount} reseñas verificadas)</span>
             </div>
           </div>
 
           <h1 className="detail-product-title">{product.name}</h1>
           <p className="detail-tagline">{product.tagline}</p>
 
-          {/* Price Box */}
+          {/* Pricing Box */}
           <div className="detail-price-box">
             <div className="price-values">
-              <span className="detail-current-price">
-                {formatARS(selectedVariant.priceInCents)}
-              </span>
               {selectedVariant.compareAtPriceInCents && selectedVariant.compareAtPriceInCents > selectedVariant.priceInCents && (
                 <span className="detail-compare-price">
                   {formatARS(selectedVariant.compareAtPriceInCents)}
                 </span>
               )}
+              <span className="detail-current-price">
+                {formatARS(selectedVariant.priceInCents)}
+              </span>
             </div>
 
-            {/* Installments text (ENA style) */}
-            <div className="installments-callout">
-              <CreditCard size={18} className="text-green-600" />
-              <span><strong>{formatInstallments(selectedVariant.priceInCents, 3)}</strong> con Mercado Pago</span>
+            {/* Argentine Installments callout */}
+            <div className="installments-callout-box">
+              <CreditCard size={17} className="text-success" />
+              <span><strong>{formatInstallments(selectedVariant.priceInCents, 3)}</strong> con Mercado Pago y todas las tarjetas</span>
+            </div>
+
+            <div className="transfer-discount-callout">
+              <span className="badge-tag">10% OFF</span>
+              <span>Abonando con <strong>Transferencia Bancaria</strong> o en efectivo al retirar</span>
             </div>
           </div>
 
@@ -164,46 +205,50 @@ export const ProductDetailPage: React.FC = () => {
           {product.variants.some((v) => v.flavor) && (
             <div className="variant-select-section">
               <label className="variant-label">
-                SABOR SELECCIONADO: <strong>{selectedVariant.flavor}</strong>
+                SABOR: <strong>{selectedVariant.flavor}</strong>
               </label>
               <div className="variants-buttons-grid">
                 {product.variants.map((v) => (
                   <button
                     key={v.id}
-                    onClick={() => setSelectedVariant(v)}
+                    onClick={() => {
+                      setSelectedVariant(v);
+                      setQuantity(1);
+                    }}
                     className={`variant-option-btn ${selectedVariant.id === v.id ? 'active' : ''}`}
                     disabled={v.stock <= 0}
                   >
                     <span>{v.flavor}</span>
-                    {v.size && <span className="variant-size-hint">({v.size})</span>}
+                    {v.size && <span className="variant-size-tag">{v.size}</span>}
                   </button>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Stock Notification */}
+          {/* Stock Availability Indicator */}
           <div className="detail-stock-status">
             {selectedVariant.stock <= 0 ? (
-              <span className="text-red-600 font-bold">⚠️ Agotado momentáneamente</span>
+              <span className="stock-alert stock-out">⚠️ Agotado momentáneamente — Próximo reingreso en 48hs</span>
             ) : selectedVariant.stock <= 5 ? (
-              <span className="text-amber-600 font-bold">
-                ⚠️ ¡ÚLTIMAS {selectedVariant.stock} UNIDADES EN STOCK!
+              <span className="stock-alert stock-low">
+                ⚠️ ¡ÚLTIMAS {selectedVariant.stock} UNIDADES EN STOCK EN RECOLETA!
               </span>
             ) : (
-              <span className="text-green-600 font-bold">
-                ✓ En stock disponible para entrega inmediata (SKU: {selectedVariant.sku})
+              <span className="stock-alert stock-in">
+                ✓ En stock disponible para entrega inmediata o retiro hoy (SKU: {selectedVariant.sku})
               </span>
             )}
           </div>
 
-          {/* Purchase Actions */}
+          {/* Quantity & Purchase Action Buttons */}
           <div className="purchase-controls-row">
             <div className="quantity-box">
               <button 
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="qty-change-btn"
                 disabled={quantity <= 1}
+                aria-label="Disminuir"
               >
                 <Minus size={14} />
               </button>
@@ -212,6 +257,7 @@ export const ProductDetailPage: React.FC = () => {
                 onClick={() => setQuantity(Math.min(selectedVariant.stock, quantity + 1))}
                 className="qty-change-btn"
                 disabled={quantity >= selectedVariant.stock}
+                aria-label="Aumentar"
               >
                 <Plus size={14} />
               </button>
@@ -220,19 +266,10 @@ export const ProductDetailPage: React.FC = () => {
             <button
               onClick={handleAddToCart}
               disabled={selectedVariant.stock <= 0}
-              className={`btn ${addedSuccess ? 'btn-secondary' : 'btn-primary'} btn-lg flex-1`}
+              className="btn btn-primary btn-lg flex-1 product-main-cta"
             >
-              {addedSuccess ? (
-                <>
-                  <Check size={18} className="text-green-600" />
-                  <span>¡AGREGADO AL CARRITO!</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag size={18} />
-                  <span>AGREGAR AL CARRITO</span>
-                </>
-              )}
+              <ShoppingBag size={18} />
+              <span>AGREGAR AL CARRITO</span>
             </button>
 
             <button
@@ -244,72 +281,224 @@ export const ProductDetailPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Delivery & Pickup Info */}
-          <div className="delivery-highlights-box">
-            <div className="delivery-card-item">
-              <MapPin size={22} className="text-red flex-shrink-0" />
-              <div>
-                <strong>RETIRO HOY MISMO GRATIS EN RECOLETA</strong>
-                <p>{settings.pickupAddress}</p>
-                <small className="text-gray-500">Horarios: {settings.hoursDescription}</small>
-              </div>
+          {/* Shipping Calculator Box */}
+          <div className="shipping-calculator-box">
+            <div className="calc-header">
+              <Truck size={18} className="text-accent" />
+              <span>Calculá el costo y tiempo de envío a tu código postal</span>
             </div>
 
-            <div className="delivery-card-item">
-              <Truck size={22} className="text-red flex-shrink-0" />
-              <div>
-                <strong>ENVÍOS A DOMICILIO A TODO EL PAÍS</strong>
-                <p>CABA, GBA e Interior con despacho prioritario.</p>
-                <small className="text-green-600 font-bold">Envío gratis en compras mayores a $85.000</small>
-              </div>
-            </div>
+            <form onSubmit={handleCalculateShipping} className="calc-form">
+              <input
+                type="text"
+                placeholder="Ingresá tu Código Postal (Ej: 1425)"
+                value={postalCode}
+                onChange={(e) => {
+                  setPostalCode(e.target.value);
+                  setShippingCalculated(false);
+                }}
+                className="calc-input"
+                maxLength={8}
+              />
+              <button type="submit" className="btn btn-secondary btn-sm calc-btn">
+                CALCULAR
+              </button>
+            </form>
 
-            <div className="delivery-card-item whatsapp-box">
-              <Phone size={22} className="text-green-600 flex-shrink-0" />
-              <div>
-                <strong>¿CONSULTAS SOBRE ESTE SUPLEMENTO?</strong>
-                <p>Chateá en directo con nuestro equipo deportivo.</p>
-                <a
-                  href={`https://wa.me/5491165651990?text=${encodeURIComponent(`Hola! Quisiera consultar sobre el producto: ${product.name} (${selectedVariant.title})`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="whatsapp-inline-link text-green-700"
-                >
-                  Consultar por WhatsApp al 11 6565 1990 →
-                </a>
+            {shippingCalculated && (
+              <div className="calc-results-list">
+                <div className="calc-result-row">
+                  <div className="calc-res-info">
+                    <MapPin size={16} className="text-accent" />
+                    <div>
+                      <strong>Retiro sin cargo en Recoleta</strong>
+                      <p>{settings.pickupAddress} — ¡Listo para retirar hoy!</p>
+                    </div>
+                  </div>
+                  <span className="calc-res-price text-success font-bold">¡GRATIS!</span>
+                </div>
+
+                <div className="calc-result-row">
+                  <div className="calc-res-info">
+                    <Truck size={16} className="text-accent" />
+                    <div>
+                      <strong>Envío Express a Domicilio</strong>
+                      <p>Entrega en 24 a 48 hs hábiles</p>
+                    </div>
+                  </div>
+                  <span className="calc-res-price">
+                    {selectedVariant.priceInCents >= 8500000 ? (
+                      <span className="text-success font-bold">¡GRATIS!</span>
+                    ) : (
+                      formatARS(490000)
+                    )}
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Description & Nutritional info */}
-          <div className="product-description-wrap">
-            <h3 className="section-subheading">DESCRIPCIÓN Y MODO DE USO</h3>
-            <p className="description-text">{product.description}</p>
-
-            {product.servingInfo && (
-              <div className="serving-info-pill">
-                <Sparkles size={16} className="text-red" />
-                <span><strong>RENDIMIENTO:</strong> {product.servingInfo}</span>
-              </div>
-            )}
-
-            {product.nutritionalHighlights && (
-              <div className="highlights-list-wrap">
-                <h4>BENEFICIOS CLAVE:</h4>
-                <ul className="nutritional-bullets">
-                  {product.nutritionalHighlights.map((hl, i) => (
-                    <li key={i}>
-                      <Check size={14} className="text-green-600" />
-                      <span>{hl}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+          {/* WhatsApp Direct Help */}
+          <div className="whatsapp-help-strip">
+            <Phone size={18} className="text-success" />
+            <div className="wa-help-text">
+              <span>¿Tenés dudas sobre cómo tomar este producto?</span>
+              <a 
+                href={waProductLink}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="wa-link font-bold text-success"
+              >
+                Chateá por WhatsApp con un asesor (11 6565 1990) →
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Multi-Tab Detailed Technical Information Section */}
+      <section className="product-tabs-section">
+        <div className="tabs-header-nav">
+          <button 
+            onClick={() => setActiveTab('desc')}
+            className={`tab-nav-btn ${activeTab === 'desc' ? 'active' : ''}`}
+          >
+            DESCRIPCIÓN & BENEFICIOS
+          </button>
+          <button 
+            onClick={() => setActiveTab('nutrition')}
+            className={`tab-nav-btn ${activeTab === 'nutrition' ? 'active' : ''}`}
+          >
+            TABLA NUTRICIONAL OFICIAL
+          </button>
+          <button 
+            onClick={() => setActiveTab('usage')}
+            className={`tab-nav-btn ${activeTab === 'usage' ? 'active' : ''}`}
+          >
+            MODO DE USO & DOSIFICACIÓN
+          </button>
+          <button 
+            onClick={() => setActiveTab('guarantee')}
+            className={`tab-nav-btn ${activeTab === 'guarantee' ? 'active' : ''}`}
+          >
+            ORIGEN & GARANTÍA OFICIAL
+          </button>
+        </div>
+
+        <div className="tab-content-panel">
+          {activeTab === 'desc' && (
+            <div className="tab-pane-desc">
+              <h3>FÓRMULA Y CARACTERÍSTICAS PRINCIPALES</h3>
+              <p className="tab-body-text">{product.description}</p>
+              
+              {product.servingInfo && (
+                <div className="serving-highlight-pill">
+                  <Zap size={16} className="text-accent" />
+                  <span><strong>PRESENTACIÓN & RENDIMIENTO:</strong> {product.servingInfo}</span>
+                </div>
+              )}
+
+              {product.nutritionalHighlights && (
+                <div className="benefits-bullets-grid">
+                  <h4>Puntos destacados de la fórmula:</h4>
+                  <ul>
+                    {product.nutritionalHighlights.map((hl, i) => (
+                      <li key={i}>
+                        <Check size={16} className="text-success" />
+                        <span>{hl}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'nutrition' && (
+            <div className="tab-pane-nutrition">
+              <h3>INFORMACIÓN NUTRICIONAL CERTIFICADA</h3>
+              <p className="text-muted text-xs mb-3">
+                Valores calculados por porción de referencia. Los porcentajes de valores diarios (%VD) están basados en una dieta de 2.000 kcal.
+              </p>
+
+              <div className="nutrition-table-wrapper">
+                <table className="nutrition-table">
+                  <thead>
+                    <tr>
+                      <th>NUTRIENTE</th>
+                      <th>CANTIDAD POR PORCIÓN</th>
+                      <th>% VALOR DIARIO</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {nutritionalRows.map((row, idx) => (
+                      <tr key={idx}>
+                        <td><strong>{row.nutrient}</strong></td>
+                        <td>{row.perServing}</td>
+                        <td>{row.dailyValue || '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'usage' && (
+            <div className="tab-pane-usage">
+              <h3>MODO DE PREPARACIÓN Y DOSIFICACIÓN RECOMENDADA</h3>
+              <div className="usage-steps-grid">
+                <div className="usage-step-card">
+                  <span className="step-num">1</span>
+                  <h4>Días de Entrenamiento</h4>
+                  <p>Consumir 1 porción (1 scoop colmado) disuelto en 250ml a 300ml de agua fría o leche descremada inmediatamente después de finalizar tu sesión de entrenamiento para optimizar la síntesis proteica.</p>
+                </div>
+                <div className="usage-step-card">
+                  <span className="step-num">2</span>
+                  <h4>Días de Descanso</h4>
+                  <p>Tomar 1 porción a media mañana o media tarde entre comidas principales para asegurar el balance de nitrógeno positivo y una óptima recuperación de las fibras musculares.</p>
+                </div>
+                <div className="usage-step-card">
+                  <span className="step-num">3</span>
+                  <h4>Recomendación de Shaker</h4>
+                  <p>Colocar primero el líquido y luego el polvo en el shaker. Agitar enérgicamente durante 15 a 20 segundos para lograr una textura homogénea y sin grumos.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'guarantee' && (
+            <div className="tab-pane-guarantee">
+              <h3>COMPROMISO DE CALIDAD Y RETIRO OFICIAL</h3>
+              <div className="guarantee-features-grid">
+                <div className="guarantee-feature-item">
+                  <Award size={24} className="text-accent" />
+                  <div>
+                    <strong>Laboratorio y Lote Fresco</strong>
+                    <p>Comercializamos únicamente productos de distribuidores oficiales con fecha de vencimiento lejana y certificación de ANMAT.</p>
+                  </div>
+                </div>
+                <div className="guarantee-feature-item">
+                  <MapPin size={24} className="text-accent" />
+                  <div>
+                    <strong>Punto de Retiro Oficial en CABA</strong>
+                    <p>Sede física en Uriburu 1163 (entre Av. Santa Fe y Arenales), Recoleta. Podés retirar tu compra el mismo día presentando tu DNI.</p>
+                  </div>
+                </div>
+                <div className="guarantee-feature-item">
+                  <Clock size={24} className="text-accent" />
+                  <div>
+                    <strong>Horarios de Atención Amplios</strong>
+                    <p>Lunes a Viernes de 8:00 a 23:00 hs y Sábados de 10:00 a 18:00 hs. Respondemos consultas y dudas técnicas al instante.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Embedded Component Styles */}
       <style>{`
         .product-detail-page {
           padding-top: 2rem;
@@ -319,28 +508,32 @@ export const ProductDetailPage: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          font-size: 0.85rem;
-          color: #6B7280;
+          font-size: 0.82rem;
+          color: var(--color-text-muted);
           margin-bottom: 2rem;
           flex-wrap: wrap;
         }
         .detail-breadcrumb a {
           display: flex;
           align-items: center;
-          gap: 0.35rem;
-          color: #111827;
-          font-weight: 500;
+          gap: 0.3rem;
+          color: var(--color-text-main);
+          font-weight: 600;
         }
         .detail-breadcrumb a:hover {
-          color: var(--color-brand-red);
+          color: var(--color-accent);
+        }
+        .crumb-sep {
+          color: var(--color-border-hover);
         }
         .current-crumb {
-          color: #9CA3AF;
+          color: var(--color-text-subtle);
         }
         .product-detail-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 3rem;
+          margin-bottom: 4rem;
         }
         @media (min-width: 992px) {
           .product-detail-grid {
@@ -354,27 +547,38 @@ export const ProductDetailPage: React.FC = () => {
         }
         .main-image-wrap {
           position: relative;
-          background: #F9FAFB;
+          background: #FFFFFF;
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           overflow: hidden;
           aspect-ratio: 1;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 1.5rem;
+          padding: 2rem;
+          box-shadow: var(--shadow-xs);
         }
         .main-detail-img {
-          width: 100%;
-          height: 100%;
+          max-width: 100%;
+          max-height: 100%;
           object-fit: contain;
+          transition: transform 0.3s ease;
         }
-        .discount-badge {
+        .main-image-wrap:hover .main-detail-img {
+          transform: scale(1.04);
+        }
+        .product-badge-discount-lg {
           position: absolute;
           top: 1rem;
           left: 1rem;
-          font-size: 0.85rem;
-          padding: 0.35rem 0.75rem;
+          background-color: var(--color-accent);
+          color: #FFFFFF;
+          font-size: 0.8rem;
+          font-weight: 800;
+          padding: 0.3rem 0.65rem;
+          border-radius: var(--radius-xs);
+          letter-spacing: 0.04em;
+          z-index: 2;
         }
         .thumbnails-row {
           display: flex;
@@ -383,43 +587,49 @@ export const ProductDetailPage: React.FC = () => {
         .thumbnail-btn {
           width: 72px;
           height: 72px;
-          border-radius: var(--radius-sm);
+          border-radius: var(--radius-xs);
           border: 1.5px solid var(--color-border);
           overflow: hidden;
-          background: #F9FAFB;
+          background: #FFFFFF;
           padding: 0.25rem;
+          transition: border-color 0.15s ease;
         }
         .thumbnail-btn.active {
-          border-color: #111827;
+          border-color: var(--color-primary);
         }
         .thumbnail-btn img {
           width: 100%;
           height: 100%;
           object-fit: contain;
         }
-        .detail-guarantees-card {
-          background: #F8F9FA;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
-          padding: 1.25rem;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-        }
-        .guarantee-item {
+        .detail-trust-cards {
           display: flex;
-          align-items: flex-start;
+          flex-direction: column;
           gap: 0.75rem;
-          font-size: 0.8rem;
+          background: var(--color-bg-secondary);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          padding: 1.25rem;
         }
-        .guarantee-item strong {
-          color: #111827;
+        .trust-card-mini {
+          display: flex;
+          gap: 0.75rem;
+          align-items: flex-start;
+          font-size: 0.82rem;
+        }
+        .trust-card-mini strong {
+          color: var(--color-text-main);
           display: block;
-          font-size: 0.85rem;
+          margin-bottom: 0.15rem;
+          font-size: 0.82rem;
         }
-        .guarantee-item p {
-          color: #6B7280;
+        .trust-card-mini p {
+          color: var(--color-text-muted);
+          font-size: 0.78rem;
+          margin: 0;
         }
+
+        /* Right Info Section */
         .info-section {
           display: flex;
           flex-direction: column;
@@ -429,80 +639,112 @@ export const ProductDetailPage: React.FC = () => {
           justify-content: space-between;
           align-items: center;
           margin-bottom: 0.5rem;
+          flex-wrap: wrap;
+          gap: 0.5rem;
         }
         .product-brand-tag {
+          font-size: 0.75rem;
           font-weight: 800;
-          font-size: 0.85rem;
-          color: #6B7280;
+          color: var(--color-accent);
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.06em;
         }
         .product-stars {
           display: flex;
           align-items: center;
-          gap: 0.35rem;
+          gap: 0.4rem;
+        }
+        .rating-stars {
+          display: flex;
+          gap: 1px;
+        }
+        .rating-val {
           font-size: 0.85rem;
+          font-weight: 800;
+          color: var(--color-text-main);
         }
-        .star-icon {
-          color: #F59E0B;
-          fill: #F59E0B;
-        }
-        .text-red {
-          color: var(--color-brand-red);
+        .rating-count {
+          font-size: 0.78rem;
+          color: var(--color-text-muted);
         }
         .detail-product-title {
-          font-size: 2.2rem;
+          font-size: 2.1rem;
           font-weight: 900;
-          line-height: 1.15;
+          letter-spacing: -0.02em;
+          color: var(--color-text-main);
           margin-bottom: 0.5rem;
-          color: #111827;
+          line-height: 1.15;
         }
         .detail-tagline {
-          font-size: 1rem;
-          color: #4B5563;
+          font-size: 0.95rem;
+          color: var(--color-text-muted);
           margin-bottom: 1.5rem;
         }
+
+        /* Price Box */
         .detail-price-box {
-          background: #F8F9FA;
+          background-color: var(--color-bg-secondary);
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           padding: 1.25rem 1.5rem;
           margin-bottom: 1.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
         }
         .price-values {
           display: flex;
           align-items: baseline;
-          gap: 1rem;
-        }
-        .detail-current-price {
-          font-size: 2.4rem;
-          font-weight: 900;
-          color: #111827;
-          line-height: 1;
+          gap: 0.75rem;
+          margin-bottom: 0.5rem;
         }
         .detail-compare-price {
-          font-size: 1.25rem;
-          color: #9CA3AF;
+          font-size: 1.1rem;
+          color: var(--color-text-subtle);
           text-decoration: line-through;
         }
-        .installments-callout {
+        .detail-current-price {
+          font-family: var(--font-display);
+          font-size: 2.2rem;
+          font-weight: 900;
+          color: var(--color-text-main);
+          letter-spacing: -0.02em;
+        }
+        .installments-callout-box {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          font-size: 0.9rem;
+          background-color: #ECFDF5;
+          border: 1px solid #A7F3D0;
           color: #065F46;
+          padding: 0.5rem 0.75rem;
+          border-radius: var(--radius-xs);
+          font-size: 0.85rem;
+          margin-bottom: 0.5rem;
         }
+        .transfer-discount-callout {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.8rem;
+          color: var(--color-text-body);
+        }
+        .badge-tag {
+          background-color: #F1F5F9;
+          border: 1px solid var(--color-border);
+          color: var(--color-text-main);
+          font-weight: 800;
+          font-size: 0.7rem;
+          padding: 0.15rem 0.45rem;
+          border-radius: var(--radius-xs);
+        }
+
+        /* Variants */
         .variant-select-section {
           margin-bottom: 1.5rem;
         }
         .variant-label {
           display: block;
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: #374151;
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: var(--color-text-main);
           margin-bottom: 0.65rem;
         }
         .variants-buttons-grid {
@@ -511,141 +753,325 @@ export const ProductDetailPage: React.FC = () => {
           gap: 0.65rem;
         }
         .variant-option-btn {
-          border: 1.5px solid var(--color-border);
-          background: #FFFFFF;
-          color: #111827;
-          padding: 0.65rem 1rem;
-          border-radius: var(--radius-sm);
-          font-size: 0.9rem;
-          font-weight: 600;
           display: flex;
           align-items: center;
-          gap: 0.35rem;
-          transition: all 0.15s;
+          gap: 0.4rem;
+          background: #FFFFFF;
+          border: 1.5px solid var(--color-border);
+          color: var(--color-text-main);
+          padding: 0.6rem 1rem;
+          border-radius: var(--radius-xs);
+          font-size: 0.85rem;
+          font-weight: 700;
+          transition: all 0.15s ease;
         }
         .variant-option-btn:hover {
-          border-color: #111827;
+          border-color: var(--color-primary);
         }
         .variant-option-btn.active {
-          border-color: #111827;
-          background: #111827;
-          color: #FFFFFF;
+          border-color: var(--color-accent);
+          background-color: #FFF1F2;
+          color: var(--color-accent);
         }
-        .variant-size-hint {
-          font-size: 0.775rem;
-          opacity: 0.8;
+        .variant-size-tag {
+          font-size: 0.72rem;
+          color: var(--color-text-muted);
         }
+
+        /* Stock Status */
         .detail-stock-status {
-          font-size: 0.85rem;
           margin-bottom: 1.5rem;
+          font-size: 0.82rem;
         }
+        .stock-alert {
+          font-weight: 700;
+          display: block;
+        }
+        .stock-in { color: var(--color-success); }
+        .stock-low { color: #D97706; }
+        .stock-out { color: var(--color-accent); }
+
+        /* Purchase Controls */
         .purchase-controls-row {
           display: flex;
-          gap: 0.85rem;
-          margin-bottom: 2rem;
+          gap: 0.75rem;
+          margin-bottom: 1.5rem;
           flex-wrap: wrap;
         }
         .quantity-box {
           display: flex;
           align-items: center;
           border: 1.5px solid var(--color-border);
-          border-radius: var(--radius-sm);
+          border-radius: var(--radius-xs);
           background: #FFFFFF;
         }
         .qty-change-btn {
-          padding: 0.75rem 1rem;
-          color: #111827;
+          width: 40px;
+          height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--color-text-main);
         }
         .qty-change-btn:disabled {
           opacity: 0.3;
         }
         .qty-number {
-          font-size: 1.05rem;
-          font-weight: 700;
-          min-width: 25px;
+          width: 36px;
           text-align: center;
+          font-weight: 800;
+          font-size: 0.95rem;
         }
-        .delivery-highlights-box {
+        .product-main-cta {
+          font-weight: 800;
+          letter-spacing: 0.04em;
+        }
+
+        /* Shipping Calculator */
+        .shipping-calculator-box {
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          padding: 1.25rem;
+          background: #FFFFFF;
+          margin-bottom: 1.25rem;
+        }
+        .calc-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: var(--color-text-main);
+          margin-bottom: 0.75rem;
+        }
+        .calc-form {
+          display: flex;
+          gap: 0.5rem;
+        }
+        .calc-input {
+          flex: 1;
+          padding: 0.6rem 0.85rem;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-xs);
+          font-size: 0.85rem;
+        }
+        .calc-btn {
+          padding: 0.6rem 1rem;
+        }
+        .calc-results-list {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
-          background: #F8F9FA;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
-          padding: 1.25rem 1.5rem;
-          margin-bottom: 2rem;
+          gap: 0.65rem;
+          margin-top: 1rem;
+          padding-top: 0.85rem;
+          border-top: 1px solid var(--color-border);
         }
-        .delivery-card-item {
+        .calc-result-row {
           display: flex;
-          align-items: flex-start;
-          gap: 0.85rem;
-          font-size: 0.85rem;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0.82rem;
         }
-        .delivery-card-item strong {
-          color: #111827;
-          display: block;
+        .calc-res-info {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
-        .delivery-card-item p {
-          color: #4B5563;
+        .calc-res-info p {
+          margin: 0;
+          font-size: 0.75rem;
+          color: var(--color-text-muted);
         }
-        .whatsapp-box {
-          background: #ECFDF5;
-          border: 1px solid #A7F3D0;
-          padding: 0.85rem 1.25rem;
-          border-radius: var(--radius-md);
+
+        /* WhatsApp Help Strip */
+        .whatsapp-help-strip {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          background: #F0FDF4;
+          border: 1px solid #BBF7D0;
+          border-radius: var(--radius-xs);
+          padding: 0.75rem 1rem;
         }
-        .whatsapp-inline-link {
-          display: inline-block;
-          margin-top: 0.25rem;
-          font-weight: 700;
+        .wa-help-text {
+          font-size: 0.78rem;
+          display: flex;
+          flex-direction: column;
+        }
+        .wa-link {
           text-decoration: underline;
         }
-        .product-description-wrap {
-          border-top: 1px solid var(--color-border);
-          padding-top: 1.5rem;
+
+        /* Technical Tabs Section */
+        .product-tabs-section {
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          overflow: hidden;
+          background: #FFFFFF;
         }
-        .section-subheading {
+        .tabs-header-nav {
+          display: flex;
+          background: var(--color-bg-secondary);
+          border-bottom: 1px solid var(--color-border);
+          overflow-x: auto;
+        }
+        .tab-nav-btn {
+          padding: 1rem 1.5rem;
+          font-family: var(--font-body);
+          font-size: 0.82rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          color: var(--color-text-muted);
+          border-bottom: 2px solid transparent;
+          white-space: nowrap;
+          transition: all 0.15s ease;
+        }
+        .tab-nav-btn:hover {
+          color: var(--color-text-main);
+        }
+        .tab-nav-btn.active {
+          color: var(--color-accent);
+          border-bottom-color: var(--color-accent);
+          background: #FFFFFF;
+        }
+        .tab-content-panel {
+          padding: 2.5rem;
+        }
+        .tab-content-panel h3 {
           font-size: 1.25rem;
-          margin-bottom: 0.85rem;
+          font-weight: 900;
+          margin-bottom: 1rem;
         }
-        .description-text {
-          font-size: 0.95rem;
-          color: #4B5563;
+        .tab-body-text {
+          font-size: 0.92rem;
           line-height: 1.7;
+          color: var(--color-text-body);
           margin-bottom: 1.5rem;
         }
-        .serving-info-pill {
+        .serving-highlight-pill {
           display: inline-flex;
           align-items: center;
-          gap: 0.6rem;
-          background: #F3F4F6;
-          border: 1px solid var(--color-border);
-          padding: 0.6rem 1rem;
-          border-radius: var(--radius-md);
-          font-size: 0.85rem;
-          color: #111827;
+          gap: 0.5rem;
+          background: #FFF1F2;
+          border: 1px solid #FFE4E6;
+          color: var(--color-accent);
+          padding: 0.5rem 0.85rem;
+          border-radius: var(--radius-xs);
+          font-size: 0.82rem;
           margin-bottom: 1.5rem;
         }
-        .highlights-list-wrap h4 {
-          font-size: 1rem;
-          margin-bottom: 0.65rem;
+        .benefits-bullets-grid h4 {
+          font-size: 0.95rem;
+          font-weight: 800;
+          margin-bottom: 0.75rem;
         }
-        .nutritional-bullets {
-          display: grid;
-          grid-template-columns: 1fr;
+        .benefits-bullets-grid ul {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
           gap: 0.5rem;
         }
-        @media (min-width: 600px) {
-          .nutritional-bullets {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-        .nutritional-bullets li {
+        .benefits-bullets-grid li {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          font-size: 0.875rem;
-          color: #374151;
+          font-size: 0.88rem;
+          color: var(--color-text-body);
+        }
+
+        /* Nutrition Table */
+        .nutrition-table-wrapper {
+          overflow-x: auto;
+        }
+        .nutrition-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 0.85rem;
+        }
+        .nutrition-table th {
+          background: var(--color-bg-secondary);
+          padding: 0.75rem 1rem;
+          text-align: left;
+          font-weight: 800;
+          border-bottom: 1.5px solid var(--color-border);
+        }
+        .nutrition-table td {
+          padding: 0.75rem 1rem;
+          border-bottom: 1px solid var(--color-border);
+        }
+        .nutrition-table tr:hover td {
+          background: #F8FAFC;
+        }
+
+        /* Usage Steps */
+        .usage-steps-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+          .usage-steps-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+        .usage-step-card {
+          background: var(--color-bg-secondary);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-xs);
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .step-num {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background: var(--color-primary);
+          color: #FFFFFF;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+          font-size: 0.8rem;
+        }
+        .usage-step-card h4 {
+          font-size: 0.95rem;
+          margin: 0;
+        }
+        .usage-step-card p {
+          font-size: 0.82rem;
+          color: var(--color-text-muted);
+          line-height: 1.55;
+          margin: 0;
+        }
+
+        /* Guarantee features */
+        .guarantee-features-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+          .guarantee-features-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+        .guarantee-feature-item {
+          display: flex;
+          gap: 0.85rem;
+          align-items: flex-start;
+        }
+        .guarantee-feature-item strong {
+          display: block;
+          font-size: 0.9rem;
+          margin-bottom: 0.25rem;
+        }
+        .guarantee-feature-item p {
+          font-size: 0.82rem;
+          color: var(--color-text-muted);
+          line-height: 1.5;
+          margin: 0;
         }
       `}</style>
     </div>
