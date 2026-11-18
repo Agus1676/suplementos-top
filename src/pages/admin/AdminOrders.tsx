@@ -433,7 +433,9 @@ export const AdminOrders: React.FC = () => {
         }
         .table-card {
           padding: 0;
-          overflow: hidden;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          border-radius: var(--radius-md);
         }
         .empty-table-cell {
           text-align: center;
@@ -593,6 +595,42 @@ export const AdminOrders: React.FC = () => {
           padding: 1.25rem 1.5rem;
           border-top: 1px solid var(--color-border);
           background: #F8FAFC;
+        }
+
+        @media (max-width: 768px) {
+          .orders-filter-card {
+            padding: 1rem;
+          }
+          .status-tabs-row {
+            gap: 0.35rem;
+          }
+          .status-tab {
+            padding: 0.3rem 0.65rem;
+            font-size: 0.75rem;
+          }
+          .modal-backdrop {
+            padding: 0.75rem;
+          }
+          .modal-card {
+            max-height: 94vh;
+          }
+          .modal-header {
+            padding: 1rem;
+          }
+          .modal-body {
+            padding: 1rem;
+            gap: 1rem;
+          }
+          .modal-footer {
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: stretch;
+            padding: 1rem;
+          }
+          .modal-footer button {
+            width: 100%;
+            justify-content: center;
+          }
         }
       `}</style>
     </div>

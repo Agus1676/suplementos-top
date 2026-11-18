@@ -312,6 +312,36 @@ export const AdminProducts: React.FC = () => {
           font-size: 0.875rem;
           font-weight: 700;
         }
+
+        @media (max-width: 640px) {
+          .product-manage-card {
+            padding: 1rem;
+          }
+          .product-top-row {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.85rem;
+          }
+          .product-thumb {
+            width: 55px;
+            height: 55px;
+          }
+          .title-row h3 {
+            font-size: 1rem;
+          }
+          .variant-manage-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+          }
+          .stock-control-cluster {
+            width: 100%;
+            justify-content: space-between;
+            border-top: 1px solid var(--color-border);
+            padding-top: 0.5rem;
+          }
+        }
       `}</style>
     </div>
   );
