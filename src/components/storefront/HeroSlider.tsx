@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 interface Slide {
   id: number;
@@ -21,10 +21,10 @@ export const HeroSlider: React.FC = () => {
       id: 1,
       tag: 'TEMPORADA DE ENTRENAMIENTO 2026',
       tagColor: '#E11D48',
-      title: 'SUPLEMENTACIÓN DE ÉLITE PARA DEPORTISTAS',
-      subtitle: 'Proteínas Isolate CFM, Creatinas Creapure® y Pre-Entrenos con despacho express a todo el país o retiro sin cargo en Recoleta.',
+      title: 'SUPLEMENTOS ORIGINALES AL MEJOR PRECIO',
+      subtitle: 'Las mejores marcas con envío a todo el país o retiro gratis en Recoleta.',
       badge: '3 Y 6 CUOTAS SIN INTERÉS CON TODAS LAS TARJETAS',
-      ctaText: 'VER CATÁLOGO COMPLETO',
+      ctaText: 'Ver productos',
       ctaLink: '/catalogo',
       bgGradient: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
       imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1000&q=80',
@@ -33,10 +33,10 @@ export const HeroSlider: React.FC = () => {
       id: 2,
       tag: 'MATERIAS PRIMAS IMPORTADAS',
       tagColor: '#16A34A',
-      title: 'CREAPURE® & WHEY ISOLATE 100% PURA',
-      subtitle: 'Fórmulas oficiales con certificación internacional de pureza. Máxima recuperación, hipertrofia y rendimiento atlético.',
+      title: 'PROTEÍNAS Y CREATINAS 100% PURAS',
+      subtitle: 'Whey Isolate y Creapure® de distribuidores oficiales. Combos con hasta 20% OFF.',
       badge: 'COMBOS CON HASTA 20% OFF Y ENVÍO GRATIS',
-      ctaText: 'VER PROTEÍNAS & CREATINAS',
+      ctaText: 'Ver proteínas',
       ctaLink: '/catalogo?categoria=proteinas',
       bgGradient: 'linear-gradient(135deg, #111827 0%, #1F2937 100%)',
       imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=1000&q=80',
@@ -45,10 +45,10 @@ export const HeroSlider: React.FC = () => {
       id: 3,
       tag: 'RETIRO EN EL DÍA EN CABA',
       tagColor: '#F59E0B',
-      title: 'LOCAL & DESPACHO EN RECOLETA',
-      subtitle: 'Uriburu 1163 (entre Santa Fe y Arenales). Lunes a Viernes de 8:00 a 23:00 hs y Sábados de 10:00 a 18:00 hs.',
+      title: 'COMPRÁ ONLINE, RETIRÁ HOY EN RECOLETA',
+      subtitle: 'Uriburu 1163 (entre Santa Fe y Arenales). Lun a Vie 8 a 23 hs · Sáb 10 a 18 hs.',
       badge: 'COMPRÁ ONLINE Y RETIRÁ EN EL ACTO SIN COSTO',
-      ctaText: 'CÓMO RETIRAR MI PEDIDO',
+      ctaText: 'Cómo retirar',
       ctaLink: '/contacto',
       bgGradient: 'linear-gradient(135deg, #18181B 0%, #27272A 100%)',
       imageUrl: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1000&q=80',
@@ -99,18 +99,15 @@ export const HeroSlider: React.FC = () => {
 
             <p className="slide-subtitle">{slide.subtitle}</p>
 
-            <div className="slide-badge-wrap">
-              <ShieldCheck size={16} className="text-success" />
-              <span>{slide.badge}</span>
+            <div className="slide-promo-pills">
+              <span className="promo-pill promo-pill-white">10% OFF <small>transferencia</small></span>
+              <span className="promo-pill promo-pill-green">6 CUOTAS <small>SIN INTERÉS</small></span>
             </div>
 
             <div className="slide-cta-row">
-              <Link to={slide.ctaLink} className="btn btn-accent btn-lg slide-cta-btn">
+              <Link to={slide.ctaLink} className="slide-cta-btn">
                 <span>{slide.ctaText}</span>
-                <ArrowRight size={18} />
-              </Link>
-              <Link to="/catalogo?categoria=combos" className="btn btn-secondary btn-lg slide-secondary-btn">
-                <span>COMBOS 15% OFF</span>
+                <ArrowRight size={20} />
               </Link>
             </div>
           </div>
@@ -164,7 +161,7 @@ export const HeroSlider: React.FC = () => {
           background: #0F172A;
         }
         .hero-slide-item {
-          min-height: 480px;
+          min-height: 400px;
           display: flex;
           align-items: center;
           transition: background 0.4s ease;
@@ -172,15 +169,15 @@ export const HeroSlider: React.FC = () => {
         }
         @media (min-width: 768px) {
           .hero-slide-item {
-            min-height: 520px;
+            min-height: 500px;
           }
         }
         .hero-slide-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 2rem;
-          padding-top: 3.5rem;
-          padding-bottom: 3.5rem;
+          padding-top: 2.25rem;
+          padding-bottom: 3rem;
           align-items: center;
         }
         @media (min-width: 900px) {
@@ -230,18 +227,41 @@ export const HeroSlider: React.FC = () => {
           margin-bottom: 1.5rem;
           max-width: 580px;
         }
-        .slide-badge-wrap {
+        .slide-promo-pills {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.6rem;
+          margin-bottom: 1.5rem;
+        }
+        .promo-pill {
           display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          background: rgba(22, 163, 74, 0.15);
-          border: 1px solid rgba(22, 163, 74, 0.35);
-          color: #86EFAC;
-          font-size: 0.8rem;
-          font-weight: 700;
-          padding: 0.4rem 0.85rem;
-          border-radius: var(--radius-sm);
-          margin-bottom: 2rem;
+          align-items: baseline;
+          gap: 0.35rem;
+          border-radius: var(--radius-full);
+          padding: 0.5rem 1.1rem;
+          font-family: var(--font-display);
+          font-weight: 900;
+          font-size: 1rem;
+          line-height: 1;
+          letter-spacing: 0.01em;
+        }
+        .promo-pill small {
+          font-size: 0.66rem;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+        }
+        .promo-pill-white {
+          background: #FFFFFF;
+          color: var(--color-promo-red);
+        }
+        .promo-pill-white small { color: #0F172A; }
+        .promo-pill-green {
+          background: var(--color-promo-green);
+          color: #FFFFFF;
+        }
+        @media (min-width: 768px) {
+          .promo-pill { font-size: 1.2rem; padding: 0.6rem 1.3rem; }
+          .promo-pill small { font-size: 0.75rem; }
         }
         .slide-cta-row {
           display: flex;
@@ -249,23 +269,27 @@ export const HeroSlider: React.FC = () => {
           flex-wrap: wrap;
         }
         .slide-cta-btn {
-          background-color: var(--color-accent);
-          border-color: var(--color-accent);
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          background: var(--color-accent);
           color: #FFFFFF;
+          font-family: var(--font-display);
           font-weight: 800;
+          font-size: 1.1rem;
+          padding: 0.9rem 2rem;
+          border-radius: var(--radius-full);
+          text-decoration: none;
+          box-shadow: 0 8px 20px -6px rgba(240, 16, 58, 0.55);
+          transition: background 0.15s ease, transform 0.15s ease;
         }
         .slide-cta-btn:hover {
-          background-color: var(--color-accent-hover);
-        }
-        .slide-secondary-btn {
-          background: rgba(255, 255, 255, 0.1);
+          background: var(--color-accent-hover);
           color: #FFFFFF;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          font-weight: 700;
+          transform: translateY(-2px);
         }
-        .slide-secondary-btn:hover {
-          background: rgba(255, 255, 255, 0.2);
-          color: #FFFFFF;
+        @media (min-width: 768px) {
+          .slide-cta-btn { font-size: 1.35rem; padding: 1rem 2.6rem; }
         }
 
         /* Slide Media */

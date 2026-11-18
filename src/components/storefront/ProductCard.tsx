@@ -23,242 +23,278 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const currentPrice = primaryVariant.priceInCents;
   const originalPrice = product.compareAtPriceInCents || Math.round(currentPrice * 1.18);
   const discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+  const isOutOfStock = product.variants.length > 0 && product.variants.every((v) => v.stock <= 0);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem(product, primaryVariant, 1);
+    if (!isOutOfStock) addItem(product, primaryVariant, 1);
   };
 
   return (
-    <div className="product-card-root">
-      <Link to={`/producto/${product.slug}`} className="product-card-link">
-        {/* Media Frame */}
-        <div className="product-card-media">
-          {discountPercent > 0 && (
-            <span className="product-badge-discount">{discountPercent}% OFF</span>
-          )}
-          {product.isBestSeller && (
-            <span className="product-badge-bestseller">MÁS VENDIDO</span>
-          )}
+    <article className="pc-root">
+      <Link to={`/producto/${product.slug}`} className="pc-link">
+        {/* Media */}
+        <div className="pc-media">
+          <div className="pc-badges">
+            {discountPercent > 0 && (
+              <span className="pc-badge pc-badge-off">-{discountPercent}%</span>
+            )}
+            {product.isBestSeller && (
+              <span className="pc-badge pc-badge-hot">TOP VENTAS</span>
+            )}
+          </div>
 
           <img 
             src={product.images[0]?.url || '/logo.jpg'} 
             alt={product.name} 
-            className="product-card-img"
+            className="pc-img"
             loading="lazy"
+            decoding="async"
           />
         </div>
 
-        {/* Content Body */}
-        <div className="product-card-body">
-          {/* Brand */}
-          <span className="product-card-brand">{product.brand}</span>
+        {/* Body */}
+        <div className="pc-body">
+          <span className="pc-brand">{product.brand}</span>
+          <h3 className="pc-title">{product.name}</h3>
 
-          {/* Title */}
-          <h3 className="product-card-title">{product.name}</h3>
-
-          {/* Ratings */}
-          <div className="product-card-rating">
-            <div className="rating-stars">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={12} className="star-filled" fill="#F59E0B" color="#F59E0B" />
-              ))}
-            </div>
-            <span className="rating-num">{product.rating}</span>
+          <div className="pc-rating" aria-label={`Calificación ${product.rating} de 5`}>
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} size={11} fill="#F59E0B" color="#F59E0B" />
+            ))}
+            <span>{product.rating}</span>
           </div>
 
-          {/* Prices */}
-          <div className="product-card-prices">
+          <div className="pc-prices">
             {originalPrice > currentPrice && (
-              <span className="price-original">{formatARS(originalPrice)}</span>
+              <span className="pc-price-old">{formatARS(originalPrice)}</span>
             )}
-            <div className="price-current-wrap">
-              <span className="price-current">{formatARS(currentPrice)}</span>
-            </div>
+            <span className="pc-price">{formatARS(currentPrice)}</span>
           </div>
 
-          {/* 3 Cuotas sin interés Callout (Argentine eCommerce Standard) */}
-          <div className="product-installments-pill">
-            <CreditCard size={13} className="text-success" />
+          <div className="pc-cuotas">
+            <CreditCard size={12} />
             <span><strong>{formatInstallments(currentPrice, 3)}</strong> sin interés</span>
           </div>
 
-          <div className="product-transfer-notice">
-            <span><strong>10% OFF</strong> con Transferencia / Efectivo</span>
-          </div>
+          <span className="pc-transfer">
+            <strong>10% OFF</strong> transferencia
+          </span>
         </div>
       </Link>
 
-      {/* Action Footer */}
-      <div className="product-card-footer">
+      <div className="pc-footer">
         <button 
+          type="button"
           onClick={handleQuickAdd}
-          className="btn btn-primary btn-block btn-sm product-add-btn"
+          disabled={isOutOfStock}
+          className="pc-add-btn"
           aria-label={`Agregar ${product.name} al carrito`}
         >
           <ShoppingBag size={15} />
-          <span>AGREGAR AL CARRITO</span>
+          <span>{isOutOfStock ? 'SIN STOCK' : 'AGREGAR'}</span>
         </button>
       </div>
 
       <style>{`
-        .product-card-root {
-          background-color: #FFFFFF;
+        .pc-root {
+          background: #FFFFFF;
           border: 1px solid var(--color-border);
-          border-radius: var(--radius-sm);
+          border-radius: var(--radius-md);
           display: flex;
           flex-direction: column;
           overflow: hidden;
-          transition: all var(--transition-fast);
-          position: relative;
+          height: 100%;
+          transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
         }
-        .product-card-root:hover {
+        .pc-root:hover {
           border-color: #CBD5E1;
-          box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 12px 24px -8px rgba(15, 23, 42, 0.14);
           transform: translateY(-2px);
         }
-        .product-card-link {
+        .pc-link {
           display: flex;
           flex-direction: column;
-          text-decoration: none;
           flex: 1;
+          text-decoration: none;
+          color: inherit;
         }
-        .product-card-media {
+        .pc-media {
           position: relative;
-          background-color: #FFFFFF;
-          border-bottom: 1px solid var(--color-border);
-          padding: 1.25rem 1rem;
-          height: 240px;
+          aspect-ratio: 1 / 1;
+          background: #FFFFFF;
+          padding: 0.75rem;
           display: flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
         }
-        .product-card-img {
+        .pc-img {
           max-width: 100%;
           max-height: 100%;
           object-fit: contain;
           transition: transform 0.3s ease;
         }
-        .product-card-root:hover .product-card-img {
+        .pc-root:hover .pc-img {
           transform: scale(1.05);
         }
-        .product-badge-discount {
+        .pc-badges {
           position: absolute;
-          top: 0.75rem;
-          left: 0.75rem;
-          background-color: var(--color-accent);
-          color: #FFFFFF;
-          font-size: 0.68rem;
-          font-weight: 800;
-          padding: 0.2rem 0.5rem;
-          border-radius: var(--radius-xs);
-          letter-spacing: 0.04em;
+          top: 0.5rem;
+          left: 0.5rem;
+          right: 0.5rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 0.25rem;
           z-index: 2;
+          pointer-events: none;
         }
-        .product-badge-bestseller {
-          position: absolute;
-          top: 0.75rem;
-          right: 0.75rem;
-          background-color: #0F172A;
-          color: #FFFFFF;
-          font-size: 0.62rem;
-          font-weight: 800;
-          padding: 0.2rem 0.5rem;
+        .pc-badge {
+          font-weight: 900;
+          line-height: 1;
           border-radius: var(--radius-xs);
-          letter-spacing: 0.05em;
-          z-index: 2;
+          letter-spacing: 0.02em;
+          white-space: nowrap;
         }
-        .product-card-body {
-          padding: 1rem 1.15rem 0.75rem;
+        .pc-badge-off {
+          background: var(--color-promo-red);
+          color: #FFFFFF;
+          font-size: 0.82rem;
+          padding: 0.32rem 0.5rem;
+          box-shadow: 0 3px 8px rgba(255, 23, 68, 0.35);
+        }
+        .pc-badge-hot {
+          background: var(--color-promo-yellow);
+          color: #0F172A;
+          font-size: 0.58rem;
+          padding: 0.3rem 0.4rem;
+          margin-left: auto;
+        }
+        .pc-body {
+          padding: 0.6rem 0.7rem 0.4rem;
           display: flex;
           flex-direction: column;
           flex: 1;
+          border-top: 1px solid var(--color-border);
         }
-        .product-card-brand {
-          font-size: 0.7rem;
+        .pc-brand {
+          font-size: 0.62rem;
           font-weight: 800;
           color: var(--color-accent);
           text-transform: uppercase;
           letter-spacing: 0.06em;
-          margin-bottom: 0.25rem;
         }
-        .product-card-title {
+        .pc-title {
           font-family: var(--font-body);
-          font-size: 0.92rem;
+          font-size: 0.8rem;
           font-weight: 700;
           color: var(--color-text-main);
-          line-height: 1.35;
-          margin-bottom: 0.45rem;
+          line-height: 1.3;
+          margin: 0.15rem 0 0.3rem;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
-          min-height: 2.5rem;
+          min-height: 2.08em;
         }
-        .product-card-rating {
+        .pc-rating {
           display: flex;
           align-items: center;
-          gap: 0.35rem;
-          margin-bottom: 0.65rem;
-        }
-        .rating-stars {
-          display: flex;
           gap: 1px;
+          margin-bottom: 0.35rem;
         }
-        .rating-num {
-          font-size: 0.72rem;
+        .pc-rating span {
+          font-size: 0.66rem;
           font-weight: 700;
           color: var(--color-text-muted);
+          margin-left: 0.25rem;
         }
-        .product-card-prices {
+        .pc-prices {
           display: flex;
           flex-direction: column;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.35rem;
         }
-        .price-original {
-          font-size: 0.78rem;
+        .pc-price-old {
+          font-size: 0.7rem;
           color: var(--color-text-subtle);
           text-decoration: line-through;
         }
-        .price-current-wrap {
-          display: flex;
-          align-items: baseline;
-          gap: 0.5rem;
-        }
-        .price-current {
+        .pc-price {
           font-family: var(--font-display);
-          font-size: 1.3rem;
+          font-size: 1.1rem;
           font-weight: 900;
           color: var(--color-text-main);
           letter-spacing: -0.01em;
+          line-height: 1.1;
         }
-        .product-installments-pill {
-          display: flex;
+        .pc-cuotas {
+          display: inline-flex;
           align-items: center;
-          gap: 0.35rem;
-          background-color: var(--color-success-light);
-          color: var(--color-success);
-          border: 1px solid var(--color-success-border);
-          border-radius: var(--radius-xs);
-          padding: 0.35rem 0.55rem;
-          font-size: 0.75rem;
-          margin-bottom: 0.35rem;
+          gap: 0.3rem;
+          align-self: flex-start;
+          background: var(--color-promo-green);
+          color: #FFFFFF;
+          border-radius: var(--radius-full);
+          padding: 0.22rem 0.55rem;
+          font-size: 0.64rem;
+          font-weight: 600;
+          margin-bottom: 0.3rem;
+          max-width: 100%;
         }
-        .product-transfer-notice {
-          font-size: 0.7rem;
+        .pc-cuotas span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .pc-transfer {
+          font-size: 0.64rem;
           color: var(--color-text-muted);
-          margin-bottom: 0.5rem;
         }
-        .product-card-footer {
-          padding: 0 1.15rem 1.15rem;
+        .pc-transfer strong {
+          color: var(--color-promo-green-dark);
         }
-        .product-add-btn {
+        .pc-footer {
+          padding: 0.4rem 0.7rem 0.7rem;
+        }
+        .pc-add-btn {
+          width: 100%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.4rem;
+          background: var(--color-accent);
+          color: #FFFFFF;
+          border: none;
+          border-radius: var(--radius-full);
+          padding: 0.55rem 0.5rem;
+          font-size: 0.74rem;
           font-weight: 800;
           letter-spacing: 0.04em;
+          cursor: pointer;
+          transition: background var(--transition-fast), transform var(--transition-fast);
+        }
+        .pc-add-btn:hover:not(:disabled) {
+          background: var(--color-accent-hover);
+        }
+        .pc-add-btn:active:not(:disabled) {
+          transform: scale(0.97);
+        }
+        .pc-add-btn:disabled {
+          background: #CBD5E1;
+          cursor: not-allowed;
+        }
+        @media (min-width: 768px) {
+          .pc-body { padding: 0.8rem 0.95rem 0.5rem; }
+          .pc-footer { padding: 0.5rem 0.95rem 0.95rem; }
+          .pc-title { font-size: 0.9rem; }
+          .pc-price { font-size: 1.3rem; }
+          .pc-cuotas { font-size: 0.72rem; }
+          .pc-transfer { font-size: 0.7rem; }
+          .pc-add-btn { font-size: 0.8rem; padding: 0.65rem; }
         }
       `}</style>
-    </div>
+    </article>
   );
 };

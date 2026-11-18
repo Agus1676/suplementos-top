@@ -24,10 +24,16 @@
   --color-primary-light: #1E293B;
 
   /* Accent Red / Energy */
-  --color-accent: #E11D48;           /* Athletic Crimson Red (Entreno / Nike standard) */
-  --color-accent-hover: #BE123C;
-  --color-accent-light: #FFE4E6;
-  --color-brand-red: #E11D48;
+  --color-accent: #F0103A;           /* Vivid athletic red — brighter for promos & CTAs */
+  --color-accent-hover: #C80D30;
+  --color-accent-light: #FFE4E9;
+  --color-brand-red: #F0103A;
+
+  /* Promo palette (high-visibility retail badges) */
+  --color-promo-red: #FF1744;        /* Discount badges */
+  --color-promo-green: #22C55E;      /* Cuotas / beneficios */
+  --color-promo-green-dark: #16A34A;
+  --color-promo-yellow: #FACC15;     /* Highlights / "Más vendido" */
 
   /* Bank Installments & Trust Green */
   --color-success: #16A34A;          /* Authentic Argentine 3/6 cuotas emerald */

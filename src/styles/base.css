@@ -159,50 +159,47 @@ input, select, textarea {
   box-shadow: var(--shadow-md);
 }
 
-/* Section Header Structure */
+/* Section Header Structure — always a single compact row (title left, link right) */
 .section-header {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 2rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
   position: relative;
-}
-
-@media (min-width: 768px) {
-  .section-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
 }
 
 .section-eyebrow {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.2rem;
 }
 
 .section-title {
-  font-size: 1.85rem;
+  font-size: clamp(1.15rem, 1rem + 1vw, 1.65rem);
   font-weight: 800;
   color: var(--color-text-main);
   letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
 }
 
 .section-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.875rem;
+  gap: 0.3rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: var(--color-primary);
-  margin-top: 0.5rem;
+  color: var(--color-accent);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .section-link:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-hover);
 }

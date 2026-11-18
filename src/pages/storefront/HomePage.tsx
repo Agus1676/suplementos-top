@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  CreditCard, 
-  Truck, 
   MapPin, 
   Phone, 
   ArrowRight, 
@@ -13,58 +11,60 @@ import {
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../../components/storefront/ProductCard';
 import { HeroSlider } from '../../components/storefront/HeroSlider';
+import { TrustMarquee } from '../../components/storefront/TrustMarquee';
+import { HorizontalScroller } from '../../components/ui/HorizontalScroller';
+
+interface CategoryTile {
+  title: string;
+  slug: string;
+  imageUrl: string;
+  badge?: string;
+}
+
+// Compact category tiles (swipeable rail on mobile, single row on desktop)
+const CATEGORY_TILES: CategoryTile[] = [
+  {
+    title: 'PROTEÍNAS',
+    slug: 'proteinas',
+    imageUrl: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=400&q=70',
+  },
+  {
+    title: 'CREATINAS',
+    slug: 'creatinas',
+    imageUrl: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=400&q=70',
+  },
+  {
+    title: 'PRE-ENTRENOS',
+    slug: 'pre-entrenos',
+    imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=70',
+  },
+  {
+    title: 'COMBOS',
+    slug: 'combos',
+    badge: '20% OFF',
+    imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=400&q=70',
+  },
+  {
+    title: 'AMINOÁCIDOS',
+    slug: 'aminoacidos',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=70',
+  },
+  {
+    title: 'VITAMINAS',
+    slug: 'salud-vitaminas',
+    imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=70',
+  },
+];
 
 export const HomePage: React.FC = () => {
   const { products, settings } = useStore();
 
-  const bestSellers = products.filter((p) => p.isBestSeller).slice(0, 4);
-  const featuredProducts = products.filter((p) => p.isFeatured).slice(0, 4);
-
-  // High-Impact Category Banner Cards (Estilo Entreno / Athletic Ecommerce)
-  const categoryBanners = [
-    {
-      title: 'PROTEÍNAS',
-      subtitle: 'CFM Isolate & Concentrados Whey',
-      tag: 'MATERIA PRIMA IMPORTADA',
-      slug: 'proteinas',
-      imageUrl: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=800&q=80',
-    },
-    {
-      title: 'CREATINAS',
-      subtitle: '100% Creapure® & Monohidrato',
-      tag: 'MÁXIMA PUREZA ALEMÁN',
-      slug: 'creatinas',
-      imageUrl: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=800&q=80',
-    },
-    {
-      title: 'PRE-ENTRENOS',
-      subtitle: 'Fuerza, Focus & Congestión Muscular',
-      tag: 'ENERGÍA EXPLOSIVA',
-      slug: 'pre-entrenos',
-      imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80',
-    },
-    {
-      title: 'COMBOS & OFERTAS',
-      subtitle: 'Packs armados con envío bonificado',
-      tag: 'HASTA 20% OFF',
-      slug: 'combos',
-      imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=800&q=80',
-    },
-    {
-      title: 'AMINOÁCIDOS',
-      subtitle: 'BCAA 4:1:1, EAA & Glutamina Pura',
-      tag: 'RECUPERACIÓN RÁPIDA',
-      slug: 'aminoacidos',
-      imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
-    },
-    {
-      title: 'SALUD & VITAMINAS',
-      subtitle: 'Citrato de Magnesio, Omega 3 & Multi',
-      tag: 'RENDIMIENTO INTEGRAL',
-      slug: 'salud-vitaminas',
-      imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=800&q=80',
-    }
-  ];
+  // Carousels: show a longer list so there's something to swipe through
+  const bestSellersRaw = products.filter((p) => p.isBestSeller);
+  const bestSellers = (bestSellersRaw.length >= 4 ? bestSellersRaw : products).slice(0, 10);
+  const featuredRaw = products.filter((p) => p.isFeatured);
+  const featuredProducts = (featuredRaw.length >= 4 ? featuredRaw : products).slice(0, 10);
+  const categoryBanners = CATEGORY_TILES;
 
   // Official brands
   const brands = [
@@ -81,92 +81,40 @@ export const HomePage: React.FC = () => {
       {/* 1. Interactive Hero Slider */}
       <HeroSlider />
 
-      {/* 2. Trust Bar (4 Commercial Pillars) */}
-      <section className="trust-bar-section">
-        <div className="container">
-          <div className="trust-grid">
-            <div className="trust-item">
-              <div className="trust-icon-wrap">
-                <CreditCard size={22} className="text-accent" />
-              </div>
-              <div className="trust-text">
-                <h4 className="trust-title">3 Y 6 CUOTAS SIN INTERÉS</h4>
-                <p className="trust-desc">Con todas las tarjetas bancarias y Mercado Pago</p>
-              </div>
-            </div>
+      {/* 2. Trust strip — compact, auto-scrolling to the left */}
+      <TrustMarquee />
 
-            <div className="trust-item">
-              <div className="trust-icon-wrap">
-                <Truck size={22} className="text-accent" />
-              </div>
-              <div className="trust-text">
-                <h4 className="trust-title">ENVÍOS A TODO EL PAÍS</h4>
-                <p className="trust-desc">Bonificado en compras mayores a $85.000</p>
-              </div>
-            </div>
-
-            <div className="trust-item">
-              <div className="trust-icon-wrap">
-                <MapPin size={22} className="text-accent" />
-              </div>
-              <div className="trust-text">
-                <h4 className="trust-title">RETIRO GRATIS EN RECOLETA</h4>
-                <p className="trust-desc">Uriburu 1163 — Lunes a Viernes de 8 a 23 hs</p>
-              </div>
-            </div>
-
-            <div className="trust-item">
-              <div className="trust-icon-wrap">
-                <Phone size={22} className="text-accent" />
-              </div>
-              <div className="trust-text">
-                <h4 className="trust-title">ASESORAMIENTO DIRECTO</h4>
-                <p className="trust-desc">Atención por WhatsApp al 11 6565 1990</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. High-Impact Category Mosaic (Entreno / Athletic Standard) */}
+      {/* 3. Compact category rail (swipeable) */}
       <section className="categories-section">
         <div className="container">
-          <div className="section-header">
-            <div>
-              <span className="section-eyebrow">LÍNEAS DE SUPLEMENTACIÓN</span>
-              <h2 className="section-title">COMPRÁ POR CATEGORÍA</h2>
-            </div>
+          <div className="section-header section-header-compact">
+            <h2 className="section-title">COMPRÁ POR CATEGORÍA</h2>
             <Link to="/catalogo" className="section-link">
-              <span>Ver catálogo completo</span>
+              <span>Ver todo</span>
               <ArrowRight size={16} />
             </Link>
           </div>
 
-          <div className="category-mosaic-grid">
+          <HorizontalScroller
+            ariaLabel="Categorías de productos"
+            perView={{ mobile: 3, tablet: 5, desktop: 6 }}
+            gapRem={0.65}
+            mobilePeek={0.3}
+          >
             {categoryBanners.map((cat) => (
-              <Link 
-                key={cat.slug} 
-                to={`/catalogo?categoria=${cat.slug}`} 
-                className="category-mosaic-card"
+              <Link
+                key={cat.slug}
+                to={`/catalogo?categoria=${cat.slug}`}
+                className="cat-tile"
               >
-                <div className="category-mosaic-bg">
-                  <img src={cat.imageUrl} alt={cat.title} className="category-mosaic-img" />
-                  <div className="category-mosaic-overlay"></div>
+                <div className="cat-tile-media">
+                  <img src={cat.imageUrl} alt="" loading="lazy" className="cat-tile-img" />
+                  {cat.badge && <span className="cat-tile-badge">{cat.badge}</span>}
                 </div>
-
-                <div className="category-mosaic-content">
-                  <span className="category-mosaic-tag">{cat.tag}</span>
-                  <h3 className="category-mosaic-title">{cat.title}</h3>
-                  <p className="category-mosaic-sub">{cat.subtitle}</p>
-                  
-                  <span className="category-mosaic-cta">
-                    <span>EXPLORAR</span>
-                    <ArrowRight size={14} className="category-mosaic-arrow" />
-                  </span>
-                </div>
+                <span className="cat-tile-title">{cat.title}</span>
               </Link>
             ))}
-          </div>
+          </HorizontalScroller>
         </div>
       </section>
 
@@ -179,16 +127,16 @@ export const HomePage: React.FC = () => {
               <h2 className="section-title">MÁS VENDIDOS DE LA SEMANA</h2>
             </div>
             <Link to="/catalogo?sort=bestseller" className="section-link">
-              <span>Ver todos los más vendidos</span>
+              <span>Ver todos</span>
               <ArrowRight size={16} />
             </Link>
           </div>
 
-          <div className="grid-4">
+          <HorizontalScroller ariaLabel="Más vendidos" perView={{ mobile: 2, tablet: 3, desktop: 4 }} mobilePeek={0.15}>
             {bestSellers.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </HorizontalScroller>
         </div>
       </section>
 
@@ -238,16 +186,16 @@ export const HomePage: React.FC = () => {
               <h2 className="section-title">FÓRMULAS DESTACADAS</h2>
             </div>
             <Link to="/catalogo" className="section-link">
-              <span>Explorar todo el catálogo</span>
+              <span>Ver catálogo</span>
               <ArrowRight size={16} />
             </Link>
           </div>
 
-          <div className="grid-4">
+          <HorizontalScroller ariaLabel="Fórmulas destacadas" perView={{ mobile: 2, tablet: 3, desktop: 4 }} mobilePeek={0.15}>
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </HorizontalScroller>
         </div>
       </section>
 
@@ -399,170 +347,72 @@ export const HomePage: React.FC = () => {
           gap: 0;
         }
 
-        /* 2. Trust Bar */
-        .trust-bar-section {
-          background-color: #FFFFFF;
-          border-bottom: 1px solid var(--color-border);
-          padding: 1.5rem 0;
-        }
-        .trust-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1.25rem;
-        }
-        @media (min-width: 640px) {
-          .trust-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-        @media (min-width: 1024px) {
-          .trust-grid {
-            grid-template-columns: repeat(4, 1fr);
-          }
-        }
-        .trust-item {
-          display: flex;
-          align-items: center;
-          gap: 0.85rem;
-        }
-        .trust-icon-wrap {
-          width: 44px;
-          height: 44px;
-          border-radius: var(--radius-sm);
-          background-color: var(--color-bg-secondary);
-          border: 1px solid var(--color-border);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-        .trust-text {
-          display: flex;
-          flex-direction: column;
-        }
-        .trust-title {
-          font-family: var(--font-body);
-          font-size: 0.82rem;
-          font-weight: 800;
-          letter-spacing: 0.04em;
-          color: var(--color-text-main);
-          margin-bottom: 0.15rem;
-        }
-        .trust-desc {
-          font-size: 0.75rem;
-          color: var(--color-text-muted);
-          line-height: 1.35;
-        }
-
-        /* 3. Category Mosaic Grid (Entreno / Athletic Standard) */
+        /* 3. Compact Category Rail */
         .categories-section {
-          padding: 3rem 0;
+          padding: 1.75rem 0 1.25rem;
           background-color: #FFFFFF;
         }
-        .category-mosaic-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1.25rem;
+        .section-header-compact {
+          margin-bottom: 0.9rem !important;
+          align-items: center !important;
         }
-        @media (min-width: 640px) {
-          .category-mosaic-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
+        .section-header-compact .section-title {
+          margin: 0;
         }
-        @media (min-width: 1024px) {
-          .category-mosaic-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-        .category-mosaic-card {
-          position: relative;
-          height: 240px;
-          border-radius: var(--radius-sm);
-          overflow: hidden;
+        .cat-tile {
           display: flex;
           flex-direction: column;
-          justify-content: flex-end;
-          padding: 1.5rem;
+          gap: 0.45rem;
           text-decoration: none;
-          box-shadow: var(--shadow-sm);
+          color: var(--color-text-main);
+        }
+        .cat-tile-media {
+          position: relative;
+          aspect-ratio: 1 / 1;
+          border-radius: var(--radius-md);
+          overflow: hidden;
+          background: var(--color-bg-tertiary);
           border: 1px solid var(--color-border);
-          transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
-        .category-mosaic-card:hover {
-          transform: translateY(-3px);
-          box-shadow: var(--shadow-lg);
-          border-color: #CBD5E1;
-        }
-        .category-mosaic-bg {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-        }
-        .category-mosaic-img {
+        .cat-tile-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.5s ease;
+          transition: transform 0.35s ease;
         }
-        .category-mosaic-card:hover .category-mosaic-img {
-          transform: scale(1.06);
+        .cat-tile:hover .cat-tile-img {
+          transform: scale(1.07);
         }
-        .category-mosaic-overlay {
+        .cat-tile:hover .cat-tile-media {
+          border-color: var(--color-accent);
+        }
+        .cat-tile-badge {
           position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.45) 55%, rgba(15, 23, 42, 0.15) 100%);
-        }
-        .category-mosaic-content {
-          position: relative;
-          z-index: 2;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.25rem;
-        }
-        .category-mosaic-tag {
-          font-size: 0.65rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          color: #FDA4AF;
-          text-transform: uppercase;
-        }
-        .category-mosaic-title {
-          font-family: var(--font-display);
-          font-size: 1.45rem;
+          top: 0.4rem;
+          left: 0.4rem;
+          background: var(--color-promo-red);
+          color: #FFFFFF;
+          font-size: 0.6rem;
           font-weight: 900;
-          color: #FFFFFF;
-          margin: 0;
-          letter-spacing: -0.01em;
-          line-height: 1.15;
+          letter-spacing: 0.03em;
+          padding: 0.15rem 0.4rem;
+          border-radius: var(--radius-xs);
         }
-        .category-mosaic-sub {
+        .cat-tile-title {
+          font-family: var(--font-display);
           font-size: 0.78rem;
-          color: #CBD5E1;
-          margin: 0;
-          line-height: 1.35;
-        }
-        .category-mosaic-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.35rem;
-          font-size: 0.75rem;
           font-weight: 800;
-          color: #FFFFFF;
-          margin-top: 0.5rem;
-          letter-spacing: 0.05em;
-          transition: color 0.15s ease;
+          letter-spacing: 0.02em;
+          text-align: center;
+          line-height: 1.2;
         }
-        .category-mosaic-arrow {
-          transition: transform 0.2s ease;
-        }
-        .category-mosaic-card:hover .category-mosaic-arrow {
-          transform: translateX(4px);
+        @media (min-width: 768px) {
+          .cat-tile-title { font-size: 0.85rem; }
         }
 
         /* 4. Products Showcase */
         .products-showcase-section {
-          padding: 3.5rem 0;
+          padding: 2rem 0;
           background-color: #FFFFFF;
         }
         .bg-secondary-section {
@@ -704,7 +554,7 @@ export const HomePage: React.FC = () => {
 
         /* 8. Location Callout */
         .location-callout-section {
-          padding: 3.5rem 0;
+          padding: 2rem 0;
           background-color: #FFFFFF;
         }
         .location-callout-card {
