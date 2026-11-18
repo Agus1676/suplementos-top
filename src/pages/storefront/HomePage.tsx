@@ -66,14 +66,14 @@ export const HomePage: React.FC = () => {
   const featuredProducts = (featuredRaw.length >= 4 ? featuredRaw : products).slice(0, 10);
   const categoryBanners = CATEGORY_TILES;
 
-  // Official brands
+  // Official brands (matched to catalog)
   const brands = [
-    { name: 'STAR NUTRITION', desc: 'Laboratorio Oficial' },
-    { name: 'ENA SPORT', desc: 'Líder en Nutrición' },
-    { name: 'OPTIMUM NUTRITION', desc: 'Importado USA' },
-    { name: 'DYMATIZE', desc: 'ISO 100 Hidrolizada' },
-    { name: 'BSN', desc: 'Syntha-6 & No-Xplode' },
-    { name: 'GENTECH', desc: 'Nutrición Deportiva' }
+    { name: 'STAR NUTRITION', filter: 'Star Nutrition', desc: 'Laboratorio Oficial' },
+    { name: 'ENA SPORT', filter: 'ENA Sport', desc: 'Líder en Nutrición' },
+    { name: 'OPTIMUM NUTRITION', filter: 'Optimum Nutrition', desc: 'Importado USA' },
+    { name: 'DYMATIZE', filter: 'Dymatize', desc: 'ISO 100 Hidrolizada' },
+    { name: 'GENTECH', filter: 'Gentech', desc: 'Nutrición Deportiva' },
+    { name: 'VER TODAS', filter: '', desc: 'Explorar Catálogo' }
   ];
 
   return (
@@ -209,10 +209,14 @@ export const HomePage: React.FC = () => {
 
           <div className="brands-grid">
             {brands.map((brand) => (
-              <div key={brand.name} className="brand-item-card">
+              <Link
+                key={brand.name}
+                to={brand.filter ? `/catalogo?marca=${encodeURIComponent(brand.filter)}` : '/catalogo'}
+                className="brand-item-card"
+              >
                 <span className="brand-logo-name">{brand.name}</span>
                 <span className="brand-logo-desc">{brand.desc}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -526,12 +530,13 @@ export const HomePage: React.FC = () => {
           background-color: var(--color-bg-secondary);
           border: 1px solid var(--color-border);
           border-radius: var(--radius-sm);
-          padding: 1.25rem 0.75rem;
+          padding: 1.15rem 0.75rem;
           text-align: center;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          text-decoration: none;
           transition: all var(--transition-fast);
         }
         .brand-item-card:hover {
