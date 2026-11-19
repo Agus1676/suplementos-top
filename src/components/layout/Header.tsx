@@ -55,6 +55,12 @@ export const Header: React.FC = () => {
     }
   };
 
+  const handleGoHomeTop = () => {
+    setIsSearchFocused(false);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <header className="pv-header">
       {/* Top Promo Strip */}
@@ -83,7 +89,7 @@ export const Header: React.FC = () => {
             {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
-          <Link to="/" className="pv-brand">
+          <Link to="/" className="pv-brand" onClick={handleGoHomeTop}>
             <img src="/logo.png" alt="Suplementos Top" className="pv-brand-logo" />
             <span className="pv-brand-name">SUPLEMENTOS TOP</span>
           </Link>
@@ -174,7 +180,7 @@ export const Header: React.FC = () => {
         <nav className="pv-nav" aria-label="Navegación principal">
           <div className="container">
             <ul className="pv-nav-list">
-              <li><Link to="/">Inicio</Link></li>
+              <li><Link to="/" onClick={handleGoHomeTop}>Inicio</Link></li>
               <li><Link to="/catalogo">Productos</Link></li>
               <li><Link to="/catalogo?categoria=proteinas">Proteínas</Link></li>
               <li><Link to="/catalogo?categoria=creatinas">Creatinas</Link></li>

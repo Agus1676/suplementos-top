@@ -9,7 +9,11 @@ export const Footer: React.FC = () => {
     <footer className="ft">
       <div className="ft-inner">
         <div className="ft-grid">
-          <div className="ft-brand">
+          <Link
+            to="/"
+            className="ft-brand"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
             <img src="/logo.png" alt={settings.storeName} className="ft-logo" />
             <div>
               <div className="ft-name">SUPLEMENTOS TOP</div>
@@ -17,7 +21,7 @@ export const Footer: React.FC = () => {
                 Suplementación deportiva original en Recoleta, Ciudad Autónoma de Buenos Aires.
               </p>
             </div>
-          </div>
+          </Link>
 
           <div className="ft-col">
             <h4>Tienda</h4>
@@ -90,6 +94,9 @@ export const Footer: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 14px;
+          text-decoration: none;
+          color: inherit;
+          cursor: pointer;
         }
         .ft-logo {
           height: 58px;

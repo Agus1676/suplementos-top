@@ -1,11 +1,17 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { CartDrawer } from '../storefront/CartDrawer';
 import { WhatsAppFloat } from '../storefront/WhatsAppFloat';
 
 export const StoreLayout: React.FC = () => {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname, search]);
+
   return (
     <div className="store-layout-root">
       <Header />
