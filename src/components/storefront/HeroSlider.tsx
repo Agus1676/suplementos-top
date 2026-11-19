@@ -1,68 +1,108 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+interface SlideProduct {
+  name: string;
+  imageUrl: string;
+}
 
 interface Slide {
   id: number;
-  tag: string;
-  tagColor: string;
   title: string;
   subtitle: string;
-  pill1Text: string;
-  pill1Sub: string;
-  pill2Text: string;
-  pill2Sub: string;
+  highlight1: string;
+  highlight2: string;
   ctaText: string;
   ctaLink: string;
-  imageUrl: string;
+  products: SlideProduct[];
 }
 
 const SLIDES: Slide[] = [
   {
     id: 1,
-    tag: 'TEMPORADA DE ENTRENAMIENTO 2026',
-    tagColor: '#FF1744',
-    title: 'SUPLEMENTOS ORIGINALES AL MEJOR PRECIO',
-    subtitle: 'Las marcas líderes en nutrición deportiva con stock garantizado, envío a todo el país y retiro en Recoleta.',
-    pill1Text: '10% OFF',
-    pill1Sub: 'transferencia',
-    pill2Text: '6 CUOTAS',
-    pill2Sub: 'SIN INTERÉS',
+    title: 'Suplementos originales de las mejores marcas',
+    subtitle:
+      'Star Nutrition, ENA Sport, Optimum Nutrition y One Fit con envío a todo el país o retiro sin cargo en Recoleta.',
+    highlight1: '10% OFF por transferencia',
+    highlight2: '6 cuotas sin interés con Mercado Pago',
     ctaText: 'Ver productos',
     ctaLink: '/catalogo',
-    imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1600&q=80',
+    products: [
+      {
+        name: 'Star Nutrition Whey Protein',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-36-d9bc6bd2b3819e422717800791905669-640-0.webp',
+      },
+      {
+        name: 'ENA Creatina Micronizada',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/crea1-43ecc9d7c95f3dd32316495194702323-640-0.webp',
+      },
+      {
+        name: 'Optimum Nutrition Creatine',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-66-89296cadbf5be4b82e17579636094867-640-0.webp',
+      },
+    ],
   },
   {
     id: 2,
-    tag: 'FÓRMULAS 100% PURAS & CERTIFICADAS',
-    tagColor: '#22C55E',
-    title: 'PROTEÍNAS WHEY & CREAPURE® ALEMANA',
-    subtitle: 'Materia prima importada con máxima pureza y disolución instantánea. Recuperación muscular sin rellenos.',
-    pill1Text: 'HASTA 20% OFF',
-    pill1Sub: 'en combos',
-    pill2Text: 'ENVÍO GRATIS',
-    pill2Sub: 'desde $85.000',
+    title: 'Proteínas Whey y Creatinas 100% puras',
+    subtitle:
+      'Doypacks de 2 lb y baldes de 3 kg con sello de fábrica. Llevá tu combo de proteína + creatina con descuento.',
+    highlight1: 'Hasta 20% OFF en combos',
+    highlight2: 'Envío gratis desde $85.000',
     ctaText: 'Ver proteínas',
     ctaLink: '/catalogo?categoria=proteinas',
-    imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=1600&q=80',
+    products: [
+      {
+        name: 'Star Nutrition Whey 3 Kg',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
+      },
+      {
+        name: 'ENA True Made Whey',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
+      },
+      {
+        name: 'One Fit Classic Whey',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-95-5c7345af65acc8ee4917654696614725-640-0.webp',
+      },
+    ],
   },
   {
     id: 3,
-    tag: 'LOCAL FÍSICO OFICIAL EN CABA',
-    tagColor: '#FACC15',
-    title: 'COMPRÁ ONLINE, RETIRÁ HOY EN RECOLETA',
-    subtitle: 'Uriburu 1163 (entre Av. Santa Fe y Arenales). Lunes a Viernes de 8 a 23 hs · Sábados 10 a 18 hs sin cargo.',
-    pill1Text: 'RETIRO EN EL DÍA',
-    pill1Sub: 'gratis',
-    pill2Text: '11 6565 1990',
-    pill2Sub: 'WhatsApp directo',
-    ctaText: 'Cómo retirar',
+    title: 'Comprá online y retirá hoy en Recoleta',
+    subtitle:
+      'Uriburu 1163 (entre Av. Santa Fe y Arenales). Lunes a Viernes de 8 a 23 hs y Sábados de 10 a 18 hs sin costo.',
+    highlight1: 'Retiro en el día sin cargo',
+    highlight2: 'WhatsApp 11 6565 1990',
+    ctaText: 'Ubicación y horarios',
     ctaLink: '/contacto',
-    imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=80',
-  }
+    products: [
+      {
+        name: 'Star Nutrition Pump V8',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/v8-acai-296d8b9d4323834baa17326403674588-640-0.webp',
+      },
+      {
+        name: 'ENA ISOPROT Isolate',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-2026-10-03t104933-283-8d35f5b7ba1edf476917910354272508-640-0.webp',
+      },
+      {
+        name: 'Star Nutrition Magnesio',
+        imageUrl:
+          'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
+      },
+    ],
+  },
 ];
 
-const AUTOPLAY_INTERVAL = 3400; // 3.4 seconds (fast, dynamic, modern)
+const AUTOPLAY_INTERVAL = 3600;
 
 export const HeroSlider: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -78,14 +118,12 @@ export const HeroSlider: React.FC = () => {
     setCurrentSlide((prev) => (prev === 0 ? SLIDES.length - 1 : prev - 1));
   }, []);
 
-  // Fast auto-change timer
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(nextSlide, AUTOPLAY_INTERVAL);
     return () => clearInterval(timer);
   }, [isPaused, nextSlide]);
 
-  // Touch swipe support
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX;
   };
@@ -97,76 +135,58 @@ export const HeroSlider: React.FC = () => {
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
     const diff = touchStartX.current - touchEndX.current;
-    if (diff > 45) {
-      nextSlide(); // swipe left
-    } else if (diff < -45) {
-      prevSlide(); // swipe right
-    }
+    if (diff > 45) nextSlide();
+    else if (diff < -45) prevSlide();
     touchStartX.current = null;
     touchEndX.current = null;
   };
 
   return (
-    <div 
-      className="hero-slider-root"
+    <section
+      className="pv-hero"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      aria-label="Promociones principales"
     >
-      {/* Slides Container */}
-      <div className="hero-slides-wrapper">
+      <div className="pv-hero-slides">
         {SLIDES.map((slide, index) => {
           const isActive = index === currentSlide;
           return (
-            <div 
+            <div
               key={slide.id}
-              className={`hero-slide-layer ${isActive ? 'active' : ''}`}
+              className={`pv-hero-slide ${isActive ? 'active' : ''}`}
               aria-hidden={!isActive}
             >
-              {/* Full-bleed background image with modern overlay */}
-              <div className="hero-slide-bg">
-                <img 
-                  src={slide.imageUrl} 
-                  alt="" 
-                  className="hero-slide-bg-img"
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                />
-                <div className="hero-slide-gradient-overlay" />
-              </div>
+              <div className="container pv-hero-grid">
+                <div className="pv-hero-copy">
+                  <h1 className="pv-hero-title">{slide.title}</h1>
+                  <p className="pv-hero-sub">{slide.subtitle}</p>
 
-              {/* Text content inside container */}
-              <div className="container hero-slide-container">
-                <div className="hero-slide-content">
-                  <div className="slide-tag-wrap">
-                    <span 
-                      className="slide-tag" 
-                      style={{ borderColor: slide.tagColor, color: slide.tagColor }}
-                    >
-                      {slide.tag}
-                    </span>
+                  <div className="pv-hero-highlights">
+                    <span className="pv-hi pv-hi-green">{slide.highlight1}</span>
+                    <span className="pv-hi pv-hi-neutral">{slide.highlight2}</span>
                   </div>
 
-                  <h1 className="slide-title">{slide.title}</h1>
-
-                  <p className="slide-subtitle">{slide.subtitle}</p>
-
-                  <div className="slide-promo-pills">
-                    <span className="promo-pill promo-pill-white">
-                      {slide.pill1Text} <small>{slide.pill1Sub}</small>
-                    </span>
-                    <span className="promo-pill promo-pill-green">
-                      {slide.pill2Text} <small>{slide.pill2Sub}</small>
-                    </span>
-                  </div>
-
-                  <div className="slide-cta-row">
-                    <Link to={slide.ctaLink} className="slide-cta-btn">
-                      <span>{slide.ctaText}</span>
-                      <ArrowRight size={20} />
+                  <div className="pv-hero-actions">
+                    <Link to={slide.ctaLink} className="pv-hero-cta">
+                      {slide.ctaText}
                     </Link>
                   </div>
+                </div>
+
+                <div className="pv-hero-products">
+                  {slide.products.map((prod, idx) => (
+                    <div key={prod.name} className={`pv-hero-pack pv-hero-pack--${idx}`}>
+                      <img
+                        src={prod.imageUrl}
+                        alt={prod.name}
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -174,310 +194,236 @@ export const HeroSlider: React.FC = () => {
         })}
       </div>
 
-      {/* Navigation Arrows */}
-      <button 
+      <button
         type="button"
-        onClick={prevSlide} 
-        className="slider-arrow-btn arrow-prev" 
-        aria-label="Slide anterior"
+        onClick={prevSlide}
+        className="pv-hero-arrow pv-hero-arrow--prev"
+        aria-label="Anterior"
       >
-        <ChevronLeft size={22} />
+        <ChevronLeft size={20} />
       </button>
-      <button 
+      <button
         type="button"
-        onClick={nextSlide} 
-        className="slider-arrow-btn arrow-next" 
-        aria-label="Slide siguiente"
+        onClick={nextSlide}
+        className="pv-hero-arrow pv-hero-arrow--next"
+        aria-label="Siguiente"
       >
-        <ChevronRight size={22} />
+        <ChevronRight size={20} />
       </button>
 
-      {/* Modern Progress Dots */}
-      <div className="slider-dots-wrap">
-        {SLIDES.map((s, index) => {
-          const isActive = index === currentSlide;
-          return (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setCurrentSlide(index)}
-              className={`slider-dot ${isActive ? 'active' : ''}`}
-              aria-label={`Ir al slide ${index + 1}`}
-            >
-              {isActive && (
-                <span 
-                  className="dot-progress-bar"
-                  style={{ animationDuration: `${AUTOPLAY_INTERVAL}ms` }}
-                />
-              )}
-            </button>
-          );
-        })}
+      <div className="pv-hero-dots">
+        {SLIDES.map((s, index) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => setCurrentSlide(index)}
+            className={`pv-hero-dot ${index === currentSlide ? 'active' : ''}`}
+            aria-label={`Slide ${index + 1}`}
+          />
+        ))}
       </div>
 
       <style>{`
-        .hero-slider-root {
+        .pv-hero {
           position: relative;
           overflow: hidden;
-          background: #080D18;
-          min-height: 420px;
-          height: clamp(420px, 48vh, 520px);
+          background: #F4F5F7;
+          border-bottom: 1px solid #E4E4E7;
+          min-height: 360px;
+          height: clamp(360px, 44vh, 430px);
         }
-        .hero-slides-wrapper {
+        .pv-hero-slides {
           position: relative;
           width: 100%;
           height: 100%;
         }
-        .hero-slide-layer {
+        .pv-hero-slide {
           position: absolute;
           inset: 0;
           opacity: 0;
           visibility: hidden;
-          transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.45s;
+          transition: opacity 0.4s ease, visibility 0.4s ease;
           pointer-events: none;
           display: flex;
           align-items: center;
         }
-        .hero-slide-layer.active {
+        .pv-hero-slide.active {
           opacity: 1;
           visibility: visible;
           pointer-events: auto;
           z-index: 2;
         }
 
-        /* Full Bleed Background */
-        .hero-slide-bg {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          overflow: hidden;
-        }
-        .hero-slide-bg-img {
+        .pv-hero-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          align-items: center;
+          gap: 1.5rem;
           width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: right center;
-          transform: scale(1.06);
-          transition: transform 3.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .hero-slide-layer.active .hero-slide-bg-img {
-          transform: scale(1);
-        }
-        .hero-slide-gradient-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            90deg,
-            rgba(8, 13, 24, 0.97) 0%,
-            rgba(8, 13, 24, 0.90) 42%,
-            rgba(8, 13, 24, 0.45) 75%,
-            rgba(8, 13, 24, 0.65) 100%
-          );
-        }
-        @media (max-width: 768px) {
-          .hero-slide-bg-img {
-            object-position: center;
-          }
-          .hero-slide-gradient-overlay {
-            background: linear-gradient(
-              180deg,
-              rgba(8, 13, 24, 0.78) 0%,
-              rgba(8, 13, 24, 0.95) 85%
-            );
+        @media (min-width: 900px) {
+          .pv-hero-grid {
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 2.5rem;
           }
         }
 
-        /* Content & Staggered Motion */
-        .hero-slide-container {
-          position: relative;
-          z-index: 3;
-          height: 100%;
-          display: flex;
-          align-items: center;
-        }
-        .hero-slide-content {
-          max-width: 620px;
+        .pv-hero-copy {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          transform: translateY(14px);
-          opacity: 0;
-          transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, opacity 0.45s ease 0.08s;
+          max-width: 560px;
         }
-        .hero-slide-layer.active .hero-slide-content {
-          transform: translateY(0);
-          opacity: 1;
-        }
-
-        .slide-tag-wrap {
-          margin-bottom: 0.65rem;
-        }
-        .slide-tag {
-          display: inline-block;
-          font-size: 0.7rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          padding: 0.22rem 0.6rem;
-          border-radius: var(--radius-xs);
-          border: 1.5px solid currentColor;
-          background: rgba(0, 0, 0, 0.45);
-        }
-        .slide-title {
+        .pv-hero-title {
           font-family: var(--font-display);
-          font-weight: 900;
-          font-size: clamp(1.8rem, 4vw, 2.85rem);
-          line-height: 1.12;
-          color: #FFFFFF;
-          margin-bottom: 0.75rem;
+          font-weight: 800;
+          font-size: clamp(1.6rem, 3.2vw, 2.45rem);
+          line-height: 1.15;
+          color: #18181B;
+          margin: 0 0 0.7rem;
           letter-spacing: -0.02em;
         }
-        .slide-subtitle {
-          font-size: clamp(0.85rem, 1.4vw, 0.95rem);
-          line-height: 1.5;
-          color: #CBD5E1;
-          margin-bottom: 1.25rem;
-          max-width: 540px;
+        .pv-hero-sub {
+          font-size: clamp(0.84rem, 1.2vw, 0.95rem);
+          line-height: 1.55;
+          color: #52525B;
+          margin: 0 0 1.15rem;
         }
 
-        .slide-promo-pills {
+        .pv-hero-highlights {
           display: flex;
           flex-wrap: wrap;
           gap: 0.5rem;
           margin-bottom: 1.25rem;
         }
-        .promo-pill {
-          display: inline-flex;
-          align-items: baseline;
-          gap: 0.35rem;
-          border-radius: var(--radius-full);
-          padding: 0.45rem 1rem;
-          font-family: var(--font-display);
-          font-weight: 900;
-          font-size: 0.95rem;
-          line-height: 1;
-          letter-spacing: 0.01em;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-        }
-        .promo-pill small {
-          font-size: 0.65rem;
-          font-weight: 800;
-          letter-spacing: 0.04em;
-        }
-        .promo-pill-white {
-          background: #FFFFFF;
-          color: var(--color-promo-red);
-        }
-        .promo-pill-white small { color: #0F172A; }
-        .promo-pill-green {
-          background: var(--color-promo-green);
-          color: #FFFFFF;
-        }
-        @media (min-width: 768px) {
-          .promo-pill { font-size: 1.15rem; padding: 0.55rem 1.2rem; }
-          .promo-pill small { font-size: 0.72rem; }
-        }
-
-        .slide-cta-row {
-          display: flex;
-          gap: 1rem;
-        }
-        .slide-cta-btn {
+        .pv-hi {
           display: inline-flex;
           align-items: center;
-          gap: 0.55rem;
-          background: var(--color-accent);
-          color: #FFFFFF;
-          font-family: var(--font-display);
-          font-weight: 800;
-          font-size: 1.05rem;
-          padding: 0.85rem 2rem;
-          border-radius: var(--radius-full);
-          text-decoration: none;
-          box-shadow: 0 8px 24px -4px rgba(240, 16, 58, 0.6);
-          transition: background 0.15s ease, transform 0.15s ease;
+          font-size: 0.78rem;
+          font-weight: 700;
+          padding: 0.4rem 0.85rem;
+          border-radius: 5px;
+          line-height: 1.1;
         }
-        .slide-cta-btn:hover {
-          background: var(--color-accent-hover);
+        .pv-hi-green {
+          background: #5B8C2A;
           color: #FFFFFF;
-          transform: translateY(-2px);
         }
-        @media (min-width: 768px) {
-          .slide-cta-btn { font-size: 1.25rem; padding: 0.95rem 2.5rem; }
+        .pv-hi-neutral {
+          background: #FFFFFF;
+          color: #18181B;
+          border: 1px solid #E4E4E7;
         }
 
-        /* Arrows */
-        .slider-arrow-btn {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background: rgba(15, 23, 42, 0.6);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
+        .pv-hero-actions {
+          display: flex;
+          gap: 0.75rem;
+        }
+        .pv-hero-cta {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: #18181B;
           color: #FFFFFF;
+          font-family: var(--font-body);
+          font-weight: 700;
+          font-size: 0.9rem;
+          padding: 0.75rem 1.75rem;
+          border-radius: 5px;
+          text-decoration: none;
+          transition: background 0.15s ease;
+        }
+        .pv-hero-cta:hover {
+          background: #27272A;
+          color: #FFFFFF;
+        }
+
+        /* Real Product Packshots Trio on Right */
+        .pv-hero-products {
+          display: none;
+          align-items: center;
+          justify-content: center;
+          gap: 0.85rem;
+        }
+        @media (min-width: 900px) {
+          .pv-hero-products {
+            display: flex;
+          }
+        }
+        .pv-hero-pack {
+          background: #FFFFFF;
+          border: 1px solid #E4E4E7;
+          border-radius: 10px;
+          padding: 0.75rem;
+          width: 155px;
+          height: 185px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          cursor: pointer;
-          transition: all 0.2s ease;
-          z-index: 10;
+          box-shadow: 0 8px 20px -10px rgba(15, 23, 42, 0.12);
         }
-        .slider-arrow-btn:hover {
-          background: #FFFFFF;
-          color: #0F172A;
-          transform: translateY(-50%) scale(1.06);
+        .pv-hero-pack--1 {
+          width: 180px;
+          height: 215px;
+          box-shadow: 0 14px 30px -10px rgba(15, 23, 42, 0.18);
         }
-        .arrow-prev { left: 1rem; }
-        .arrow-next { right: 1rem; }
-        @media (max-width: 640px) {
-          .slider-arrow-btn { display: none; }
+        .pv-hero-pack img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
 
-        /* Modern Progress Dots */
-        .slider-dots-wrap {
+        .pv-hero-arrow {
           position: absolute;
-          bottom: 1.15rem;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: #FFFFFF;
+          color: #18181B;
+          border: 1px solid #E4E4E7;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 10;
+          transition: background 0.15s ease;
+        }
+        .pv-hero-arrow:hover {
+          background: #F4F4F5;
+        }
+        .pv-hero-arrow--prev { left: 1rem; }
+        .pv-hero-arrow--next { right: 1rem; }
+        @media (max-width: 640px) {
+          .pv-hero-arrow { display: none; }
+        }
+
+        .pv-hero-dots {
+          position: absolute;
+          bottom: 0.9rem;
           left: 50%;
           transform: translateX(-50%);
           display: flex;
-          align-items: center;
-          gap: 0.45rem;
+          gap: 0.4rem;
           z-index: 10;
         }
-        .slider-dot {
-          position: relative;
-          width: 24px;
-          height: 5px;
-          border-radius: 3px;
-          background: rgba(255, 255, 255, 0.25);
+        .pv-hero-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: #CBD5E1;
           border: none;
           padding: 0;
           cursor: pointer;
-          overflow: hidden;
-          transition: width 0.3s ease, background 0.3s ease;
+          transition: width 0.25s ease, background 0.25s ease;
         }
-        .slider-dot.active {
-          width: 42px;
-          background: rgba(255, 255, 255, 0.35);
-        }
-        .dot-progress-bar {
-          position: absolute;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          width: 100%;
-          background: var(--color-accent);
-          transform-origin: left;
-          animation: dotFill linear forwards;
-        }
-        @keyframes dotFill {
-          from { transform: scaleX(0); }
-          to { transform: scaleX(1); }
+        .pv-hero-dot.active {
+          width: 24px;
+          background: #18181B;
         }
       `}</style>
-    </div>
+    </section>
   );
 };
