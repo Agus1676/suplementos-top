@@ -1,101 +1,69 @@
-import React, { useState } from 'react';
-import { MessageCircle, X } from 'lucide-react';
+import React from 'react';
 
 export const WhatsAppFloat: React.FC = () => {
-  const [tooltipDismissed, setTooltipDismissed] = useState(false);
+  const whatsappUrl =
+    'https://wa.me/5491165651990?text=Hola!%20Tengo%20una%20consulta%20sobre%20los%20suplementos%20de%20la%20tienda';
 
   return (
-    <div className="whatsapp-float-root">
-      {/* Tooltip bubble */}
-      {!tooltipDismissed && (
-        <div className="wa-tooltip-bubble">
-          <button 
-            onClick={() => setTooltipDismissed(true)} 
-            className="wa-tooltip-close" 
-            aria-label="Cerrar mensaje"
-          >
-            <X size={11} />
-          </button>
-          <p className="wa-tooltip-title">¿Dudas con tu pedido?</p>
-          <p className="wa-tooltip-text">Asesoramiento directo al 11 6565 1990</p>
-        </div>
-      )}
+    <div className="wa-float-wrap">
+      <span className="wa-float-hover-label">¿Dudas? Chateá con nosotros</span>
 
-      {/* Main floating button */}
       <a
-        href="https://wa.me/5491165651990?text=Hola!%20Tengo%20una%20consulta%20sobre%20los%20suplementos%20de%20la%20tienda"
+        href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="wa-float-btn"
-        aria-label="Chat de WhatsApp con Suplementos Top"
+        aria-label="Contactar por WhatsApp a Suplementos Top"
+        title="Contactanos por WhatsApp"
       >
-        <MessageCircle size={24} />
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>
       </a>
 
       <style>{`
-        .whatsapp-float-root {
+        .wa-float-wrap {
           position: fixed;
           bottom: 1.25rem;
           right: 1.25rem;
           z-index: 999;
           display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 0.4rem;
+          align-items: center;
+          gap: 0.6rem;
         }
-        .wa-tooltip-bubble {
-          position: relative;
-          background: #FFFFFF;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-sm);
-          padding: 0.5rem 1.6rem 0.5rem 0.75rem;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-          max-width: 190px;
-          animation: popIn 0.3s ease;
-        }
-        @keyframes popIn {
-          from { opacity: 0; transform: translateY(6px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .wa-tooltip-close {
-          position: absolute;
-          top: 0.35rem;
-          right: 0.35rem;
-          color: var(--color-text-subtle);
-          padding: 0.1rem;
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-        .wa-tooltip-close:hover {
-          color: var(--color-text-main);
-        }
-        .wa-tooltip-title {
+        .wa-float-hover-label {
+          background: #18181B;
+          color: #FFFFFF;
           font-size: 0.75rem;
-          font-weight: 800;
-          color: var(--color-text-main);
-          margin-bottom: 0.1rem;
+          font-weight: 600;
+          padding: 0.4rem 0.75rem;
+          border-radius: 6px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+          white-space: nowrap;
+          opacity: 0;
+          transform: translateX(6px);
+          pointer-events: none;
+          transition: opacity 0.2s ease, transform 0.2s ease;
         }
-        .wa-tooltip-text {
-          font-size: 0.68rem;
-          color: var(--color-text-muted);
-          line-height: 1.3;
+        .wa-float-wrap:hover .wa-float-hover-label {
+          opacity: 1;
+          transform: translateX(0);
         }
         .wa-float-btn {
-          width: 48px;
-          height: 48px;
+          width: 50px;
+          height: 50px;
           border-radius: 50%;
           background-color: #25D366;
           color: #FFFFFF;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
-          transition: all 0.2s ease;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+          transition: transform 0.2s ease, background-color 0.2s ease;
         }
         .wa-float-btn:hover {
+          background-color: #20BD5A;
           transform: scale(1.06);
-          box-shadow: 0 6px 16px rgba(37, 211, 102, 0.5);
         }
       `}</style>
     </div>
