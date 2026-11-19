@@ -46,7 +46,7 @@ export const AdminLayout: React.FC = () => {
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="admin-brand-header">
           <Link to="/" className="admin-brand-link">
-            <span className="admin-badge">TOP</span>
+            <img src="/logo.png" alt="Suplementos Top" className="admin-logo-img" />
             <div>
               <span className="admin-title">ADMIN PANEL</span>
               <span className="admin-sub">Suplementos Top</span>
@@ -246,14 +246,12 @@ export const AdminLayout: React.FC = () => {
           color: #FFFFFF;
           text-decoration: none;
         }
-        .admin-badge {
-          background: #FF5500;
-          color: #FFFFFF;
-          font-weight: 800;
-          padding: 0.2rem 0.5rem;
-          border-radius: var(--radius-sm, 6px);
-          font-size: 0.85rem;
-          letter-spacing: 0.05em;
+        .admin-logo-img {
+          height: 44px;
+          width: auto;
+          object-fit: contain;
+          display: block;
+          flex-shrink: 0;
         }
         .admin-title {
           font-weight: 900;

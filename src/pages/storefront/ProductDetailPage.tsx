@@ -133,7 +133,7 @@ export const ProductDetailPage: React.FC = () => {
               </span>
             )}
             <img
-              src={selectedImage || product.images[0]?.url || '/logo.jpg'}
+              src={selectedImage || product.images[0]?.url || '/logo.png'}
               alt={product.name}
               className="main-detail-img"
             />
@@ -518,7 +518,7 @@ export const ProductDetailPage: React.FC = () => {
         <div className="sticky-bar-inner">
           <div className="sticky-product-meta">
             <img 
-              src={product.images[0]?.url || '/logo.jpg'} 
+              src={product.images[0]?.url || '/logo.png'} 
               alt={product.name} 
               className="sticky-product-thumb" 
             />

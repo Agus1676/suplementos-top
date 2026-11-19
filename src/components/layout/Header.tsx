@@ -84,7 +84,7 @@ export const Header: React.FC = () => {
           </button>
 
           <Link to="/" className="pv-brand">
-            <img src="/logo.jpg" alt="Suplementos Top" className="pv-brand-logo" />
+            <img src="/logo.png" alt="Suplementos Top" className="pv-brand-logo" />
             <span className="pv-brand-name">SUPLEMENTOS TOP</span>
           </Link>
 
@@ -120,7 +120,7 @@ export const Header: React.FC = () => {
                             className="pv-search-item"
                           >
                             <img
-                              src={prod.images[0]?.url || '/logo.jpg'}
+                              src={prod.images[0]?.url || '/logo.png'}
                               alt={prod.name}
                               className="pv-search-thumb"
                             />
@@ -297,10 +297,10 @@ export const Header: React.FC = () => {
           flex-shrink: 0;
         }
         .pv-brand-logo {
-          width: 42px;
-          height: 42px;
-          border-radius: 8px;
-          object-fit: cover;
+          height: 52px;
+          width: auto;
+          object-fit: contain;
+          display: block;
         }
         .pv-brand-name {
           font-family: var(--font-display);

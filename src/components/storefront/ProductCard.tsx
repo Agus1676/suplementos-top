@@ -38,7 +38,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const isOutOfStock = product.variants.length > 0 && product.variants.every((v) => v.stock <= 0);
   const rawImage = product.images[0]?.url;
-  const imageUrl = !rawImage || rawImage === '/logo.jpg' ? FALLBACK_PACKSHOT : rawImage;
+  const imageUrl = !rawImage || rawImage === '/logo.jpg' || rawImage === '/logo.png' ? FALLBACK_PACKSHOT : rawImage;
   const reviewCount = product.reviewCount || 74;
 
   const handleQuickAdd = (e: React.MouseEvent) => {

@@ -10,7 +10,7 @@ export const Footer: React.FC = () => {
       <div className="ft-inner">
         <div className="ft-grid">
           <div className="ft-brand">
-            <img src="/logo.jpg" alt={settings.storeName} className="ft-logo" />
+            <img src="/logo.png" alt={settings.storeName} className="ft-logo" />
             <div>
               <div className="ft-name">SUPLEMENTOS TOP</div>
               <p className="ft-about">
@@ -92,10 +92,9 @@ export const Footer: React.FC = () => {
           gap: 14px;
         }
         .ft-logo {
-          width: 52px;
-          height: 52px;
-          border-radius: 10px;
-          object-fit: cover;
+          height: 58px;
+          width: auto;
+          object-fit: contain;
           display: block;
           flex-shrink: 0;
         }

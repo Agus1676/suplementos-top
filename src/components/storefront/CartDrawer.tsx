@@ -144,7 +144,7 @@ export const CartDrawer: React.FC = () => {
                 const variant = prod.variants[0];
                 return (
                   <div key={prod.id} className="upsell-item-card">
-                    <img src={prod.images[0]?.url || '/logo.jpg'} alt={prod.name} className="upsell-thumb" />
+                    <img src={prod.images[0]?.url || '/logo.png'} alt={prod.name} className="upsell-thumb" />
                     <div className="upsell-meta">
                       <span className="upsell-title">{prod.name}</span>
                       <span className="upsell-price">{formatARS(variant.priceInCents)}</span>
