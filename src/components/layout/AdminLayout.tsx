@@ -108,6 +108,18 @@ export const AdminLayout: React.FC = () => {
             <MapPin size={12} className="text-accent" />
             <span>Uriburu 1163, CABA</span>
           </div>
+          <div className="admin-sidebar-author">
+            <span className="admin-author-sub">Desarrollado por</span>
+            <a 
+              href="https://agustinpollan.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="admin-author-link"
+              title="Portafolio de Agustín Pollán"
+            >
+              Agustín Pollán ↗
+            </a>
+          </div>
         </div>
       </aside>
 
@@ -323,6 +335,34 @@ export const AdminLayout: React.FC = () => {
           gap: 0.4rem;
           font-size: 0.725rem;
           color: #94A3B8;
+        }
+        .admin-sidebar-author {
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+          padding-top: 0.5rem;
+          border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .admin-author-sub {
+          font-size: 0.65rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #64748B;
+          font-weight: 700;
+        }
+        .admin-author-link {
+          font-size: 0.78rem;
+          font-weight: 700;
+          color: var(--color-accent, #3B82F6);
+          text-decoration: none;
+          transition: all 0.15s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+        .admin-author-link:hover {
+          color: #FFFFFF;
+          text-decoration: underline;
         }
         .admin-main-wrap {
           flex: 1;

@@ -1,10 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  MapPin, 
-  Phone, 
-  ArrowRight, 
-  Clock, 
+import {
+  MapPin,
+  Phone,
+  ArrowRight,
+  Clock,
+  Dumbbell,
+  Zap,
+  Flame,
+  Activity,
+  Pill,
+  GlassWater,
+  Package,
+  type LucideIcon,
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../../components/storefront/ProductCard';
@@ -12,48 +20,22 @@ import { HeroSlider } from '../../components/storefront/HeroSlider';
 import { TrustMarquee } from '../../components/storefront/TrustMarquee';
 import { HorizontalScroller } from '../../components/ui/HorizontalScroller';
 
-interface CategoryTile {
+interface CategoryChip {
   title: string;
   slug: string;
-  color: string;
+  icon: LucideIcon;
   badge?: string;
 }
 
-// Compact category tiles (swipeable rail on mobile, single row on desktop)
-const CATEGORY_TILES: CategoryTile[] = [
-  {
-    title: 'Proteínas',
-    slug: 'proteinas',
-    color: '#111827',
-  },
-  {
-    title: 'Creatinas',
-    slug: 'creatinas',
-    color: '#B3121F',
-  },
-  {
-    title: 'Pre-entrenos',
-    slug: 'pre-entrenos',
-    color: '#F0103A',
-  },
-  {
-    title: 'Combos',
-    slug: 'combos',
-    badge: '20% OFF',
-    color: '#0B3A6F',
-  },
-  {
-    title: 'Aminoácidos',
-    slug: 'aminoacidos',
-    color: '#1F2937',
-  },
-  {
-    title: 'Vitaminas',
-    slug: 'salud-vitaminas',
-    color: '#166534',
-  },
+const CATEGORY_CHIPS: CategoryChip[] = [
+  { title: 'Proteínas', slug: 'proteinas', icon: Dumbbell },
+  { title: 'Creatinas', slug: 'creatinas', icon: Zap },
+  { title: 'Pre-entrenos', slug: 'pre-entrenos', icon: Flame },
+  { title: 'Aminoácidos', slug: 'aminoacidos', icon: Activity },
+  { title: 'Vitaminas', slug: 'salud-vitaminas', icon: Pill },
+  { title: 'Accesorios', slug: 'accesorios', icon: GlassWater },
+  { title: 'Combos', slug: 'combos', icon: Package, badge: 'Ofertas' },
 ];
-
 export const HomePage: React.FC = () => {
   const { products, settings } = useStore();
 
@@ -62,7 +44,7 @@ export const HomePage: React.FC = () => {
   const bestSellers = (bestSellersRaw.length >= 4 ? bestSellersRaw : products).slice(0, 10);
   const featuredRaw = products.filter((p) => p.isFeatured);
   const featuredProducts = (featuredRaw.length >= 4 ? featuredRaw : products).slice(0, 10);
-  const categoryBanners = CATEGORY_TILES;
+  
 
   // Official brands (matched to catalog)
   const brands = [
@@ -82,36 +64,18 @@ export const HomePage: React.FC = () => {
       {/* 2. Trust strip — compact, auto-scrolling to the left */}
       <TrustMarquee />
 
-      {/* 3. Compact category rail (swipeable) */}
-      <section className="categories-section">
+      {/* 3. Category chips — compact, scrollable */}
+      <section className="categories-section" aria-label="Categorías">
         <div className="container">
-          <div className="section-header section-header-compact">
-            <h2 className="section-title">Comprá por categoría</h2>
-            <Link to="/catalogo" className="section-link">
-              <span>Ver todo</span>
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-
-          <HorizontalScroller
-            ariaLabel="Categorías de productos"
-            perView={{ mobile: 3, tablet: 5, desktop: 6 }}
-            gapRem={0.65}
-            mobilePeek={0.3}
-          >
-            {categoryBanners.map((cat) => (
-              <Link
-                key={cat.slug}
-                to={`/catalogo?categoria=${cat.slug}`}
-                className="cat-tile"
-              >
-                <div className="cat-tile-media" style={{ background: cat.color }}>
-                  <span className="cat-tile-name">{cat.title}</span>
-                  {cat.badge && <span className="cat-tile-badge">{cat.badge}</span>}
-                </div>
+          <nav className="cat-chips">
+            {CATEGORY_CHIPS.map(({ title, slug, icon: Icon, badge }) => (
+              <Link key={slug} to={`/catalogo?categoria=${slug}`} className="cat-chip">
+                <Icon size={18} strokeWidth={2} />
+                <span>{title}</span>
+                {badge && <em className="cat-chip-badge">{badge}</em>}
               </Link>
             ))}
-          </HorizontalScroller>
+          </nav>
         </div>
       </section>
 
@@ -281,59 +245,53 @@ export const HomePage: React.FC = () => {
           gap: 0;
         }
 
-        /* 3. Compact Category Rail */
+        /* 3. Category chips */
         .categories-section {
-          padding: 1.75rem 0 1.25rem;
-          background-color: #FFFFFF;
+          padding: 1rem 0 0.25rem;
+          background: #FFFFFF;
         }
-        .section-header-compact {
-          margin-bottom: 0.9rem !important;
-          align-items: center !important;
-        }
-        .section-header-compact .section-title {
-          margin: 0;
-        }
-        .cat-tile {
+        .cat-chips {
           display: flex;
-          flex-direction: column;
-          gap: 0.45rem;
-          text-decoration: none;
+          gap: 0.5rem;
+          overflow-x: auto;
+          scrollbar-width: none;
+          padding-bottom: 0.25rem;
+          -webkit-overflow-scrolling: touch;
+        }
+        .cat-chips::-webkit-scrollbar { display: none; }
+        .cat-chip {
+          flex: 0 0 auto;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.6rem 1rem;
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          font-size: 0.85rem;
+          font-weight: 600;
           color: var(--color-text-main);
+          text-decoration: none;
+          white-space: nowrap;
+          transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
         }
-        .cat-tile-media {
-          position: relative;
-          aspect-ratio: 1 / 1;
-          border-radius: var(--radius-md);
-          overflow: hidden;
-          display: flex;
-          align-items: flex-end;
-          padding: 0.7rem;
-          transition: transform 0.2s ease;
+        .cat-chip svg { color: var(--color-accent); }
+        .cat-chip:hover {
+          border-color: var(--color-accent);
+          color: var(--color-accent);
         }
-        .cat-tile:hover .cat-tile-media {
-          transform: translateY(-3px);
-        }
-        .cat-tile-name {
-          font-family: var(--font-display);
-          font-size: clamp(0.82rem, 0.7rem + 0.5vw, 1.05rem);
+        .cat-chip-badge {
+          font-style: normal;
+          font-size: 0.66rem;
           font-weight: 800;
-          line-height: 1.1;
-          color: #FFFFFF;
-          letter-spacing: -0.01em;
-        }
-        .cat-tile-badge {
-          position: absolute;
-          top: 0.4rem;
-          left: 0.4rem;
           background: var(--color-promo-red);
           color: #FFFFFF;
-          font-size: 0.6rem;
-          font-weight: 900;
-          letter-spacing: 0.03em;
           padding: 0.15rem 0.4rem;
           border-radius: var(--radius-xs);
         }
-
+        @media (min-width: 900px) {
+          .cat-chips { flex-wrap: wrap; overflow: visible; }
+        }
         /* 4. Products Showcase */
         .products-showcase-section {
           padding: 2rem 0;
@@ -374,6 +332,8 @@ export const HomePage: React.FC = () => {
           color: #FFFFFF;
           border-color: #1E293B;
         }
+        .promo-banner-dark .promo-title { color: #FFFFFF; }
+        .promo-banner-dark .promo-desc { color: #CBD5E1; opacity: 1; }
         .promo-banner-light {
           background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
           color: var(--color-text-main);
