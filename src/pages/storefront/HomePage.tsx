@@ -14,41 +14,60 @@ import { HorizontalScroller } from '../../components/ui/HorizontalScroller';
 
 interface CategoryTile {
   title: string;
+  subtitle: string;
   slug: string;
   imageUrl: string;
-  badge?: string;
+  badge: string;
+  badgeColor: string;
 }
 
 const CATEGORY_TILES: CategoryTile[] = [
   {
-    title: 'Proteínas',
+    title: 'Proteínas Whey',
+    subtitle: 'Masa Muscular',
     slug: 'proteinas',
+    badge: '⭐ Top Ventas',
+    badgeColor: '#F0522A',
     imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
   },
   {
     title: 'Creatinas',
+    subtitle: 'Fuerza & Potencia',
     slug: 'creatinas',
+    badge: '⚡ 100% Pura',
+    badgeColor: '#0EA5E9',
     imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-86-b01227391a8693a81817830230456620-640-0.webp',
   },
   {
-    title: 'Pre-entrenos',
+    title: 'Pre-Entreno',
+    subtitle: 'Energía Explosiva',
     slug: 'pre-entrenos',
+    badge: '🚀 Pump V8',
+    badgeColor: '#E58E09',
     imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/v8-acai-296d8b9d4323834baa17326403674588-640-0.webp',
   },
   {
-    title: 'Combos',
-    slug: 'combos',
-    badge: '20% OFF',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
-  },
-  {
     title: 'Aminoácidos',
+    subtitle: 'Recuperación',
     slug: 'aminoacidos',
+    badge: '🧬 BCAA 2000',
+    badgeColor: '#10B981',
     imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/1-beta-alanina1-9e9e31c14f3fab222116395930246659-640-0.webp',
   },
   {
+    title: 'Combos',
+    subtitle: 'Pack Ahorro',
+    slug: 'combos',
+    badge: '🔥 20% OFF',
+    badgeColor: '#E11D48',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
+  },
+  {
     title: 'Vitaminas',
+    subtitle: 'Salud & Magnesio',
     slug: 'salud-vitaminas',
+    badge: '💊 Vitalidad',
+    badgeColor: '#8B5CF6',
     imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
   },
 ];
@@ -121,10 +140,16 @@ export const HomePage: React.FC = () => {
                 className="cat-pack-card"
               >
                 <div className="cat-pack-stage">
-                  {cat.badge && <span className="cat-pack-badge">{cat.badge}</span>}
+                  <span
+                    className="cat-pack-badge"
+                    style={{ backgroundColor: cat.badgeColor }}
+                  >
+                    {cat.badge}
+                  </span>
                   <img src={cat.imageUrl} alt={cat.title} loading="lazy" className="cat-pack-img" />
                 </div>
                 <span className="cat-pack-title">{cat.title}</span>
+                <span className="cat-pack-subtitle">{cat.subtitle}</span>
               </Link>
             ))}
           </HorizontalScroller>
@@ -321,8 +346,8 @@ export const HomePage: React.FC = () => {
           aspect-ratio: 1 / 1;
           background: #FFFFFF;
           border: 1px solid #E4E4E7;
-          border-radius: 8px;
-          padding: 0.65rem;
+          border-radius: 12px;
+          padding: 1.75rem 0.75rem 0.65rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -345,22 +370,33 @@ export const HomePage: React.FC = () => {
         }
         .cat-pack-badge {
           position: absolute;
-          top: 0.45rem;
-          left: 0.45rem;
-          background: var(--color-promo-red);
+          top: 0.5rem;
+          left: 50%;
+          transform: translateX(-50%);
           color: #FFFFFF;
-          font-size: 0.6rem;
-          font-weight: 800;
-          padding: 0.16rem 0.4rem;
-          border-radius: 4px;
+          font-size: 0.68rem;
+          font-weight: 700;
+          padding: 0.22rem 0.65rem;
+          border-radius: 999px;
+          white-space: nowrap;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
           z-index: 2;
         }
         .cat-pack-title {
           font-family: var(--font-display);
-          font-size: 0.82rem;
+          font-size: 0.85rem;
           font-weight: 700;
           color: var(--color-text-main);
           text-align: center;
+          line-height: 1.2;
+          margin-top: 0.15rem;
+        }
+        .cat-pack-subtitle {
+          font-size: 0.74rem;
+          color: #64748B;
+          text-align: center;
+          line-height: 1.2;
+          margin-top: -0.25rem;
         }
 
         /* 4. Products Showcase */
