@@ -76,6 +76,17 @@ export const Footer: React.FC = () => {
         <div className="footer-compact-bottom">
           <div className="copyright-area">
             <span>© {new Date().getFullYear()} SUPLEMENTOS TOP. Todos los derechos reservados.</span>
+            <span className="footer-author">
+              Desarrollado por{' '}
+              <a
+                href="https://agustinpollan.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-author-link"
+              >
+                Agustín Pollán
+              </a>
+            </span>
             <span className="data-fiscal-badge">
               <ShieldCheck size={12} className="text-success" />
               <span>AFIP F960/D Verificado</span>
@@ -251,6 +262,19 @@ export const Footer: React.FC = () => {
           border-radius: 2px;
           color: #94A3B8;
           border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .footer-author {
+          color: #94A3B8;
+        }
+        .footer-author-link {
+          color: var(--color-accent);
+          font-weight: 700;
+          text-decoration: none;
+          transition: color 0.15s ease;
+        }
+        .footer-author-link:hover {
+          color: #FFFFFF;
+          text-decoration: underline;
         }
         .payment-area {
           display: flex;

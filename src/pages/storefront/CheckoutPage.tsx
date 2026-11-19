@@ -477,7 +477,7 @@ export const CheckoutPage: React.FC = () => {
 
                 {/* Installments text */}
                 <div className="summary-installments">
-                  <span>💳 {formatInstallments(finalTotalInCents, 3)} con Mercado Pago</span>
+                  <span>{formatInstallments(finalTotalInCents, 3)} con Mercado Pago</span>
                 </div>
               </div>
 

@@ -246,7 +246,7 @@ export const AdminOrders: React.FC = () => {
             <div className="modal-body">
               {/* Customer Box */}
               <div className="modal-section-box">
-                <h3>👤 Datos Completos del Comprador</h3>
+                <h3>Datos del comprador</h3>
                 <div className="grid-2">
                   <p><strong>Nombre y Apellido:</strong> {selectedOrder.customerName}</p>
                   <p><strong>DNI / CUIL:</strong> {selectedOrder.customerDni}</p>
@@ -257,7 +257,7 @@ export const AdminOrders: React.FC = () => {
 
               {/* Delivery Box */}
               <div className="modal-section-box">
-                <h3>📦 Modalidad y Dirección de Despacho</h3>
+                <h3>Entrega y dirección</h3>
                 {selectedOrder.deliveryMethod === 'pickup' ? (
                   <div>
                     <span className="badge badge-accent">Retiro en Local Recoleta</span>
@@ -282,7 +282,7 @@ export const AdminOrders: React.FC = () => {
 
               {/* Items List */}
               <div className="modal-section-box">
-                <h3>💊 Suplementos del Pedido</h3>
+                <h3>Productos del pedido</h3>
                 <div className="modal-items-list">
                   {selectedOrder.items.map((item) => (
                     <div key={item.id} className="modal-item-row">
@@ -309,10 +309,10 @@ export const AdminOrders: React.FC = () => {
               {/* Logistics Tracking Updater */}
               {selectedOrder.deliveryMethod === 'shipping' && (
                 <div className="modal-section-box tracking-update-box">
-                  <h3>🚚 Cargar Número de Seguimiento / Guía</h3>
+                  <h3>Número de seguimiento</h3>
                   {selectedOrder.trackingNumber ? (
                     <p className="text-success font-bold">
-                      ✓ Código de Seguimiento asignado: <strong>{selectedOrder.trackingNumber}</strong>
+                      Código de seguimiento: <strong>{selectedOrder.trackingNumber}</strong>
                     </p>
                   ) : (
                     <div className="tracking-input-group">

@@ -19,7 +19,7 @@ export const CATEGORIES: Category[] = [
     name: 'Proteínas',
     slug: 'proteinas',
     description: 'Whey Protein concentradas, aisladas CFM e hidrolizadas para máxima recuperación muscular.',
-    imageUrl: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/logo.jpg',
     sortOrder: 1,
   },
   {
@@ -27,7 +27,7 @@ export const CATEGORIES: Category[] = [
     name: 'Creatinas',
     slug: 'creatinas',
     description: 'Creatina monohidratada micronizada y certificación oficial Creapure® alemana.',
-    imageUrl: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/logo.jpg',
     sortOrder: 2,
   },
   {
@@ -35,7 +35,7 @@ export const CATEGORIES: Category[] = [
     name: 'Pre-Entrenos',
     slug: 'pre-entrenos',
     description: 'Fórmulas para energía explosiva, congestión muscular y retraso de la fatiga.',
-    imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/logo.jpg',
     sortOrder: 3,
   },
   {
@@ -43,7 +43,7 @@ export const CATEGORIES: Category[] = [
     name: 'Aminoácidos & BCAA',
     slug: 'aminoacidos',
     description: 'BCAA 4:1:1, EAA fermentados y L-Glutamina pura de máxima asimilación.',
-    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/logo.jpg',
     sortOrder: 4,
   },
   {
@@ -51,7 +51,7 @@ export const CATEGORIES: Category[] = [
     name: 'Salud & Vitaminas',
     slug: 'salud-vitaminas',
     description: 'Citrato de Magnesio, Omega 3 Fish Oil de alta concentración y multivitamínicos.',
-    imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/logo.jpg',
     sortOrder: 5,
   },
   {
@@ -59,7 +59,7 @@ export const CATEGORIES: Category[] = [
     name: 'Combos & Ofertas',
     slug: 'combos',
     description: 'Packs armados para volumen y definición con descuento especial y envío gratis.',
-    imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/logo.jpg',
     sortOrder: 6,
   },
   {
@@ -67,7 +67,7 @@ export const CATEGORIES: Category[] = [
     name: 'Accesorios & Shakers',
     slug: 'accesorios',
     description: 'Mezcladores herméticos de acero quirúrgico, toallas y equipamiento de entrenamiento.',
-    imageUrl: 'https://images.unsplash.com/photo-1546483875-ad9014c88eba?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/logo.jpg',
     sortOrder: 7,
   }
 ];
@@ -95,7 +95,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-star-iso-1',
-        url: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'Star Nutrition Platinum Whey Isolate',
         sortOrder: 1,
       },
@@ -163,7 +163,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-ena-crea-1',
-        url: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'ENA Sport Creatina Creapure',
         sortOrder: 1,
       },
@@ -219,7 +219,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-on-1',
-        url: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'Optimum Nutrition Gold Standard Whey',
         sortOrder: 1,
       },
@@ -286,7 +286,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-ena-true-1',
-        url: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'ENA Sport True Made Whey',
         sortOrder: 1,
       },
@@ -341,7 +341,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-pump-1',
-        url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'Star Nutrition Pump 3D Pre Workout',
         sortOrder: 1,
       },
@@ -396,7 +396,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-iso100-1',
-        url: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'Dymatize ISO 100 Hydrolyzed',
         sortOrder: 1,
       },
@@ -452,7 +452,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-combo-1',
-        url: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'Combo Pro Definicion',
         sortOrder: 1,
       },
@@ -495,7 +495,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-mag-1',
-        url: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'Citrato de Magnesio Gentech',
         sortOrder: 1,
       },
@@ -537,7 +537,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-shaker-steel-1',
-        url: 'https://images.unsplash.com/photo-1546483875-ad9014c88eba?auto=format&fit=crop&w=800&q=80',
+        url: '/logo.jpg',
         altText: 'Shaker Pro Steel',
         sortOrder: 1,
       },

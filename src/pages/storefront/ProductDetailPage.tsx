@@ -244,14 +244,14 @@ export const ProductDetailPage: React.FC = () => {
           {/* Stock Availability Indicator */}
           <div className="detail-stock-status">
             {selectedVariant.stock <= 0 ? (
-              <span className="stock-alert stock-out">⚠️ Agotado momentáneamente — Próximo reingreso en 48hs</span>
+              <span className="stock-alert stock-out">Agotado por el momento</span>
             ) : selectedVariant.stock <= 5 ? (
               <span className="stock-alert stock-low">
-                ⚠️ ¡ÚLTIMAS {selectedVariant.stock} UNIDADES EN STOCK EN RECOLETA!
+                Quedan {selectedVariant.stock} unidades
               </span>
             ) : (
               <span className="stock-alert stock-in">
-                ✓ En stock disponible para entrega inmediata o retiro hoy (SKU: {selectedVariant.sku})
+                En stock · Retiro hoy en Recoleta (SKU: {selectedVariant.sku})
               </span>
             )}
           </div>

@@ -5,8 +5,6 @@ import {
   Phone, 
   ArrowRight, 
   Clock, 
-  Star, 
-  CheckCircle
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../../components/storefront/ProductCard';
@@ -17,42 +15,42 @@ import { HorizontalScroller } from '../../components/ui/HorizontalScroller';
 interface CategoryTile {
   title: string;
   slug: string;
-  imageUrl: string;
+  color: string;
   badge?: string;
 }
 
 // Compact category tiles (swipeable rail on mobile, single row on desktop)
 const CATEGORY_TILES: CategoryTile[] = [
   {
-    title: 'PROTEÍNAS',
+    title: 'Proteínas',
     slug: 'proteinas',
-    imageUrl: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=400&q=70',
+    color: '#111827',
   },
   {
-    title: 'CREATINAS',
+    title: 'Creatinas',
     slug: 'creatinas',
-    imageUrl: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=400&q=70',
+    color: '#B3121F',
   },
   {
-    title: 'PRE-ENTRENOS',
+    title: 'Pre-entrenos',
     slug: 'pre-entrenos',
-    imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=70',
+    color: '#F0103A',
   },
   {
-    title: 'COMBOS',
+    title: 'Combos',
     slug: 'combos',
     badge: '20% OFF',
-    imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=400&q=70',
+    color: '#0B3A6F',
   },
   {
-    title: 'AMINOÁCIDOS',
+    title: 'Aminoácidos',
     slug: 'aminoacidos',
-    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=70',
+    color: '#1F2937',
   },
   {
-    title: 'VITAMINAS',
+    title: 'Vitaminas',
     slug: 'salud-vitaminas',
-    imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=400&q=70',
+    color: '#166534',
   },
 ];
 
@@ -88,7 +86,7 @@ export const HomePage: React.FC = () => {
       <section className="categories-section">
         <div className="container">
           <div className="section-header section-header-compact">
-            <h2 className="section-title">COMPRÁ POR CATEGORÍA</h2>
+            <h2 className="section-title">Comprá por categoría</h2>
             <Link to="/catalogo" className="section-link">
               <span>Ver todo</span>
               <ArrowRight size={16} />
@@ -107,11 +105,10 @@ export const HomePage: React.FC = () => {
                 to={`/catalogo?categoria=${cat.slug}`}
                 className="cat-tile"
               >
-                <div className="cat-tile-media">
-                  <img src={cat.imageUrl} alt="" loading="lazy" className="cat-tile-img" />
+                <div className="cat-tile-media" style={{ background: cat.color }}>
+                  <span className="cat-tile-name">{cat.title}</span>
                   {cat.badge && <span className="cat-tile-badge">{cat.badge}</span>}
                 </div>
-                <span className="cat-tile-title">{cat.title}</span>
               </Link>
             ))}
           </HorizontalScroller>
@@ -123,8 +120,7 @@ export const HomePage: React.FC = () => {
         <div className="container">
           <div className="section-header">
             <div>
-              <span className="section-eyebrow">LOS ELEGIDOS POR ATLETAS</span>
-              <h2 className="section-title">MÁS VENDIDOS DE LA SEMANA</h2>
+              <h2 className="section-title">Más vendidos</h2>
             </div>
             <Link to="/catalogo?sort=bestseller" className="section-link">
               <span>Ver todos</span>
@@ -182,8 +178,7 @@ export const HomePage: React.FC = () => {
         <div className="container">
           <div className="section-header">
             <div>
-              <span className="section-eyebrow">NOVEDADES & LANZAMIENTOS</span>
-              <h2 className="section-title">FÓRMULAS DESTACADAS</h2>
+              <h2 className="section-title">Destacados</h2>
             </div>
             <Link to="/catalogo" className="section-link">
               <span>Ver catálogo</span>
@@ -278,71 +273,6 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 9. Social Proof / Verified Athlete Reviews */}
-      <section className="reviews-section">
-        <div className="container">
-          <div className="reviews-header text-center">
-            <span className="section-eyebrow">CLIENTES VERIFICADOS</span>
-            <h2 className="section-title">MÁS DE 4.800 DEPORTISTAS CONFÍAN EN NOSOTROS</h2>
-            <div className="reviews-stars-summary">
-              <div className="rating-stars">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={18} fill="#F59E0B" color="#F59E0B" />
-                ))}
-              </div>
-              <span className="reviews-score">4.9 / 5.0 en satisfacción de entrega y calidad de producto</span>
-            </div>
-          </div>
-
-          <div className="grid-3 reviews-grid">
-            <div className="review-card">
-              <div className="review-stars">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="#F59E0B" color="#F59E0B" />
-                ))}
-              </div>
-              <p className="review-comment">
-                "Excelente atención. Compré la proteína Star Isolate y pasé a retirarla por el local en Uriburu 1163 a las 20hs. Todo rápido, en caja cerrada con precinto original."
-              </p>
-              <div className="review-author-info">
-                <strong>Matías G. (Palermo, CABA)</strong>
-                <span className="verified-badge"><CheckCircle size={13} className="text-success" /> Compra Verificada</span>
-              </div>
-            </div>
-
-            <div className="review-card">
-              <div className="review-stars">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="#F59E0B" color="#F59E0B" />
-                ))}
-              </div>
-              <p className="review-comment">
-                "Pagué en 3 cuotas sin interés con Mercado Pago desde Córdoba y en menos de 48hs me llegó por correo a casa. El empaque impecable, súper recomendable."
-              </p>
-              <div className="review-author-info">
-                <strong>Carolina B. (Córdoba Capital)</strong>
-                <span className="verified-badge"><CheckCircle size={13} className="text-success" /> Compra Verificada</span>
-              </div>
-            </div>
-
-            <div className="review-card">
-              <div className="review-stars">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill="#F59E0B" color="#F59E0B" />
-                ))}
-              </div>
-              <p className="review-comment">
-                "La creatina Creapure® se disuelve perfecto y la fecha de vencimiento es para 2028. Se nota que traen lotes frescos directamente de fábrica."
-              </p>
-              <div className="review-author-info">
-                <strong>Joaquín R. (Rosario, Santa Fe)</strong>
-                <span className="verified-badge"><CheckCircle size={13} className="text-success" /> Compra Verificada</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Styles */}
       <style>{`
         .home-root {
@@ -375,20 +305,21 @@ export const HomePage: React.FC = () => {
           aspect-ratio: 1 / 1;
           border-radius: var(--radius-md);
           overflow: hidden;
-          background: var(--color-bg-tertiary);
-          border: 1px solid var(--color-border);
-        }
-        .cat-tile-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.35s ease;
-        }
-        .cat-tile:hover .cat-tile-img {
-          transform: scale(1.07);
+          display: flex;
+          align-items: flex-end;
+          padding: 0.7rem;
+          transition: transform 0.2s ease;
         }
         .cat-tile:hover .cat-tile-media {
-          border-color: var(--color-accent);
+          transform: translateY(-3px);
+        }
+        .cat-tile-name {
+          font-family: var(--font-display);
+          font-size: clamp(0.82rem, 0.7rem + 0.5vw, 1.05rem);
+          font-weight: 800;
+          line-height: 1.1;
+          color: #FFFFFF;
+          letter-spacing: -0.01em;
         }
         .cat-tile-badge {
           position: absolute;
@@ -401,17 +332,6 @@ export const HomePage: React.FC = () => {
           letter-spacing: 0.03em;
           padding: 0.15rem 0.4rem;
           border-radius: var(--radius-xs);
-        }
-        .cat-tile-title {
-          font-family: var(--font-display);
-          font-size: 0.78rem;
-          font-weight: 800;
-          letter-spacing: 0.02em;
-          text-align: center;
-          line-height: 1.2;
-        }
-        @media (min-width: 768px) {
-          .cat-tile-title { font-size: 0.85rem; }
         }
 
         /* 4. Products Showcase */
@@ -648,67 +568,6 @@ export const HomePage: React.FC = () => {
           background: #22C55E;
         }
 
-        /* 9. Reviews */
-        .reviews-section {
-          padding: 3.5rem 0 5rem;
-          background-color: var(--color-bg-secondary);
-          border-top: 1px solid var(--color-border);
-        }
-        .reviews-header {
-          margin-bottom: 2.5rem;
-          text-align: center;
-        }
-        .reviews-stars-summary {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.65rem;
-          margin-top: 0.5rem;
-        }
-        .reviews-score {
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: var(--color-text-muted);
-        }
-        .reviews-grid {
-          gap: 1.5rem;
-        }
-        .review-card {
-          background-color: #FFFFFF;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-sm);
-          padding: 1.5rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.85rem;
-          box-shadow: var(--shadow-xs);
-        }
-        .review-stars {
-          display: flex;
-          gap: 2px;
-        }
-        .review-comment {
-          font-size: 0.88rem;
-          line-height: 1.6;
-          color: var(--color-text-main);
-          font-style: italic;
-          flex: 1;
-        }
-        .review-author-info {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-size: 0.78rem;
-          border-top: 1px solid var(--color-border);
-          padding-top: 0.75rem;
-        }
-        .verified-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.25rem;
-          color: var(--color-success);
-          font-weight: 700;
-        }
       `}</style>
     </div>
   );

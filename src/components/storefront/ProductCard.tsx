@@ -21,8 +21,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const currentPrice = primaryVariant.priceInCents;
-  const originalPrice = product.compareAtPriceInCents || Math.round(currentPrice * 1.18);
-  const discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+  // Only show a discount when the store actually set a "before" price (never invented)
+  const originalPrice =
+    ('compareAtPriceInCents' in primaryVariant && primaryVariant.compareAtPriceInCents) ||
+    product.compareAtPriceInCents ||
+    0;
+  const discountPercent =
+    originalPrice > currentPrice
+      ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100)
+      : 0;
   const isOutOfStock = product.variants.length > 0 && product.variants.every((v) => v.stock <= 0);
 
   const handleQuickAdd = (e: React.MouseEvent) => {

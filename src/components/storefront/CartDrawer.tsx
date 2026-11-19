@@ -53,7 +53,7 @@ export const CartDrawer: React.FC = () => {
           <div className="free-shipping-text">
             <Truck size={16} className={isFreeShippingEligible ? 'text-success' : 'text-primary'} />
             {isFreeShippingEligible ? (
-              <span className="text-success font-bold">¡ENVÍO GRATIS A TODO EL PAÍS CONSEGUIDO! 🎉</span>
+              <span className="text-success font-bold">Tenés envío gratis a todo el país</span>
             ) : (
               <span>
                 Agregá <strong>{formatARS(centsRemainingForFreeShipping)}</strong> para tener <strong>Envío Gratis</strong>
