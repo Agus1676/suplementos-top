@@ -19,7 +19,7 @@ export const CATEGORIES: Category[] = [
     name: 'Proteínas',
     slug: 'proteinas',
     description: 'Whey Protein concentradas, aisladas CFM e hidrolizadas para máxima recuperación muscular.',
-    imageUrl: '/logo.jpg',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
     sortOrder: 1,
   },
   {
@@ -27,7 +27,7 @@ export const CATEGORIES: Category[] = [
     name: 'Creatinas',
     slug: 'creatinas',
     description: 'Creatina monohidratada micronizada y certificación oficial Creapure® alemana.',
-    imageUrl: '/logo.jpg',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-86-b01227391a8693a81817830230456620-640-0.webp',
     sortOrder: 2,
   },
   {
@@ -35,7 +35,7 @@ export const CATEGORIES: Category[] = [
     name: 'Pre-Entrenos',
     slug: 'pre-entrenos',
     description: 'Fórmulas para energía explosiva, congestión muscular y retraso de la fatiga.',
-    imageUrl: '/logo.jpg',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/v8-acai-296d8b9d4323834baa17326403674588-640-0.webp',
     sortOrder: 3,
   },
   {
@@ -43,7 +43,7 @@ export const CATEGORIES: Category[] = [
     name: 'Aminoácidos & BCAA',
     slug: 'aminoacidos',
     description: 'BCAA 4:1:1, EAA fermentados y L-Glutamina pura de máxima asimilación.',
-    imageUrl: '/logo.jpg',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/1-beta-alanina1-9e9e31c14f3fab222116395930246659-640-0.webp',
     sortOrder: 4,
   },
   {
@@ -51,7 +51,7 @@ export const CATEGORIES: Category[] = [
     name: 'Salud & Vitaminas',
     slug: 'salud-vitaminas',
     description: 'Citrato de Magnesio, Omega 3 Fish Oil de alta concentración y multivitamínicos.',
-    imageUrl: '/logo.jpg',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
     sortOrder: 5,
   },
   {
@@ -59,7 +59,7 @@ export const CATEGORIES: Category[] = [
     name: 'Combos & Ofertas',
     slug: 'combos',
     description: 'Packs armados para volumen y definición con descuento especial y envío gratis.',
-    imageUrl: '/logo.jpg',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
     sortOrder: 6,
   },
   {
@@ -67,7 +67,7 @@ export const CATEGORIES: Category[] = [
     name: 'Accesorios & Shakers',
     slug: 'accesorios',
     description: 'Mezcladores herméticos de acero quirúrgico, toallas y equipamiento de entrenamiento.',
-    imageUrl: '/logo.jpg',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/colag-sport-fp-34b023adaa65e4448817335106040409-640-0.webp',
     sortOrder: 7,
   }
 ];
@@ -76,7 +76,7 @@ export const PRODUCTS: Product[] = [
   // 1. Star Nutrition - Platinum Whey Isolate
   {
     id: 'prod-star-isolate',
-    name: 'Star Nutrition — Platinum Whey Isolate CFM',
+    name: 'Proteína Whey Star Nutrition Doypack 2lb/908g',
     slug: 'star-nutrition-platinum-whey-isolate-cfm',
     tagline: '27g de proteína aislada por porción, 0g carbohidratos, microfiltrado CFM',
     description: 'Aislado de proteína de suero de leche obtenido por microfiltración de flujo cruzado (CFM). Garantiza la máxima concentración proteica sin desnaturalizar los péptidos bioactivos. Ideal para etapas de definición estricta y recuperación muscular inmediata.',
@@ -95,7 +95,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-star-iso-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-36-d9bc6bd2b3819e422717800791905669-640-0.webp',
         altText: 'Star Nutrition Platinum Whey Isolate',
         sortOrder: 1,
       },
@@ -144,7 +144,7 @@ export const PRODUCTS: Product[] = [
   // 2. ENA Sport - Creatina Creapure® Monohidrato
   {
     id: 'prod-ena-creapure',
-    name: 'ENA Sport — Creatina Creapure® 100% Pura',
+    name: 'Creatina Micronizada ENA Sport 300g 100% Pura',
     slug: 'ena-sport-creatina-creapure-100-pura',
     tagline: 'Sello oficial de pureza alemán Creapure®, micronizada y sin aditivos',
     description: 'Creatina monohidratada de grado farmacéutico fabricada en Alemania bajo el prestigioso sello Creapure®. Incrementa drásticamente la fuerza, la potencia anaeróbica y acelera la recuperación de fosfocreatina intracelular.',
@@ -163,7 +163,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-ena-crea-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/crea1-43ecc9d7c95f3dd32316495194702323-640-0.webp',
         altText: 'ENA Sport Creatina Creapure',
         sortOrder: 1,
       },
@@ -200,7 +200,7 @@ export const PRODUCTS: Product[] = [
   // 3. Optimum Nutrition - Gold Standard 100% Whey
   {
     id: 'prod-on-gold-standard',
-    name: 'Optimum Nutrition — Gold Standard 100% Whey',
+    name: 'Creatina Monohidrato Micronizada Optimum Nutrition 300g',
     slug: 'optimum-nutrition-gold-standard-100-whey',
     tagline: 'El estándar mundial de proteínas: 24g proteína, 5.5g BCAA, importado USA',
     description: 'La proteína de suero más premiada y reconocida en el mundo del fitness. Mezcla premium de aislado de proteína de suero (WPI), concentrado (WPC) y péptidos hidrolizados para una digestibilidad impecable.',
@@ -219,7 +219,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-on-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-66-89296cadbf5be4b82e17579636094867-640-0.webp',
         altText: 'Optimum Nutrition Gold Standard Whey',
         sortOrder: 1,
       },
@@ -268,7 +268,7 @@ export const PRODUCTS: Product[] = [
   // 4. ENA Sport - True Made Whey Protein
   {
     id: 'prod-ena-true-made',
-    name: 'ENA Sport — True Made Whey Protein Concentrada',
+    name: 'Proteína True Made Whey ENA Sport 2lb/930g',
     slug: 'ena-sport-true-made-whey-protein',
     tagline: '25g de proteína, disolución instantánea y sabor excepcional',
     description: 'Proteína concentrada al 80% con materia prima Glanbia Nutritionals. Enriquecida con BCAA y glutamina, libre de gluten y con la disolución más suave del mercado argentino.',
@@ -286,7 +286,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-ena-true-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
         altText: 'ENA Sport True Made Whey',
         sortOrder: 1,
       },
@@ -323,7 +323,7 @@ export const PRODUCTS: Product[] = [
   // 5. Star Nutrition - Pump 3D Pre-Entreno
   {
     id: 'prod-star-pump-3d',
-    name: 'Star Nutrition — Pump 3D Extreme Pre-Workout',
+    name: 'Pre Entreno Pump V8 Star Nutrition 285g',
     slug: 'star-nutrition-pump-3d-extreme-pre-workout',
     tagline: 'Óxido Nítrico, Beta Alanina CarnoSyn® y Cafeína Anhidra para máxima congestión',
     description: 'Fórmula pre-entrenamiento de alta intensidad diseñada para maximizar el bombeo sanguíneo, la oxigenación muscular y la resistencia a la acidez láctica.',
@@ -341,7 +341,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-pump-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/v8-acai-296d8b9d4323834baa17326403674588-640-0.webp',
         altText: 'Star Nutrition Pump 3D Pre Workout',
         sortOrder: 1,
       },
@@ -378,7 +378,7 @@ export const PRODUCTS: Product[] = [
   // 6. Dymatize - ISO 100 Hydrolyzed
   {
     id: 'prod-dymatize-iso-100',
-    name: 'Dymatize — ISO 100 100% Hydrolyzed Whey Isolate',
+    name: 'Proteína Isolate ISOPROT ENA Sport 2lb',
     slug: 'dymatize-iso-100-hydrolyzed-whey-isolate',
     tagline: 'Proteína 100% hidrolizada y aislada, 25g de proteína, digestión relámpago',
     description: 'La cumbre de la nutrición deportiva a nivel global. Proteína hidrolizada enzimáticamente en péptidos pequeños para una absorción inmediata. Menos de 1g de azúcar y grasas.',
@@ -396,7 +396,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-iso100-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-2026-10-03t104933-283-8d35f5b7ba1edf476917910354272508-640-0.webp',
         altText: 'Dymatize ISO 100 Hydrolyzed',
         sortOrder: 1,
       },
@@ -433,7 +433,7 @@ export const PRODUCTS: Product[] = [
   // 7. Combo Especial: Definición y Masa Muscular
   {
     id: 'prod-combo-definicion',
-    name: 'Combo Pro — Star Isolate CFM + ENA Creatina Creapure® + Shaker Steel',
+    name: 'Proteína Premium Whey Star Nutrition Balde 3 Kg',
     slug: 'combo-pro-star-isolate-creapure-shaker',
     tagline: 'El pack más potente de Argentina con 15% de ahorro y Envío Gratis',
     description: 'El combo por excelencia para ganar fuerza y masa muscular magra sin retención de líquidos ni grasa. Incluye: 1 Star Isolate CFM 908g + 1 ENA Creatina Creapure® 300g + 1 Shaker Pro de Acero Inoxidable.',
@@ -452,7 +452,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-combo-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
         altText: 'Combo Pro Definicion',
         sortOrder: 1,
       },
@@ -477,7 +477,7 @@ export const PRODUCTS: Product[] = [
   // 8. Gentech - Citrato de Magnesio + Zinc
   {
     id: 'prod-gentech-magnesio',
-    name: 'Gentech — Citrato de Magnesio Puro + Zinc & B6',
+    name: 'Citrato de Magnesio Star Nutrition 60 Cápsulas',
     slug: 'gentech-citrato-de-magnesio-puro-zinc-b6',
     tagline: 'Máxima biodisponibilidad para relajación muscular, sueño profundo y evitar calambres',
     description: 'Citrato de magnesio de alta absorción intestinal combinado con zinc quelatado y vitamina B6. Fundamental para deportistas con alta sudoración y contracturas musculares.',
@@ -495,7 +495,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-mag-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
         altText: 'Citrato de Magnesio Gentech',
         sortOrder: 1,
       },
@@ -519,7 +519,7 @@ export const PRODUCTS: Product[] = [
   // 9. Suplementos Top Gear - Shaker Pro Steel
   {
     id: 'prod-shaker-pro-steel',
-    name: 'Suplementos Top Gear — Shaker Pro Steel 750ml Hermético',
+    name: 'Proteína Classic Whey One Fit Doypack 2lb/908g',
     slug: 'suplementos-top-gear-shaker-pro-steel-750ml',
     tagline: 'Acero inoxidable 304 quirúrgico, rejilla anti-grumos y cierre 100% estanco',
     description: 'Eliminá para siempre los malos olores del plástico. Mezclador térmico de acero inoxidable con serigrafía láser de Suplementos Top y escala de medición interior en mililitros y onzas.',
@@ -537,7 +537,7 @@ export const PRODUCTS: Product[] = [
     images: [
       {
         id: 'img-shaker-steel-1',
-        url: '/logo.jpg',
+        url: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-95-5c7345af65acc8ee4917654696614725-640-0.webp',
         altText: 'Shaker Pro Steel',
         sortOrder: 1,
       },
@@ -602,7 +602,7 @@ export const INITIAL_ORDERS: Order[] = [
         id: 'item-1',
         orderId: 'ord-1001',
         productId: 'prod-star-isolate',
-        productName: 'Star Nutrition — Platinum Whey Isolate CFM',
+        productName: 'Proteína Whey Star Nutrition Doypack 2lb/908g',
         variantId: 'var-star-iso-choc',
         variantTitle: 'Chocolate Suizo - 908g',
         sku: 'STAR-ISO-CHO-1',
@@ -614,7 +614,7 @@ export const INITIAL_ORDERS: Order[] = [
         id: 'item-2',
         orderId: 'ord-1001',
         productId: 'prod-ena-creapure',
-        productName: 'ENA Sport — Creatina Creapure® 100% Pura',
+        productName: 'Creatina Micronizada ENA Sport 300g 100% Pura',
         variantId: 'var-ena-crea-300g',
         variantTitle: 'Neutro Sin Sabor - 300g',
         sku: 'ENA-CREA-300',
@@ -646,7 +646,7 @@ export const INITIAL_ORDERS: Order[] = [
         id: 'item-3',
         orderId: 'ord-1002',
         productId: 'prod-star-pump-3d',
-        productName: 'Star Nutrition — Pump 3D Extreme Pre-Workout',
+        productName: 'Pre Entreno Pump V8 Star Nutrition 285g',
         variantId: 'var-pump-fruit',
         variantTitle: 'Fruit Punch - 300g',
         sku: 'STAR-PUMP-FRU',

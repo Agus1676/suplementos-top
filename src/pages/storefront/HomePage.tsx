@@ -5,14 +5,6 @@ import {
   Phone,
   ArrowRight,
   Clock,
-  Dumbbell,
-  Zap,
-  Flame,
-  Activity,
-  Pill,
-  GlassWater,
-  Package,
-  type LucideIcon,
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../../components/storefront/ProductCard';
@@ -20,21 +12,45 @@ import { HeroSlider } from '../../components/storefront/HeroSlider';
 import { TrustMarquee } from '../../components/storefront/TrustMarquee';
 import { HorizontalScroller } from '../../components/ui/HorizontalScroller';
 
-interface CategoryChip {
+interface CategoryTile {
   title: string;
   slug: string;
-  icon: LucideIcon;
+  imageUrl: string;
   badge?: string;
 }
 
-const CATEGORY_CHIPS: CategoryChip[] = [
-  { title: 'Proteínas', slug: 'proteinas', icon: Dumbbell },
-  { title: 'Creatinas', slug: 'creatinas', icon: Zap },
-  { title: 'Pre-entrenos', slug: 'pre-entrenos', icon: Flame },
-  { title: 'Aminoácidos', slug: 'aminoacidos', icon: Activity },
-  { title: 'Vitaminas', slug: 'salud-vitaminas', icon: Pill },
-  { title: 'Accesorios', slug: 'accesorios', icon: GlassWater },
-  { title: 'Combos', slug: 'combos', icon: Package, badge: 'Ofertas' },
+const CATEGORY_TILES: CategoryTile[] = [
+  {
+    title: 'Proteínas',
+    slug: 'proteinas',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
+  },
+  {
+    title: 'Creatinas',
+    slug: 'creatinas',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-86-b01227391a8693a81817830230456620-640-0.webp',
+  },
+  {
+    title: 'Pre-entrenos',
+    slug: 'pre-entrenos',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/v8-acai-296d8b9d4323834baa17326403674588-640-0.webp',
+  },
+  {
+    title: 'Combos',
+    slug: 'combos',
+    badge: '20% OFF',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
+  },
+  {
+    title: 'Aminoácidos',
+    slug: 'aminoacidos',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/1-beta-alanina1-9e9e31c14f3fab222116395930246659-640-0.webp',
+  },
+  {
+    title: 'Vitaminas',
+    slug: 'salud-vitaminas',
+    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
+  },
 ];
 export const HomePage: React.FC = () => {
   const { products, settings } = useStore();
@@ -64,18 +80,37 @@ export const HomePage: React.FC = () => {
       {/* 2. Trust strip — compact, auto-scrolling to the left */}
       <TrustMarquee />
 
-      {/* 3. Category chips — compact, scrollable */}
+      {/* 3. Compact category rail with real product packshots */}
       <section className="categories-section" aria-label="Categorías">
         <div className="container">
-          <nav className="cat-chips">
-            {CATEGORY_CHIPS.map(({ title, slug, icon: Icon, badge }) => (
-              <Link key={slug} to={`/catalogo?categoria=${slug}`} className="cat-chip">
-                <Icon size={18} strokeWidth={2} />
-                <span>{title}</span>
-                {badge && <em className="cat-chip-badge">{badge}</em>}
+          <div className="section-header">
+            <h2 className="section-title">Comprá por categoría</h2>
+            <Link to="/catalogo" className="section-link">
+              <span>Ver todo</span>
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <HorizontalScroller
+            ariaLabel="Categorías de productos"
+            perView={{ mobile: 3, tablet: 5, desktop: 6 }}
+            gapRem={0.75}
+            mobilePeek={0.3}
+          >
+            {CATEGORY_TILES.map((cat) => (
+              <Link
+                key={cat.slug}
+                to={`/catalogo?categoria=${cat.slug}`}
+                className="cat-pack-card"
+              >
+                <div className="cat-pack-stage">
+                  {cat.badge && <span className="cat-pack-badge">{cat.badge}</span>}
+                  <img src={cat.imageUrl} alt={cat.title} loading="lazy" className="cat-pack-img" />
+                </div>
+                <span className="cat-pack-title">{cat.title}</span>
               </Link>
             ))}
-          </nav>
+          </HorizontalScroller>
         </div>
       </section>
 
@@ -245,52 +280,65 @@ export const HomePage: React.FC = () => {
           gap: 0;
         }
 
-        /* 3. Category chips */
+        /* 3. Compact Category Packshot Cards */
         .categories-section {
-          padding: 1rem 0 0.25rem;
+          padding: 1.5rem 0 0.75rem;
           background: #FFFFFF;
         }
-        .cat-chips {
+        .cat-pack-card {
           display: flex;
-          gap: 0.5rem;
-          overflow-x: auto;
-          scrollbar-width: none;
-          padding-bottom: 0.25rem;
-          -webkit-overflow-scrolling: touch;
-        }
-        .cat-chips::-webkit-scrollbar { display: none; }
-        .cat-chip {
-          flex: 0 0 auto;
-          display: inline-flex;
+          flex-direction: column;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.6rem 1rem;
-          background: #FFFFFF;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-sm);
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: var(--color-text-main);
+          gap: 0.45rem;
           text-decoration: none;
-          white-space: nowrap;
-          transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+          color: var(--color-text-main);
         }
-        .cat-chip svg { color: var(--color-accent); }
-        .cat-chip:hover {
+        .cat-pack-stage {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          border-radius: 10px;
+          padding: 0.65rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .cat-pack-card:hover .cat-pack-stage {
           border-color: var(--color-accent);
-          color: var(--color-accent);
+          box-shadow: 0 8px 20px -8px rgba(15, 23, 42, 0.14);
+          transform: translateY(-2px);
         }
-        .cat-chip-badge {
-          font-style: normal;
-          font-size: 0.66rem;
-          font-weight: 800;
+        .cat-pack-img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          transition: transform 0.25s ease;
+        }
+        .cat-pack-card:hover .cat-pack-img {
+          transform: scale(1.06);
+        }
+        .cat-pack-badge {
+          position: absolute;
+          top: 0.45rem;
+          left: 0.45rem;
           background: var(--color-promo-red);
           color: #FFFFFF;
-          padding: 0.15rem 0.4rem;
-          border-radius: var(--radius-xs);
+          font-size: 0.6rem;
+          font-weight: 800;
+          padding: 0.16rem 0.4rem;
+          border-radius: 4px;
+          z-index: 2;
         }
-        @media (min-width: 900px) {
-          .cat-chips { flex-wrap: wrap; overflow: visible; }
+        .cat-pack-title {
+          font-family: var(--font-display);
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: var(--color-text-main);
+          text-align: center;
         }
         /* 4. Products Showcase */
         .products-showcase-section {
