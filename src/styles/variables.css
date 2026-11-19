@@ -50,10 +50,10 @@
   --color-border-hover: #CBD5E1;
   --color-border-dark: #0F172A;
 
-  /* Typography Fonts */
-  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  /* Typography Fonts (ProteViking / Tiendanube Retail Standard) */
+  --font-display: 'Montserrat', 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-body: 'Poppins', 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Poppins', 'Montserrat', system-ui, -apple-system, sans-serif;
 
   /* Shadows (Natural, subtle, crisp) */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

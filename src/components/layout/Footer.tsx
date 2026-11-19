@@ -12,9 +12,7 @@ export const Footer: React.FC = () => {
           <div className="ft-brand">
             <img src="/logo.jpg" alt={settings.storeName} className="ft-logo" />
             <div>
-              <div className="ft-name">
-                SUPLEMENTOS <span>TOP</span>
-              </div>
+              <div className="ft-name">SUPLEMENTOS TOP</div>
               <p className="ft-about">
                 Suplementación deportiva original en Recoleta, Ciudad Autónoma de Buenos Aires.
               </p>
@@ -69,9 +67,9 @@ export const Footer: React.FC = () => {
 
       <style>{`
         .ft {
-          background: #000000;
-          color: #A1A1AA;
-          border-top: 1px solid #1F1F1F;
+          background: #F8FAFC;
+          color: #52525B;
+          border-top: 1px solid #E4E4E7;
           margin-top: 3rem;
           width: 100%;
           font-size: 0.82rem;
@@ -94,32 +92,28 @@ export const Footer: React.FC = () => {
           gap: 14px;
         }
         .ft-logo {
-          width: 56px;
-          height: 56px;
-          border-radius: 50%;
+          width: 52px;
+          height: 52px;
+          border-radius: 10px;
           object-fit: cover;
           display: block;
           flex-shrink: 0;
-          border: 1px solid #27272A;
         }
         .ft-name {
           font-family: var(--font-display);
-          font-size: 1.05rem;
-          font-weight: 900;
-          color: #FFFFFF;
-          letter-spacing: -0.01em;
-          line-height: 1.1;
+          font-size: 1rem;
+          font-weight: 800;
+          color: #18181B;
+          letter-spacing: 0.04em;
+          line-height: 1.15;
           margin-bottom: 5px;
-        }
-        .ft-name span {
-          color: var(--color-accent);
         }
         .ft-about {
           margin: 0;
           max-width: 240px;
           line-height: 1.45;
-          color: #8A8A93;
-          font-size: 0.82rem;
+          color: #71717A;
+          font-size: 0.8rem;
         }
         .ft-col {
           display: flex;
@@ -129,24 +123,24 @@ export const Footer: React.FC = () => {
         }
         .ft-col h4 {
           margin: 0 0 4px;
-          font-size: 0.7rem;
+          font-size: 0.72rem;
           font-weight: 700;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: #FFFFFF;
+          color: #18181B;
         }
         .ft-col a,
         .ft-col span {
-          color: #A1A1AA;
+          color: #52525B;
           text-decoration: none;
           line-height: 1.4;
           transition: color 0.15s ease;
         }
         .ft-col a:hover {
-          color: #FFFFFF;
+          color: #18181B;
         }
         .ft-bottom {
-          border-top: 1px solid #1F1F1F;
+          border-top: 1px solid #E4E4E7;
           padding-top: 14px;
           display: flex;
           justify-content: space-between;
@@ -157,20 +151,20 @@ export const Footer: React.FC = () => {
           color: #71717A;
         }
         .ft-bottom a {
-          color: #E4E4E7;
+          color: #18181B;
           font-weight: 600;
           text-decoration: none;
           transition: color 0.15s ease;
         }
         .ft-bottom a:hover {
-          color: var(--color-accent);
+          text-decoration: underline;
         }
         .ft-admin {
-          color: #52525B !important;
+          color: #A1A1AA !important;
           font-weight: 400 !important;
         }
         .ft-admin:hover {
-          color: #A1A1AA !important;
+          color: #52525B !important;
         }
         @media (max-width: 860px) {
           .ft-grid {

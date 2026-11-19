@@ -406,19 +406,20 @@ export const HomePage: React.FC = () => {
           box-shadow: 0 12px 24px -10px rgba(15, 23, 42, 0.18);
         }
         .promo-banner-dark {
-          background: #0F172A;
-          color: #FFFFFF;
-          border-color: #1E293B;
+          background: #F4F4F5;
+          color: #18181B;
+          border-color: #E4E4E7;
         }
         .promo-banner-dark .promo-title {
-          color: #FFFFFF;
+          color: #18181B;
         }
         .promo-banner-dark .promo-desc {
-          color: #CBD5E1;
+          color: #52525B;
         }
         .promo-banner-light {
-          background: #F8FAFC;
-          color: var(--color-text-main);
+          background: #F4F4F5;
+          color: #18181B;
+          border-color: #E4E4E7;
         }
         .promo-banner-content {
           display: flex;
@@ -463,11 +464,11 @@ export const HomePage: React.FC = () => {
           gap: 0.35rem;
           font-size: 0.8rem;
           font-weight: 700;
-          color: #FFFFFF;
+          color: #18181B;
           margin-top: 0.25rem;
         }
         .promo-cta-dark {
-          color: var(--color-accent);
+          color: #18181B;
         }
         .promo-banner-packshot {
           width: 120px;

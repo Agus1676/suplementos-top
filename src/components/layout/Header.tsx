@@ -57,12 +57,12 @@ export const Header: React.FC = () => {
 
   return (
     <header className="pv-header">
-      {/* Top Bar */}
+      {/* Top Promo Strip */}
       <div className="pv-topbar">
         <div className="container pv-topbar-inner">
-          <span>10% OFF por transferencia · Hasta 6 cuotas sin interés · Envío gratis desde $85.000</span>
+          <span>10% OFF por transferencia · 6 cuotas sin interés · Envío gratis desde $85.000</span>
           <div className="pv-topbar-links">
-            <span>Uriburu 1163, Recoleta</span>
+            <span>Retiro sin cargo: Uriburu 1163, Recoleta</span>
             <span className="pv-topbar-sep">|</span>
             <a href="https://wa.me/5491165651990" target="_blank" rel="noopener noreferrer">
               WhatsApp 11 6565 1990
@@ -71,7 +71,7 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Header: Brand Left, Search + Icons Right */}
+      {/* Main White Header */}
       <div className="pv-header-main">
         <div className="container pv-header-row">
           <button
@@ -85,18 +85,15 @@ export const Header: React.FC = () => {
 
           <Link to="/" className="pv-brand">
             <img src="/logo.jpg" alt="Suplementos Top" className="pv-brand-logo" />
-            <span className="pv-brand-name">
-              SUPLEMENTOS <b>TOP</b>
-            </span>
+            <span className="pv-brand-name">SUPLEMENTOS TOP</span>
           </Link>
 
           <div className="pv-right-cluster">
-            {/* Search Input */}
             <div className="pv-search-wrap" ref={searchRef}>
               <form onSubmit={handleSearchSubmit} className="pv-search-form">
                 <input
                   type="text"
-                  placeholder="Buscar..."
+                  placeholder="Buscar productos o marcas..."
                   value={searchQuery}
                   onFocus={() => setIsSearchFocused(true)}
                   onChange={(e) => {
@@ -151,7 +148,6 @@ export const Header: React.FC = () => {
               )}
             </div>
 
-            {/* Order Tracking Icon */}
             <Link
               to="/seguimiento"
               className="pv-icon-btn"
@@ -161,7 +157,6 @@ export const Header: React.FC = () => {
               <PackageCheck size={20} />
             </Link>
 
-            {/* Cart Icon with Counter */}
             <button
               type="button"
               onClick={openCartDrawer}
@@ -175,34 +170,18 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Integrated Navigation Bar (ProteViking layout) */}
+        {/* Clean White Navigation Bar */}
         <nav className="pv-nav" aria-label="Navegación principal">
           <div className="container">
             <ul className="pv-nav-list">
-              <li>
-                <Link to="/">INICIO</Link>
-              </li>
-              <li>
-                <Link to="/catalogo">PRODUCTOS</Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=proteinas">PROTEÍNAS</Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=creatinas">CREATINAS</Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=pre-entrenos">PRE-ENTRENOS</Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=combos">COMBOS</Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=salud-vitaminas">VITAMINAS</Link>
-              </li>
-              <li>
-                <Link to="/contacto">CONTACTO</Link>
-              </li>
+              <li><Link to="/">Inicio</Link></li>
+              <li><Link to="/catalogo">Productos</Link></li>
+              <li><Link to="/catalogo?categoria=proteinas">Proteínas</Link></li>
+              <li><Link to="/catalogo?categoria=creatinas">Creatinas</Link></li>
+              <li><Link to="/catalogo?categoria=pre-entrenos">Pre-entrenos</Link></li>
+              <li><Link to="/catalogo?categoria=combos">Combos</Link></li>
+              <li><Link to="/catalogo?categoria=salud-vitaminas">Vitaminas</Link></li>
+              <li><Link to="/contacto">Contacto</Link></li>
             </ul>
           </div>
         </nav>
@@ -213,7 +192,7 @@ export const Header: React.FC = () => {
         <div className="pv-mobile-backdrop" onClick={() => setMobileMenuOpen(false)}>
           <div className="pv-mobile-drawer" onClick={(e) => e.stopPropagation()}>
             <div className="pv-mobile-head">
-              <span>MENÚ</span>
+              <span>Menú</span>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
@@ -243,15 +222,15 @@ export const Header: React.FC = () => {
           position: sticky;
           top: 0;
           z-index: 100;
-          background: #0B0F17;
-          color: #FFFFFF;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+          background: #FFFFFF;
+          color: #18181B;
+          border-bottom: 1px solid #E4E4E7;
         }
         .pv-topbar {
-          background: #06090F;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+          background: #5B8C2A;
           font-size: 0.72rem;
-          color: #A1A1AA;
+          font-weight: 500;
+          color: #FFFFFF;
           padding: 0.35rem 0;
         }
         .pv-topbar-inner {
@@ -266,15 +245,15 @@ export const Header: React.FC = () => {
           gap: 0.5rem;
         }
         .pv-topbar-links a {
-          color: #E4E4E7;
+          color: #FFFFFF;
           text-decoration: none;
           font-weight: 600;
         }
         .pv-topbar-links a:hover {
-          color: #FFFFFF;
+          text-decoration: underline;
         }
         .pv-topbar-sep {
-          color: #3F3F46;
+          opacity: 0.5;
         }
         @media (min-width: 768px) {
           .pv-topbar-links {
@@ -283,7 +262,7 @@ export const Header: React.FC = () => {
         }
 
         .pv-header-main {
-          background: #0B0F17;
+          background: #FFFFFF;
         }
         .pv-header-row {
           display: flex;
@@ -299,7 +278,7 @@ export const Header: React.FC = () => {
           justify-content: center;
           background: none;
           border: none;
-          color: #FFFFFF;
+          color: #18181B;
           cursor: pointer;
           padding: 0.25rem;
         }
@@ -314,68 +293,65 @@ export const Header: React.FC = () => {
           align-items: center;
           gap: 0.65rem;
           text-decoration: none;
-          color: #FFFFFF;
+          color: #18181B;
           flex-shrink: 0;
         }
         .pv-brand-logo {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
+          width: 42px;
+          height: 42px;
+          border-radius: 8px;
           object-fit: cover;
-          border: 1px solid rgba(255, 255, 255, 0.15);
         }
         .pv-brand-name {
           font-family: var(--font-display);
-          font-size: 1.15rem;
-          font-weight: 900;
-          letter-spacing: -0.02em;
-          color: #FFFFFF;
-        }
-        .pv-brand-name b {
-          color: var(--color-accent);
+          font-size: 1.05rem;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          color: #18181B;
         }
 
         .pv-right-cluster {
           display: flex;
           align-items: center;
-          gap: 0.65rem;
+          gap: 0.5rem;
           flex: 1;
           justify-content: flex-end;
         }
         .pv-search-wrap {
           position: relative;
           width: 100%;
-          max-width: 340px;
+          max-width: 360px;
         }
         .pv-search-form {
           display: flex;
           align-items: center;
-          background: rgba(255, 255, 255, 0.07);
-          border: 1px solid rgba(255, 255, 255, 0.18);
-          border-radius: 4px;
+          background: #F4F4F5;
+          border: 1px solid #E4E4E7;
+          border-radius: 6px;
           overflow: hidden;
           transition: border-color 0.15s ease, background 0.15s ease;
         }
         .pv-search-form:focus-within {
-          border-color: rgba(255, 255, 255, 0.45);
-          background: rgba(255, 255, 255, 0.11);
+          border-color: #A1A1AA;
+          background: #FFFFFF;
         }
         .pv-search-input {
           width: 100%;
           background: transparent;
           border: none;
-          color: #FFFFFF;
+          color: #18181B;
+          font-family: var(--font-body);
           font-size: 0.82rem;
           padding: 0.5rem 0.75rem;
           outline: none;
         }
         .pv-search-input::placeholder {
-          color: #9CA3AF;
+          color: #71717A;
         }
         .pv-search-btn {
           background: transparent;
           border: none;
-          color: #D4D4D8;
+          color: #52525B;
           padding: 0.5rem 0.7rem;
           display: flex;
           align-items: center;
@@ -383,7 +359,7 @@ export const Header: React.FC = () => {
           cursor: pointer;
         }
         .pv-search-btn:hover {
-          color: #FFFFFF;
+          color: #18181B;
         }
 
         .pv-search-dropdown {
@@ -394,7 +370,7 @@ export const Header: React.FC = () => {
           background: #FFFFFF;
           color: #18181B;
           border-radius: 6px;
-          box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 14px 32px rgba(0, 0, 0, 0.14);
           border: 1px solid #E4E4E7;
           overflow: hidden;
           z-index: 200;
@@ -431,7 +407,7 @@ export const Header: React.FC = () => {
         }
         .pv-search-title {
           font-size: 0.78rem;
-          font-weight: 600;
+          font-weight: 500;
           color: #18181B;
           white-space: nowrap;
           overflow: hidden;
@@ -439,8 +415,8 @@ export const Header: React.FC = () => {
         }
         .pv-search-price {
           font-size: 0.75rem;
-          font-weight: 800;
-          color: #16A34A;
+          font-weight: 700;
+          color: #5B8C2A;
         }
         .pv-search-all {
           width: 100%;
@@ -448,8 +424,8 @@ export const Header: React.FC = () => {
           border: none;
           padding: 0.55rem;
           font-size: 0.75rem;
-          font-weight: 700;
-          color: var(--color-accent);
+          font-weight: 600;
+          color: #18181B;
           cursor: pointer;
           text-align: center;
         }
@@ -467,25 +443,25 @@ export const Header: React.FC = () => {
           justify-content: center;
           width: 38px;
           height: 38px;
-          color: #FFFFFF;
+          color: #27272A;
           background: transparent;
           border: none;
-          border-radius: 4px;
+          border-radius: 6px;
           cursor: pointer;
           text-decoration: none;
           transition: background 0.15s ease;
         }
         .pv-icon-btn:hover {
-          background: rgba(255, 255, 255, 0.1);
+          background: #F4F4F5;
         }
         .pv-cart-badge {
           position: absolute;
           top: 2px;
           right: 2px;
-          background: var(--color-accent);
+          background: #5B8C2A;
           color: #FFFFFF;
           font-size: 0.65rem;
-          font-weight: 800;
+          font-weight: 700;
           min-width: 17px;
           height: 17px;
           border-radius: 999px;
@@ -496,11 +472,11 @@ export const Header: React.FC = () => {
           line-height: 1;
         }
 
-        /* Integrated Bottom Nav Row (ProteViking style) */
+        /* Clean Light Navigation Row */
         .pv-nav {
           display: none;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          background: #0B0F17;
+          border-top: 1px solid #F4F4F5;
+          background: #FFFFFF;
         }
         @media (min-width: 900px) {
           .pv-nav {
@@ -514,33 +490,32 @@ export const Header: React.FC = () => {
           gap: 2.25rem;
           list-style: none;
           margin: 0;
-          padding: 0.6rem 0;
+          padding: 0.55rem 0;
         }
         .pv-nav-list a {
-          color: #E4E4E7;
-          font-size: 0.75rem;
-          font-weight: 700;
-          letter-spacing: 0.06em;
+          color: #3F3F46;
+          font-size: 0.82rem;
+          font-weight: 600;
           text-decoration: none;
           transition: color 0.15s ease;
         }
         .pv-nav-list a:hover {
-          color: #FFFFFF;
+          color: #18181B;
         }
 
         /* Mobile Drawer */
         .pv-mobile-backdrop {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.6);
+          background: rgba(0, 0, 0, 0.45);
           z-index: 300;
         }
         .pv-mobile-drawer {
           width: 280px;
           max-width: 85vw;
           height: 100%;
-          background: #0B0F17;
-          color: #FFFFFF;
+          background: #FFFFFF;
+          color: #18181B;
           padding: 1.25rem;
           display: flex;
           flex-direction: column;
@@ -550,16 +525,15 @@ export const Header: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          font-weight: 800;
-          font-size: 0.85rem;
-          letter-spacing: 0.06em;
+          font-weight: 700;
+          font-size: 0.95rem;
           padding-bottom: 0.75rem;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          border-bottom: 1px solid #E4E4E7;
         }
         .pv-mobile-head button {
           background: none;
           border: none;
-          color: #FFFFFF;
+          color: #18181B;
           cursor: pointer;
         }
         .pv-mobile-links {
@@ -568,16 +542,16 @@ export const Header: React.FC = () => {
           padding: 0;
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
+          gap: 0.15rem;
         }
         .pv-mobile-links a {
           display: block;
-          padding: 0.65rem 0.5rem;
-          color: #E4E4E7;
+          padding: 0.65rem 0.35rem;
+          color: #27272A;
           text-decoration: none;
           font-size: 0.88rem;
-          font-weight: 600;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          font-weight: 500;
+          border-bottom: 1px solid #F4F4F5;
         }
       `}</style>
     </header>
