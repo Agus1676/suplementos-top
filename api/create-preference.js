@@ -71,6 +71,7 @@ export default async function handler(req, res) {
         failure: `${origin}/pago-resultado?orden=${encodeURIComponent(orderNumber)}&status=rejected`,
       },
       auto_return: 'approved',
+      notification_url: `${origin}/api/mercadopago-webhook`,
     };
 
     const mpResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {

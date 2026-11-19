@@ -147,6 +147,34 @@ export const CheckoutPage: React.FC = () => {
       // Guardamos el pedido para que esté disponible al volver de Mercado Pago y en /admin
       createOrder(newOrder);
 
+      // Disparamos el email automático de despacho a suplementostopparg@gmail.com
+      fetch('/api/send-order-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber: newOrder.orderNumber,
+          customerName: newOrder.customerName,
+          customerEmail: newOrder.customerEmail,
+          customerPhone: newOrder.customerPhone,
+          customerDni: newOrder.customerDni,
+          deliveryMethod: newOrder.deliveryMethod,
+          shippingAddress: newOrder.shippingAddress,
+          paymentMethod: newOrder.paymentMethod,
+          paymentStatus: newOrder.paymentStatus,
+          subtotalFormatted: formatARS(subtotalInCents),
+          discountFormatted: transferDiscountInCents > 0 ? formatARS(transferDiscountInCents) : null,
+          shippingFormatted: effectiveShippingCost === 0 ? 'GRATIS' : formatARS(effectiveShippingCost),
+          totalFormatted: formatARS(finalTotalInCents),
+          items: orderItems.map((it) => ({
+            productName: it.productName,
+            variantTitle: it.variantTitle,
+            sku: it.sku,
+            quantity: it.quantity,
+            totalFormatted: formatARS(it.totalPriceInCents),
+          })),
+        }),
+      }).catch(() => {});
+
       // Si eligió Mercado Pago, intentamos crear la preferencia real en /api/create-preference
       if (paymentChoice === 'mercadopago') {
         try {
