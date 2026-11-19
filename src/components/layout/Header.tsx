@@ -1,47 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { 
-  ShoppingBag, 
-  Search, 
-  Menu, 
-  X, 
-  Phone, 
-  MapPin, 
-  Truck, 
-  CreditCard,
-  ChevronRight,
-  Flame
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import {
+  ShoppingBag,
+  Search,
+  Menu,
+  X,
+  PackageCheck,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
 import { formatARS } from '../../lib/utils';
 
 export const Header: React.FC = () => {
-  const { totalItemsCount, subtotalInCents, openCartDrawer } = useCart();
-  const { categories, products } = useStore();
+  const { totalItemsCount, openCartDrawer } = useCart();
+  const { products } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Announcement Bar Rotation
-  const announcements = [
-    { text: '3 Y 6 CUOTAS SIN INTERÉS CON TODAS LAS TARJETAS Y MERCADO PAGO', icon: CreditCard },
-    { text: 'ENVÍO GRATIS A TODO EL PAÍS EN COMPRAS SUPERIORES A $85.000', icon: Truck },
-    { text: 'RETIRO GRATIS HOY EN RECOLETA (URIBURU 1163) — 8 A 23 HS', icon: MapPin },
-    { text: 'WHATSAPP DIRECTO Y ASESORAMIENTO OFICIAL: 11 6565 1990', icon: Phone }
-  ];
-  const [currentAnnouncementIndex, setCurrentAnnouncementIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentAnnouncementIndex((prev) => (prev + 1) % announcements.length);
-    }, 4200);
-    return () => clearInterval(timer);
-  }, [announcements.length]);
-
-  // Click outside search listener to close results
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -52,14 +31,21 @@ export const Header: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filter products for live predictive search
-  const liveSearchResults = searchQuery.trim().length >= 2
-    ? products.filter((p) => 
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.category.name.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 5)
-    : [];
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname, location.search]);
+
+  const liveSearchResults =
+    searchQuery.trim().length >= 2
+      ? products
+          .filter(
+            (p) =>
+              p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              p.category.name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .slice(0, 5)
+      : [];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,767 +55,529 @@ export const Header: React.FC = () => {
     }
   };
 
-  const currentAnnouncement = announcements[currentAnnouncementIndex];
-  const CurrentIcon = currentAnnouncement.icon;
-
   return (
-    <header className="header-root">
-      {/* 1. Top Commercial Announcement Bar */}
-      <div className="top-announcement-bar">
-        <div className="container announcement-content">
-          <div className="announcement-item">
-            <CurrentIcon size={14} className="announcement-icon" />
-            <span className="announcement-text">{currentAnnouncement.text}</span>
-          </div>
-
-          <div className="announcement-links-right">
-            <a 
-              href="https://wa.me/5491165651990" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="announcement-link"
-            >
-              <Phone size={12} />
-              <span>WhatsApp: 11 6565 1990</span>
+    <header className="pv-header">
+      {/* Top Bar */}
+      <div className="pv-topbar">
+        <div className="container pv-topbar-inner">
+          <span>10% OFF por transferencia · Hasta 6 cuotas sin interés · Envío gratis desde $85.000</span>
+          <div className="pv-topbar-links">
+            <span>Uriburu 1163, Recoleta</span>
+            <span className="pv-topbar-sep">|</span>
+            <a href="https://wa.me/5491165651990" target="_blank" rel="noopener noreferrer">
+              WhatsApp 11 6565 1990
             </a>
-            <span className="announcement-divider">•</span>
-            <Link to="/seguimiento" className="announcement-link">
-              <span>Seguimiento de Pedido</span>
-            </Link>
           </div>
         </div>
       </div>
 
-      {/* 2. Main Header Bar (Brand, Live Search, Actions) */}
-      <div className="main-header-bar">
-        <div className="container header-grid">
-          {/* Mobile Menu Toggle Button */}
-          <button 
-            className="mobile-toggle-btn"
+      {/* Main Header: Brand Left, Search + Icons Right */}
+      <div className="pv-header-main">
+        <div className="container pv-header-row">
+          <button
+            type="button"
+            className="pv-mobile-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Abrir menú"
+            aria-label="Menú"
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
-          {/* Logo & Emblem */}
-          <Link to="/" className="brand-logo-wrap">
-            <div className="brand-logo-img-wrap">
-              <img 
-                src="/logo.jpg" 
-                alt="Suplementos Top Logo" 
-                className="brand-logo-img" 
-              />
-            </div>
-            <div className="brand-text-block">
-              <span className="brand-title">
-                SUPLEMENTOS <span className="brand-title-accent">TOP</span>
-              </span>
-              <span className="brand-tagline">SPORT NUTRITION • CABA</span>
-            </div>
+          <Link to="/" className="pv-brand">
+            <img src="/logo.jpg" alt="Suplementos Top" className="pv-brand-logo" />
+            <span className="pv-brand-name">
+              SUPLEMENTOS <b>TOP</b>
+            </span>
           </Link>
 
-          {/* Live Search Bar with Predictive Dropdown */}
-          <div className="header-search-wrap" ref={searchRef}>
-            <form onSubmit={handleSearchSubmit} className="search-form">
-              <input
-                type="text"
-                placeholder="Buscar proteínas, creatinas, pre-entrenos, marcas..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-                className="search-input"
-              />
-              <button type="submit" className="search-submit-btn" aria-label="Buscar">
-                <Search size={18} />
-              </button>
-            </form>
+          <div className="pv-right-cluster">
+            {/* Search Input */}
+            <div className="pv-search-wrap" ref={searchRef}>
+              <form onSubmit={handleSearchSubmit} className="pv-search-form">
+                <input
+                  type="text"
+                  placeholder="Buscar..."
+                  value={searchQuery}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setIsSearchFocused(true);
+                  }}
+                  className="pv-search-input"
+                />
+                <button type="submit" className="pv-search-btn" aria-label="Buscar">
+                  <Search size={16} />
+                </button>
+              </form>
 
-            {/* Predictive Results Dropdown */}
-            {isSearchFocused && searchQuery.trim().length >= 2 && (
-              <div className="search-dropdown-results">
-                {liveSearchResults.length > 0 ? (
-                  <>
-                    <div className="search-results-list">
-                      {liveSearchResults.map((prod) => (
-                        <Link
-                          key={prod.id}
-                          to={`/producto/${prod.slug}`}
-                          onClick={() => setIsSearchFocused(false)}
-                          className="search-result-item"
-                        >
-                          <img src={prod.images[0]?.url || '/logo.jpg'} alt={prod.name} className="search-result-thumb" />
-                          <div className="search-result-info">
-                            <span className="search-result-brand">{prod.brand}</span>
-                            <span className="search-result-title">{prod.name}</span>
-                            <span className="search-result-price">{formatARS(prod.basePriceInCents)}</span>
-                          </div>
-                          <ChevronRight size={16} className="search-result-arrow" />
-                        </Link>
-                      ))}
+              {isSearchFocused && searchQuery.trim().length >= 2 && (
+                <div className="pv-search-dropdown">
+                  {liveSearchResults.length > 0 ? (
+                    <>
+                      <div className="pv-search-list">
+                        {liveSearchResults.map((prod) => (
+                          <Link
+                            key={prod.id}
+                            to={`/producto/${prod.slug}`}
+                            onClick={() => setIsSearchFocused(false)}
+                            className="pv-search-item"
+                          >
+                            <img
+                              src={prod.images[0]?.url || '/logo.jpg'}
+                              alt={prod.name}
+                              className="pv-search-thumb"
+                            />
+                            <div className="pv-search-meta">
+                              <span className="pv-search-title">{prod.name}</span>
+                              <span className="pv-search-price">{formatARS(prod.basePriceInCents)}</span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleSearchSubmit}
+                        className="pv-search-all"
+                      >
+                        Ver todos los resultados ({liveSearchResults.length})
+                      </button>
+                    </>
+                  ) : (
+                    <div className="pv-search-empty">
+                      Sin resultados para "{searchQuery}"
                     </div>
-                    <button 
-                      onClick={handleSearchSubmit} 
-                      className="search-view-all-btn"
-                    >
-                      Ver todos los resultados para "{searchQuery}" →
-                    </button>
-                  </>
-                ) : (
-                  <div className="search-no-results">
-                    No encontramos productos para "{searchQuery}". Intentá con otra búsqueda.
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                  )}
+                </div>
+              )}
+            </div>
 
-          {/* Header Actions (Location, Phone & Cart) */}
-          <div className="header-actions">
-            {/* Pickup Location Badge (Desktop) */}
-            <Link to="/contacto" className="header-badge-link hide-mobile">
-              <MapPin size={18} className="text-accent" />
-              <div className="badge-text-wrap">
-                <span className="badge-micro">LOCAL RECOLETA</span>
-                <span className="badge-strong">Uriburu 1163</span>
-              </div>
+            {/* Order Tracking Icon */}
+            <Link
+              to="/seguimiento"
+              className="pv-icon-btn"
+              title="Seguimiento de pedido"
+              aria-label="Seguimiento de pedido"
+            >
+              <PackageCheck size={20} />
             </Link>
 
-            {/* Cart Button with Count Badge and Subtotal */}
-            <button 
-              onClick={openCartDrawer} 
-              className="header-cart-btn"
+            {/* Cart Icon with Counter */}
+            <button
+              type="button"
+              onClick={openCartDrawer}
+              className="pv-icon-btn pv-cart-btn"
               aria-label="Abrir carrito"
+              title="Carrito"
             >
-              <div className="cart-icon-wrap">
-                <ShoppingBag size={22} />
-                {totalItemsCount > 0 && (
-                  <span className="cart-counter-pill">{totalItemsCount}</span>
-                )}
-              </div>
-              <div className="cart-text-wrap hide-mobile">
-                <span className="cart-micro">MI CARRITO</span>
-                <span className="cart-amount">{formatARS(subtotalInCents)}</span>
-              </div>
+              <ShoppingBag size={20} />
+              <span className="pv-cart-badge">{totalItemsCount}</span>
             </button>
           </div>
         </div>
+
+        {/* Integrated Navigation Bar (ProteViking layout) */}
+        <nav className="pv-nav" aria-label="Navegación principal">
+          <div className="container">
+            <ul className="pv-nav-list">
+              <li>
+                <Link to="/">INICIO</Link>
+              </li>
+              <li>
+                <Link to="/catalogo">PRODUCTOS</Link>
+              </li>
+              <li>
+                <Link to="/catalogo?categoria=proteinas">PROTEÍNAS</Link>
+              </li>
+              <li>
+                <Link to="/catalogo?categoria=creatinas">CREATINAS</Link>
+              </li>
+              <li>
+                <Link to="/catalogo?categoria=pre-entrenos">PRE-ENTRENOS</Link>
+              </li>
+              <li>
+                <Link to="/catalogo?categoria=combos">COMBOS</Link>
+              </li>
+              <li>
+                <Link to="/catalogo?categoria=salud-vitaminas">VITAMINAS</Link>
+              </li>
+              <li>
+                <Link to="/contacto">CONTACTO</Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
       </div>
 
-      {/* 3. Secondary Category Navigation Bar */}
-      <nav className="category-nav-bar">
-        <div className="container category-nav-container">
-          <ul className="category-nav-list">
-            <li>
-              <Link to="/catalogo" className="nav-item-link">
-                <span>TODOS LOS PRODUCTOS</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/catalogo?categoria=proteinas" className="nav-item-link">
-                <span>PROTEÍNAS</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/catalogo?categoria=creatinas" className="nav-item-link">
-                <span>CREATINAS</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/catalogo?categoria=pre-entrenos" className="nav-item-link">
-                <span>PRE-ENTRENOS</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/catalogo?categoria=aminoacidos" className="nav-item-link">
-                <span>AMINOÁCIDOS</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/catalogo?categoria=salud-vitaminas" className="nav-item-link">
-                <span>SALUD & VITAMINAS</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/catalogo?categoria=combos" className="nav-item-link nav-highlight">
-                <Flame size={14} className="nav-icon-flame" />
-                <span>COMBOS & OFERTAS</span>
-              </Link>
-            </li>
-            <li className="nav-spacer"></li>
-            <li>
-              <Link to="/contacto" className="nav-item-link nav-store-link">
-                <MapPin size={14} />
-                <span>RETIRO EN RECOLETA</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="mobile-menu-backdrop" onClick={() => setMobileMenuOpen(false)}>
-          <div className="mobile-menu-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="mobile-drawer-header">
-              <span className="mobile-drawer-title">MENÚ PRINCIPAL</span>
-              <button 
-                onClick={() => setMobileMenuOpen(false)} 
-                className="close-drawer-btn"
+        <div className="pv-mobile-backdrop" onClick={() => setMobileMenuOpen(false)}>
+          <div className="pv-mobile-drawer" onClick={(e) => e.stopPropagation()}>
+            <div className="pv-mobile-head">
+              <span>MENÚ</span>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
                 aria-label="Cerrar menú"
               >
                 <X size={20} />
               </button>
             </div>
-
-            <div className="mobile-drawer-body">
-              <ul className="mobile-nav-list">
-                <li>
-                  <Link to="/" onClick={() => setMobileMenuOpen(false)}>Inicio</Link>
-                </li>
-                <li>
-                  <Link to="/catalogo" onClick={() => setMobileMenuOpen(false)}>Todos los Productos</Link>
-                </li>
-                {categories.map((cat) => (
-                  <li key={cat.id}>
-                    <Link 
-                      to={`/catalogo?categoria=${cat.slug}`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {cat.name}
-                    </Link>
-                  </li>
-                ))}
-                <li className="divider-line"></li>
-                <li>
-                  <Link to="/seguimiento" onClick={() => setMobileMenuOpen(false)}>
-                    Rastrear Mi Pedido
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/envios" onClick={() => setMobileMenuOpen(false)}>
-                    Envíos y Retiro en Local
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contacto" onClick={() => setMobileMenuOpen(false)}>
-                    Contacto & Ubicación
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="admin-link">
-                    Panel Administrador
-                  </Link>
-                </li>
-              </ul>
-
-              <div className="mobile-contact-box">
-                <p className="mobile-contact-title">¿DUDAS CON TU COMPRA?</p>
-                <p className="mobile-contact-desc">Atención de Lun a Vie de 8 a 23 hs</p>
-                <a 
-                  href="https://wa.me/5491165651990" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="btn btn-primary btn-block btn-sm mt-2"
-                >
-                  <Phone size={15} />
-                  <span>WhatsApp: 11 6565 1990</span>
-                </a>
-              </div>
-            </div>
+            <ul className="pv-mobile-links">
+              <li><Link to="/">Inicio</Link></li>
+              <li><Link to="/catalogo">Todos los productos</Link></li>
+              <li><Link to="/catalogo?categoria=proteinas">Proteínas</Link></li>
+              <li><Link to="/catalogo?categoria=creatinas">Creatinas</Link></li>
+              <li><Link to="/catalogo?categoria=pre-entrenos">Pre-Entrenos</Link></li>
+              <li><Link to="/catalogo?categoria=combos">Combos</Link></li>
+              <li><Link to="/catalogo?categoria=aminoacidos">Aminoácidos</Link></li>
+              <li><Link to="/catalogo?categoria=salud-vitaminas">Vitaminas y Salud</Link></li>
+              <li><Link to="/seguimiento">Seguimiento de pedido</Link></li>
+              <li><Link to="/contacto">Contacto y retiro en Recoleta</Link></li>
+            </ul>
           </div>
         </div>
       )}
 
-      {/* Embedded Component Styles */}
       <style>{`
-        .header-root {
+        .pv-header {
           position: sticky;
           top: 0;
-          z-index: 50;
-          background: #FFFFFF;
-          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-        }
-
-        /* 1. Top Announcement Bar */
-        .top-announcement-bar {
-          background-color: var(--color-primary);
+          z-index: 100;
+          background: #0B0F17;
           color: #FFFFFF;
-          font-size: 0.72rem;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          padding: 0.45rem 0;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
         }
-        .announcement-content {
+        .pv-topbar {
+          background: #06090F;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+          font-size: 0.72rem;
+          color: #A1A1AA;
+          padding: 0.35rem 0;
+        }
+        .pv-topbar-inner {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 1rem;
         }
-        .announcement-item {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          animation: fadeIn 0.3s ease;
-        }
-        .announcement-icon {
-          color: var(--color-accent);
-          flex-shrink: 0;
-        }
-        .announcement-text {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .announcement-links-right {
+        .pv-topbar-links {
           display: none;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.5rem;
         }
-        @media (min-width: 900px) {
-          .announcement-links-right {
+        .pv-topbar-links a {
+          color: #E4E4E7;
+          text-decoration: none;
+          font-weight: 600;
+        }
+        .pv-topbar-links a:hover {
+          color: #FFFFFF;
+        }
+        .pv-topbar-sep {
+          color: #3F3F46;
+        }
+        @media (min-width: 768px) {
+          .pv-topbar-links {
             display: flex;
           }
         }
-        .announcement-link {
-          display: flex;
-          align-items: center;
-          gap: 0.35rem;
-          color: #E2E8F0;
-          font-size: 0.72rem;
-          font-weight: 600;
-        }
-        .announcement-link:hover {
-          color: #FFFFFF;
-        }
-        .announcement-divider {
-          color: #64748B;
-        }
 
-        /* 2. Main Header Bar */
-        .main-header-bar {
-          padding: 0.85rem 0;
-          background: #FFFFFF;
-          border-bottom: 1px solid var(--color-border);
+        .pv-header-main {
+          background: #0B0F17;
         }
-        .header-grid {
+        .pv-header-row {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 1.25rem;
+          gap: 1rem;
+          padding-top: 0.85rem;
+          padding-bottom: 0.75rem;
         }
-        .mobile-toggle-btn {
-          display: flex;
+        .pv-mobile-btn {
+          display: inline-flex;
           align-items: center;
           justify-content: center;
-          padding: 0.35rem;
-          color: var(--color-primary);
+          background: none;
+          border: none;
+          color: #FFFFFF;
+          cursor: pointer;
+          padding: 0.25rem;
         }
-        @media (min-width: 1024px) {
-          .mobile-toggle-btn {
+        @media (min-width: 900px) {
+          .pv-mobile-btn {
             display: none;
           }
         }
 
-        /* Logo */
-        .brand-logo-wrap {
-          display: flex;
+        .pv-brand {
+          display: inline-flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.65rem;
           text-decoration: none;
+          color: #FFFFFF;
           flex-shrink: 0;
         }
-        .brand-logo-img-wrap {
-          width: 44px;
-          height: 44px;
-          border-radius: var(--radius-sm);
-          overflow: hidden;
-          border: 1.5px solid var(--color-primary);
-          background: #000000;
-        }
-        .brand-logo-img {
-          width: 100%;
-          height: 100%;
+        .pv-brand-logo {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
           object-fit: cover;
+          border: 1px solid rgba(255, 255, 255, 0.15);
         }
-        .brand-text-block {
-          display: flex;
-          flex-direction: column;
-        }
-        .brand-title {
+        .pv-brand-name {
           font-family: var(--font-display);
+          font-size: 1.15rem;
           font-weight: 900;
-          font-size: 1.25rem;
-          line-height: 1.1;
-          color: var(--color-primary);
           letter-spacing: -0.02em;
+          color: #FFFFFF;
         }
-        .brand-title-accent {
+        .pv-brand-name b {
           color: var(--color-accent);
         }
-        .brand-tagline {
-          font-size: 0.65rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          color: var(--color-text-muted);
-        }
 
-        /* Search Bar */
-        .header-search-wrap {
-          flex: 1;
-          max-width: 580px;
-          position: relative;
-          display: none;
-        }
-        @media (min-width: 640px) {
-          .header-search-wrap {
-            display: block;
-          }
-        }
-        .search-form {
-          position: relative;
-          width: 100%;
+        .pv-right-cluster {
           display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          flex: 1;
+          justify-content: flex-end;
         }
-        .search-input {
+        .pv-search-wrap {
+          position: relative;
           width: 100%;
-          padding: 0.65rem 3rem 0.65rem 1rem;
-          border: 1.5px solid var(--color-border);
-          border-radius: var(--radius-full);
-          font-size: 0.88rem;
-          background: var(--color-bg-secondary);
-          color: var(--color-text-main);
-          transition: all var(--transition-fast);
+          max-width: 340px;
         }
-        .search-input:focus {
-          outline: none;
-          border-color: var(--color-primary);
-          background: #FFFFFF;
-          box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+        .pv-search-form {
+          display: flex;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.07);
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          border-radius: 4px;
+          overflow: hidden;
+          transition: border-color 0.15s ease, background 0.15s ease;
         }
-        .search-submit-btn {
-          position: absolute;
-          right: 0.5rem;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background: var(--color-primary);
+        .pv-search-form:focus-within {
+          border-color: rgba(255, 255, 255, 0.45);
+          background: rgba(255, 255, 255, 0.11);
+        }
+        .pv-search-input {
+          width: 100%;
+          background: transparent;
+          border: none;
           color: #FFFFFF;
+          font-size: 0.82rem;
+          padding: 0.5rem 0.75rem;
+          outline: none;
+        }
+        .pv-search-input::placeholder {
+          color: #9CA3AF;
+        }
+        .pv-search-btn {
+          background: transparent;
+          border: none;
+          color: #D4D4D8;
+          padding: 0.5rem 0.7rem;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background var(--transition-fast);
+          cursor: pointer;
         }
-        .search-submit-btn:hover {
-          background: var(--color-primary-hover);
+        .pv-search-btn:hover {
+          color: #FFFFFF;
         }
 
-        /* Search Dropdown */
-        .search-dropdown-results {
+        .pv-search-dropdown {
           position: absolute;
-          top: calc(100% + 8px);
+          top: calc(100% + 6px);
           left: 0;
           right: 0;
           background: #FFFFFF;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
-          box-shadow: var(--shadow-xl);
+          color: #18181B;
+          border-radius: 6px;
+          box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
+          border: 1px solid #E4E4E7;
           overflow: hidden;
-          z-index: 100;
+          z-index: 200;
         }
-        .search-results-list {
-          max-height: 340px;
-          overflow-y: auto;
-        }
-        .search-result-item {
-          display: flex;
-          align-items: center;
-          gap: 0.85rem;
-          padding: 0.65rem 1rem;
-          border-bottom: 1px solid var(--color-border);
-          transition: background var(--transition-fast);
-        }
-        .search-result-item:hover {
-          background: var(--color-bg-secondary);
-        }
-        .search-result-thumb {
-          width: 44px;
-          height: 44px;
-          object-fit: contain;
-          border-radius: var(--radius-xs);
-          background: #FFFFFF;
-          border: 1px solid var(--color-border);
-          padding: 2px;
-        }
-        .search-result-info {
-          flex: 1;
+        .pv-search-list {
           display: flex;
           flex-direction: column;
         }
-        .search-result-brand {
-          font-size: 0.68rem;
+        .pv-search-item {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          padding: 0.55rem 0.75rem;
+          text-decoration: none;
+          color: #18181B;
+          border-bottom: 1px solid #F4F4F5;
+          transition: background 0.12s ease;
+        }
+        .pv-search-item:hover {
+          background: #F8FAFC;
+        }
+        .pv-search-thumb {
+          width: 38px;
+          height: 38px;
+          object-fit: contain;
+          background: #FFFFFF;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+        .pv-search-meta {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+        }
+        .pv-search-title {
+          font-size: 0.78rem;
+          font-weight: 600;
+          color: #18181B;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .pv-search-price {
+          font-size: 0.75rem;
           font-weight: 800;
-          color: var(--color-accent);
-          text-transform: uppercase;
+          color: #16A34A;
         }
-        .search-result-title {
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: var(--color-text-main);
-          line-height: 1.25;
-        }
-        .search-result-price {
-          font-size: 0.85rem;
-          font-weight: 800;
-          color: var(--color-text-main);
-          margin-top: 0.15rem;
-        }
-        .search-result-arrow {
-          color: var(--color-text-subtle);
-        }
-        .search-view-all-btn {
+        .pv-search-all {
           width: 100%;
-          padding: 0.75rem;
-          background: var(--color-bg-secondary);
-          color: var(--color-primary);
-          font-size: 0.82rem;
+          background: #F8FAFC;
+          border: none;
+          padding: 0.55rem;
+          font-size: 0.75rem;
           font-weight: 700;
+          color: var(--color-accent);
+          cursor: pointer;
           text-align: center;
-          border-top: 1px solid var(--color-border);
         }
-        .search-view-all-btn:hover {
-          background: #E2E8F0;
-        }
-        .search-no-results {
-          padding: 1.5rem;
+        .pv-search-empty {
+          padding: 0.85rem;
+          font-size: 0.78rem;
+          color: #71717A;
           text-align: center;
-          font-size: 0.85rem;
-          color: var(--color-text-muted);
         }
 
-        /* Header Actions */
-        .header-actions {
-          display: flex;
-          align-items: center;
-          gap: 1.25rem;
-        }
-        .header-badge-link {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          text-decoration: none;
-        }
-        .badge-text-wrap {
-          display: flex;
-          flex-direction: column;
-        }
-        .badge-micro {
-          font-size: 0.62rem;
-          font-weight: 800;
-          color: var(--color-text-muted);
-          letter-spacing: 0.06em;
-        }
-        .badge-strong {
-          font-size: 0.82rem;
-          font-weight: 800;
-          color: var(--color-text-main);
-        }
-        .header-cart-btn {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          background: var(--color-bg-secondary);
-          border: 1px solid var(--color-border);
-          padding: 0.5rem 0.85rem;
-          border-radius: var(--radius-full);
-          transition: all var(--transition-fast);
-        }
-        .header-cart-btn:hover {
-          background: #E2E8F0;
-          border-color: var(--color-border-hover);
-        }
-        .cart-icon-wrap {
+        .pv-icon-btn {
           position: relative;
-          color: var(--color-primary);
-        }
-        .cart-counter-pill {
-          position: absolute;
-          top: -6px;
-          right: -8px;
-          background-color: var(--color-accent);
-          color: #FFFFFF;
-          font-size: 0.68rem;
-          font-weight: 800;
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          display: flex;
+          display: inline-flex;
           align-items: center;
           justify-content: center;
+          width: 38px;
+          height: 38px;
+          color: #FFFFFF;
+          background: transparent;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          text-decoration: none;
+          transition: background 0.15s ease;
         }
-        .cart-text-wrap {
-          display: flex;
-          flex-direction: column;
-          text-align: left;
+        .pv-icon-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
         }
-        .cart-micro {
-          font-size: 0.62rem;
+        .pv-cart-badge {
+          position: absolute;
+          top: 2px;
+          right: 2px;
+          background: var(--color-accent);
+          color: #FFFFFF;
+          font-size: 0.65rem;
           font-weight: 800;
-          color: var(--color-text-muted);
-          letter-spacing: 0.05em;
-        }
-        .cart-amount {
-          font-family: var(--font-display);
-          font-size: 0.85rem;
-          font-weight: 800;
-          color: var(--color-primary);
-        }
-        @media (max-width: 768px) {
-          .hide-mobile {
-            display: none !important;
-          }
-          .header-cart-btn {
-            padding: 0.5rem;
-            border-radius: var(--radius-sm);
-          }
+          min-width: 17px;
+          height: 17px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 4px;
+          line-height: 1;
         }
 
-        /* 3. Secondary Category Navigation Bar */
-        .category-nav-bar {
-          background: #FFFFFF;
-          border-bottom: 1px solid var(--color-border);
+        /* Integrated Bottom Nav Row (ProteViking style) */
+        .pv-nav {
           display: none;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          background: #0B0F17;
         }
-        @media (min-width: 1024px) {
-          .category-nav-bar {
+        @media (min-width: 900px) {
+          .pv-nav {
             display: block;
           }
         }
-        .category-nav-list {
+        .pv-nav-list {
           display: flex;
           align-items: center;
+          justify-content: center;
+          gap: 2.25rem;
           list-style: none;
-          gap: 1.5rem;
           margin: 0;
-          padding: 0;
+          padding: 0.6rem 0;
         }
-        .nav-item-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.35rem;
-          padding: 0.75rem 0;
-          font-size: 0.8rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          color: var(--color-text-main);
-          position: relative;
-          text-transform: uppercase;
-        }
-        .nav-item-link:hover {
-          color: var(--color-accent);
-        }
-        .nav-highlight {
-          color: var(--color-accent);
-        }
-        .nav-icon-flame {
-          color: var(--color-accent);
-        }
-        .nav-spacer {
-          flex: 1;
-        }
-        .nav-store-link {
-          color: var(--color-text-muted);
+        .pv-nav-list a {
+          color: #E4E4E7;
           font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-decoration: none;
+          transition: color 0.15s ease;
         }
-        .nav-store-link:hover {
-          color: var(--color-primary);
+        .pv-nav-list a:hover {
+          color: #FFFFFF;
         }
 
         /* Mobile Drawer */
-        .mobile-menu-backdrop {
+        .pv-mobile-backdrop {
           position: fixed;
           inset: 0;
-          background: rgba(15, 23, 42, 0.6);
-          backdrop-filter: blur(2px);
-          z-index: 1000;
-          display: flex;
+          background: rgba(0, 0, 0, 0.6);
+          z-index: 300;
         }
-        .mobile-menu-drawer {
-          width: 82%;
-          max-width: 320px;
+        .pv-mobile-drawer {
+          width: 280px;
+          max-width: 85vw;
           height: 100%;
-          background: #FFFFFF;
+          background: #0B0F17;
+          color: #FFFFFF;
+          padding: 1.25rem;
           display: flex;
           flex-direction: column;
-          box-shadow: var(--shadow-xl);
-          animation: slideRight 0.2s ease;
+          gap: 1rem;
         }
-        @keyframes slideRight {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(0); }
-        }
-        .mobile-drawer-header {
+        .pv-mobile-head {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          padding: 1.25rem;
-          border-bottom: 1px solid var(--color-border);
-        }
-        .mobile-drawer-title {
-          font-size: 0.95rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-        }
-        .close-drawer-btn {
-          color: var(--color-text-muted);
-          padding: 0.25rem;
-        }
-        .mobile-drawer-body {
-          flex: 1;
-          overflow-y: auto;
-          padding: 1.25rem;
-          display: flex;
-          flex-direction: column;
           justify-content: space-between;
+          font-weight: 800;
+          font-size: 0.85rem;
+          letter-spacing: 0.06em;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .mobile-nav-list {
+        .pv-mobile-head button {
+          background: none;
+          border: none;
+          color: #FFFFFF;
+          cursor: pointer;
+        }
+        .pv-mobile-links {
           list-style: none;
+          margin: 0;
+          padding: 0;
           display: flex;
           flex-direction: column;
-          gap: 0.85rem;
+          gap: 0.25rem;
         }
-        .mobile-nav-list a {
+        .pv-mobile-links a {
           display: block;
-          font-size: 0.95rem;
-          font-weight: 700;
-          color: var(--color-text-main);
-          padding: 0.35rem 0;
-        }
-        .mobile-nav-list .divider-line {
-          height: 1px;
-          background: var(--color-border);
-          margin: 0.5rem 0;
-        }
-        .admin-link {
-          color: var(--color-accent) !important;
-        }
-        .mobile-contact-box {
-          background: var(--color-bg-secondary);
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-sm);
-          padding: 1rem;
-          margin-top: 1.5rem;
-        }
-        .mobile-contact-title {
-          font-size: 0.75rem;
-          font-weight: 800;
-          color: var(--color-primary);
-        }
-        .mobile-contact-desc {
-          font-size: 0.75rem;
-          color: var(--color-text-muted);
+          padding: 0.65rem 0.5rem;
+          color: #E4E4E7;
+          text-decoration: none;
+          font-size: 0.88rem;
+          font-weight: 600;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
       `}</style>
     </header>
