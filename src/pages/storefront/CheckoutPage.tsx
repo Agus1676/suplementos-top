@@ -7,7 +7,6 @@ import {
   ShieldCheck, 
   Truck, 
   MapPin, 
-  CreditCard, 
   ShoppingBag, 
   ArrowLeft,
   Clock,
@@ -51,6 +50,7 @@ export const CheckoutPage: React.FC = () => {
   const { settings, createOrder } = useStore();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentChoice, setPaymentChoice] = useState<'mercadopago' | 'transfer'>('mercadopago');
 
   const {
     register,
@@ -87,49 +87,13 @@ export const CheckoutPage: React.FC = () => {
       ? 0 
       : settings.flatShippingRateInCents;
 
-  const finalTotalInCents = subtotalInCents + effectiveShippingCost;
+  const transferDiscountInCents = paymentChoice === 'transfer' ? Math.round(subtotalInCents * 0.10) : 0;
+  const finalTotalInCents = subtotalInCents - transferDiscountInCents + effectiveShippingCost;
 
   const onSubmit = async (data: CheckoutFormData) => {
     setIsProcessing(true);
 
     try {
-      // 1. Si Supabase y Mercado Pago Backend están configurados
-      if (isSupabaseConfigured) {
-        const { data: edgeData, error: edgeErr } = await supabase.functions.invoke('create-payment-order', {
-          body: {
-            items: items.map((i) => ({
-              variantId: i.variantId,
-              quantity: i.quantity,
-            })),
-            customer: {
-              firstName: data.firstName,
-              lastName: data.lastName,
-              email: data.email,
-              phone: data.phone,
-              dni: data.dni,
-            },
-            deliveryMethod: data.deliveryMethod,
-            shippingAddress: data.deliveryMethod === 'shipping' ? {
-              street: data.street,
-              number: data.number,
-              apartment: data.apartment,
-              neighborhood: data.neighborhood,
-              city: data.city,
-              province: data.province,
-              postalCode: data.postalCode,
-              deliveryNotes: data.deliveryNotes,
-            } : null,
-          }
-        });
-
-        if (!edgeErr && edgeData?.initPoint && edgeData.initPoint.startsWith('https://')) {
-          clearCart();
-          window.location.href = edgeData.initPoint;
-          return;
-        }
-      }
-
-      // 2. Modo Simulado / Test Local (Guarda en base local, descuenta stock y alerta al dueño)
       const generatedOrderNumber = `ST-${Date.now().toString().slice(-6)}`;
       
       const orderItems: OrderItem[] = items.map((item, idx) => ({
@@ -172,20 +136,99 @@ export const CheckoutPage: React.FC = () => {
         items: orderItems,
         subtotalInCents,
         shippingFeeInCents: effectiveShippingCost,
-        discountInCents: 0,
+        discountInCents: transferDiscountInCents,
         totalInCents: finalTotalInCents,
-        paymentStatus: 'approved',
+        paymentStatus: paymentChoice === 'transfer' ? 'pending' : 'approved',
         fulfillmentStatus: data.deliveryMethod === 'pickup' ? 'ready_for_pickup' : 'preparing',
-        paymentMethod: 'Mercado Pago Checkout Pro',
-        mercadopagoPaymentId: `MP-${Math.floor(100000000 + Math.random() * 900000000)}`,
+        paymentMethod: paymentChoice === 'transfer' ? 'Transferencia Bancaria (10% OFF)' : 'Mercado Pago Checkout Pro',
+        mercadopagoPaymentId: paymentChoice === 'mercadopago' ? `MP-${Math.floor(100000000 + Math.random() * 900000000)}` : undefined,
       };
 
+      // Guardamos el pedido para que esté disponible al volver de Mercado Pago y en /admin
       createOrder(newOrder);
-      clearCart();
 
+      // Si eligió Mercado Pago, intentamos crear la preferencia real en /api/create-preference
+      if (paymentChoice === 'mercadopago') {
+        try {
+          const apiRes = await fetch('/api/create-preference', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              orderNumber: generatedOrderNumber,
+              siteUrl: window.location.origin,
+              shippingFeeInCents: effectiveShippingCost,
+              customer: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                phone: data.phone,
+                dni: data.dni,
+              },
+              items: items.map((i) => ({
+                productId: i.productId,
+                variantId: i.variantId,
+                productName: i.productName,
+                variantTitle: i.variantTitle,
+                priceInCents: i.priceInCents,
+                quantity: i.quantity,
+              })),
+            }),
+          });
+
+          if (apiRes.ok) {
+            const mpData = await apiRes.json();
+            if (mpData?.configured && mpData?.initPoint && mpData.initPoint.startsWith('https://')) {
+              clearCart();
+              window.location.href = mpData.initPoint;
+              return;
+            }
+          }
+        } catch {
+          // Si estamos en Vite local sin serverless o sin token, continúa al flujo normal
+        }
+
+        // Alternativa: Supabase Edge Function si está configurada
+        if (isSupabaseConfigured) {
+          const { data: edgeData, error: edgeErr } = await supabase.functions.invoke('create-payment-order', {
+            body: {
+              items: items.map((i) => ({
+                variantId: i.variantId,
+                quantity: i.quantity,
+              })),
+              customer: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                phone: data.phone,
+                dni: data.dni,
+              },
+              deliveryMethod: data.deliveryMethod,
+              shippingAddress: data.deliveryMethod === 'shipping' ? {
+                street: data.street,
+                number: data.number,
+                apartment: data.apartment,
+                neighborhood: data.neighborhood,
+                city: data.city,
+                province: data.province,
+                postalCode: data.postalCode,
+                deliveryNotes: data.deliveryNotes,
+              } : null,
+            }
+          });
+
+          if (!edgeErr && edgeData?.initPoint && edgeData.initPoint.startsWith('https://')) {
+            clearCart();
+            window.location.href = edgeData.initPoint;
+            return;
+          }
+        }
+      }
+
+      clearCart();
+      const statusParam = paymentChoice === 'transfer' ? 'pending' : 'approved';
       setTimeout(() => {
-        navigate(`/pago-resultado?orden=${newOrder.orderNumber}`);
-      }, 800);
+        navigate(`/pago-resultado?orden=${newOrder.orderNumber}&status=${statusParam}`);
+      }, 500);
     } catch (err) {
       console.error('Error procesando checkout', err);
       setIsProcessing(false);
@@ -457,6 +500,13 @@ export const CheckoutPage: React.FC = () => {
                   <span>{formatARS(subtotalInCents)}</span>
                 </div>
 
+                {transferDiscountInCents > 0 && (
+                  <div className="financial-row">
+                    <span>Descuento 10% Transferencia:</span>
+                    <strong className="text-green-600 font-bold">-{formatARS(transferDiscountInCents)}</strong>
+                  </div>
+                )}
+
                 <div className="financial-row">
                   <span>Costo de envío:</span>
                   <span>
@@ -475,21 +525,68 @@ export const CheckoutPage: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Installments text */}
                 <div className="summary-installments">
-                  <span>{formatInstallments(finalTotalInCents, 3)} con Mercado Pago</span>
+                  {paymentChoice === 'mercadopago' ? (
+                    <span>{formatInstallments(finalTotalInCents, 6)} con Mercado Pago</span>
+                  ) : (
+                    <span>10% de ahorro aplicado por transferencia o efectivo</span>
+                  )}
                 </div>
               </div>
 
-              {/* Mercado Pago CTA Box */}
+              {/* Selector de Medio de Pago */}
               <div className="mp-card-cta-box">
-                <div className="mp-badge-header">
-                  <CreditCard size={18} className="text-blue-600" />
-                  <span>Pago Seguro con <strong>Mercado Pago</strong></span>
+                <div className="payment-choice-tabs" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '0.85rem' }}>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.6rem',
+                      padding: '0.65rem 0.75rem',
+                      borderRadius: '6px',
+                      border: paymentChoice === 'mercadopago' ? '2px solid #009EE3' : '1px solid #E2E8F0',
+                      background: paymentChoice === 'mercadopago' ? '#F0F9FF' : '#FFFFFF',
+                      cursor: 'pointer',
+                      fontSize: '0.82rem',
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentChoice"
+                      checked={paymentChoice === 'mercadopago'}
+                      onChange={() => setPaymentChoice('mercadopago')}
+                    />
+                    <div>
+                      <strong style={{ display: 'block', color: '#0F172A' }}>Mercado Pago (Tarjetas, Débito, Dinero en cuenta)</strong>
+                      <span style={{ fontSize: '0.74rem', color: '#475569' }}>Hasta 6 cuotas sin interés</span>
+                    </div>
+                  </label>
+
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.6rem',
+                      padding: '0.65rem 0.75rem',
+                      borderRadius: '6px',
+                      border: paymentChoice === 'transfer' ? '2px solid #5B8C2A' : '1px solid #E2E8F0',
+                      background: paymentChoice === 'transfer' ? '#F0FDF4' : '#FFFFFF',
+                      cursor: 'pointer',
+                      fontSize: '0.82rem',
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentChoice"
+                      checked={paymentChoice === 'transfer'}
+                      onChange={() => setPaymentChoice('transfer')}
+                    />
+                    <div>
+                      <strong style={{ display: 'block', color: '#166534' }}>Transferencia Bancaria / Efectivo (10% OFF)</strong>
+                      <span style={{ fontSize: '0.74rem', color: '#15803D' }}>Ahorrás {formatARS(Math.round(subtotalInCents * 0.10))} en tu compra</span>
+                    </div>
+                  </label>
                 </div>
-                <p className="text-xs text-gray-500">
-                  Aboná con tarjetas de crédito, débito o dinero en cuenta en hasta 3 cuotas con total protección oficial.
-                </p>
 
                 <button
                   type="submit"
@@ -497,9 +594,11 @@ export const CheckoutPage: React.FC = () => {
                   className="btn btn-primary btn-block btn-lg pay-submit-btn"
                 >
                   {isProcessing ? (
-                    <span>Conectando con Mercado Pago...</span>
-                  ) : (
+                    <span>Procesando pedido...</span>
+                  ) : paymentChoice === 'mercadopago' ? (
                     <span>PAGAR {formatARS(finalTotalInCents)} CON MERCADO PAGO</span>
+                  ) : (
+                    <span>CONFIRMAR PEDIDO POR {formatARS(finalTotalInCents)} (10% OFF)</span>
                   )}
                 </button>
               </div>
