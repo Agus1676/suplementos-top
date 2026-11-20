@@ -11,14 +11,13 @@ import {
   Plus, 
   Minus, 
   ArrowLeft,
-  CreditCard,
   Award,
   Zap,
   Clock
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { useCart } from '../../context/CartContext';
-import { formatARS, formatInstallments, calculateDiscountPercentage } from '../../lib/utils';
+import { formatARS, calculateDiscountPercentage } from '../../lib/utils';
 import { ProductVariant } from '../../types';
 
 export const ProductDetailPage: React.FC = () => {
@@ -200,19 +199,33 @@ export const ProductDetailPage: React.FC = () => {
                 </span>
               )}
               <span className="detail-current-price">
-                {formatARS(selectedVariant.priceInCents)}
+                {formatARS(selectedVariant.priceInCents)},00
               </span>
             </div>
 
-            {/* Argentine Installments callout */}
-            <div className="installments-callout-box">
-              <CreditCard size={17} className="text-success" />
-              <span><strong>{formatInstallments(selectedVariant.priceInCents, 3)}</strong> con Mercado Pago y todas las tarjetas</span>
+            {/* Argentine Transfer 10% OFF Highlight Box */}
+            <div className="pdp-transfer-box">
+              <div className="pdp-transfer-content">
+                <span className="pdp-transfer-price">
+                  {formatARS(Math.round(selectedVariant.priceInCents * 0.90))}
+                </span>
+                <span className="pdp-transfer-label">por Transferencia Bancaria</span>
+              </div>
+              <span className="pdp-transfer-badge">10% OFF</span>
             </div>
 
-            <div className="transfer-discount-callout">
-              <span className="badge-tag">10% OFF</span>
-              <span>Abonando con <strong>Transferencia Bancaria</strong> o en efectivo al retirar</span>
+            {/* Mercado Pago 6 Cuotas Sin Interés Box */}
+            <div className="pdp-installments-box">
+              <span className="pdp-inst-highlight">
+                6 x {formatARS(Math.round(selectedVariant.priceInCents / 6))} sin interés
+              </span>
+              <span className="pdp-inst-sub">
+                con <img 
+                  src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.19.5/mercadopago/logo__small@2x.png" 
+                  alt="Mercado Pago" 
+                  className="pdp-mp-logo" 
+                />
+              </span>
             </div>
           </div>
 
@@ -518,7 +531,7 @@ export const ProductDetailPage: React.FC = () => {
         <div className="sticky-bar-inner">
           <div className="sticky-product-meta">
             <img 
-              src={product.images[0]?.url || '/logo.png'} 
+              src={selectedImage || product.images[0]?.url || 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp'} 
               alt={product.name} 
               className="sticky-product-thumb" 
             />
@@ -526,7 +539,7 @@ export const ProductDetailPage: React.FC = () => {
               <span className="sticky-product-title">{product.name}</span>
               <div className="sticky-pricing-row">
                 <span className="sticky-price">{formatARS(selectedVariant.priceInCents)}</span>
-                <span className="sticky-installments">{formatInstallments(selectedVariant.priceInCents, 3)}</span>
+                <span className="sticky-installments">6 x {formatARS(Math.round(selectedVariant.priceInCents / 6))}</span>
               </div>
             </div>
           </div>
@@ -546,21 +559,80 @@ export const ProductDetailPage: React.FC = () => {
 
       {/* Embedded Component Styles */}
       <style>{`
+        .pdp-transfer-box {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #ECFDF5;
+          border: 1.5px solid #10B981;
+          border-radius: var(--radius-sm);
+          padding: 0.75rem 1rem;
+          margin-bottom: 0.65rem;
+        }
+        .pdp-transfer-content {
+          display: flex;
+          flex-direction: column;
+        }
+        .pdp-transfer-price {
+          font-family: var(--font-display);
+          font-size: 1.35rem;
+          font-weight: 900;
+          color: #065F46;
+          line-height: 1.1;
+        }
+        .pdp-transfer-label {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #047857;
+        }
+        .pdp-transfer-badge {
+          background: #10B981;
+          color: #FFFFFF;
+          font-size: 0.75rem;
+          font-weight: 900;
+          padding: 0.25rem 0.55rem;
+          border-radius: var(--radius-xs);
+          letter-spacing: 0.04em;
+        }
+        .pdp-installments-box {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #F3F4F6;
+          border: 1px solid #E5E7EB;
+          border-radius: var(--radius-sm);
+          padding: 0.65rem 1rem;
+        }
+        .pdp-inst-highlight {
+          font-size: 0.88rem;
+          font-weight: 800;
+          color: #111827;
+        }
+        .pdp-inst-sub {
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-size: 0.78rem;
+          color: #6B7280;
+        }
+        .pdp-mp-logo {
+          height: 18px;
+          width: auto;
+          vertical-align: middle;
+        }
         .mobile-sticky-buy-bar {
           display: none;
           position: fixed;
           bottom: 0;
           left: 0;
           right: 0;
-          background: rgba(15, 23, 42, 0.96);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border-top: 1px solid #1E293B;
+          background: #FFFFFF;
+          border-top: 1px solid var(--color-border);
           padding: 0.65rem 1rem;
           z-index: 998;
           transform: translateY(110%);
           transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+          box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
         }
         @media (max-width: 900px) {
           .mobile-sticky-buy-bar {
@@ -585,13 +657,14 @@ export const ProductDetailPage: React.FC = () => {
           min-width: 0;
         }
         .sticky-product-thumb {
-          width: 40px;
-          height: 40px;
-          border-radius: 4px;
-          object-fit: cover;
-          background: #000;
-          border: 1px solid #334155;
+          width: 44px;
+          height: 44px;
+          border-radius: 6px;
+          object-fit: contain;
+          background: #FFFFFF;
+          border: 1px solid var(--color-border);
           flex-shrink: 0;
+          padding: 2px;
         }
         .sticky-product-texts {
           display: flex;
@@ -601,7 +674,7 @@ export const ProductDetailPage: React.FC = () => {
         .sticky-product-title {
           font-weight: 700;
           font-size: 0.8rem;
-          color: #FFFFFF;
+          color: var(--color-text-main);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -614,13 +687,13 @@ export const ProductDetailPage: React.FC = () => {
         }
         .sticky-price {
           font-weight: 800;
-          font-size: 0.9rem;
-          color: #FFFFFF;
+          font-size: 0.95rem;
+          color: var(--color-text-main);
         }
         .sticky-installments {
-          font-size: 0.68rem;
-          color: #4ADE80;
-          font-weight: 600;
+          font-size: 0.7rem;
+          color: #059669;
+          font-weight: 700;
         }
         .sticky-actions-group {
           flex-shrink: 0;
