@@ -195,7 +195,6 @@ export default async function handler(req, res) {
       }).catch(() => {});
     }
 
-    const ownerData = await ownerRes.json();
     return res.status(200).json({
       sent: ownerRes.ok,
       configured: true,
