@@ -141,7 +141,7 @@ export default async function handler(req, res) {
     const fromAddress = process.env.EMAIL_FROM || 'Suplementos Top <onboarding@resend.dev>';
 
     // 1. Enviar planilla completa al dueño (suplementostopparg@gmail.com)
-    const ownerRes = await fetch('https://api.resend.com/emails', {
+    let ownerRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${resendApiKey}`,
@@ -156,7 +156,29 @@ export default async function handler(req, res) {
       }),
     });
 
-    // 2. Enviar confirmación al comprador (si el dominio de envío está verificado)
+    let ownerData = await ownerRes.json();
+
+    // Si la cuenta de Resend está en modo sandbox (sin dominio propio verificado todavía),
+    // Resend exige enviar a la cuenta registrada (ej: agustinpollanceo@gmail.com):
+    if (!ownerRes.ok && ownerData?.statusCode === 403 && ownerData?.message?.includes('testing emails')) {
+      const match = ownerData.message.match(/\(([^)]+)\)/);
+      const sandboxEmail = match ? match[1] : 'agustinpollanceo@gmail.com';
+      ownerRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: fromAddress,
+          to: [sandboxEmail],
+          reply_to: order.customerEmail || undefined,
+          subject: `NUEVA VENTA #${order.orderNumber} — ${order.customerName} (${order.totalFormatted})`,
+          html: buildOwnerHtml(order),
+        }),
+      });
+      ownerData = await ownerRes.json();
+    }
     if (order.customerEmail) {
       await fetch('https://api.resend.com/emails', {
         method: 'POST',

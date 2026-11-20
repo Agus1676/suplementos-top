@@ -38,28 +38,46 @@ export default async function handler(req, res) {
 
           const fromAddress = process.env.EMAIL_FROM || 'Suplementos Top <onboarding@resend.dev>';
 
-          await fetch('https://api.resend.com/emails', {
+          const emailBody = {
+            from: fromAddress,
+            to: [OWNER_EMAIL],
+            subject: `PAGO ACREDITADO MP #${orderRef} — ${amountARS}`,
+            html: `
+              <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #E4E4E7;border-radius:8px;padding:24px;">
+                <h2 style="margin:0 0 12px;color:#166534;">Pago Acreditado en Mercado Pago</h2>
+                <p><strong>Pedido:</strong> #${orderRef}</p>
+                <p><strong>ID Transacción MP:</strong> #${payment.id}</p>
+                <p><strong>Monto acreditado:</strong> ${amountARS}</p>
+                <p><strong>Comprador:</strong> ${payment.payer?.first_name || ''} ${payment.payer?.last_name || ''} (${payment.payer?.email || ''}) — DNI: ${payment.payer?.identification?.number || '-'}</p>
+                ${itemsList ? `<h3>Productos:</h3><ul>${itemsList}</ul>` : ''}
+              </div>
+            `,
+          };
+
+          const webhookEmailRes = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${resendApiKey}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              from: fromAddress,
-              to: [OWNER_EMAIL],
-              subject: `PAGO ACREDITADO MP #${orderRef} — ${amountARS}`,
-              html: `
-                <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #E4E4E7;border-radius:8px;padding:24px;">
-                  <h2 style="margin:0 0 12px;color:#166534;">Pago Acreditado en Mercado Pago</h2>
-                  <p><strong>Pedido:</strong> #${orderRef}</p>
-                  <p><strong>ID Transacción MP:</strong> #${payment.id}</p>
-                  <p><strong>Monto acreditado:</strong> ${amountARS}</p>
-                  <p><strong>Comprador:</strong> ${payment.payer?.first_name || ''} ${payment.payer?.last_name || ''} (${payment.payer?.email || ''}) — DNI: ${payment.payer?.identification?.number || '-'}</p>
-                  ${itemsList ? `<h3>Productos:</h3><ul>${itemsList}</ul>` : ''}
-                </div>
-              `,
-            }),
-          }).catch(() => {});
+            body: JSON.stringify(emailBody),
+          });
+
+          const webhookData = await webhookEmailRes.json().catch(() => ({}));
+          if (!webhookEmailRes.ok && webhookData?.statusCode === 403 && webhookData?.message?.includes('testing emails')) {
+            const match = webhookData.message.match(/\(([^)]+)\)/);
+            if (match && match[1]) {
+              emailBody.to = [match[1]];
+              await fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${resendApiKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(emailBody),
+              }).catch(() => {});
+            }
+          }
         }
       }
     }
