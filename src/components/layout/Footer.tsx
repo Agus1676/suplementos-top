@@ -35,8 +35,8 @@ export const Footer: React.FC = () => {
 
           <div className="ft-col">
             <h4>Contacto</h4>
-            <a href="https://wa.me/5491165651990" target="_blank" rel="noopener noreferrer">
-              WhatsApp 11 6565 1990
+            <a href="https://wa.me/5491165652990" target="_blank" rel="noopener noreferrer">
+              WhatsApp 11 6565-2990
             </a>
             <a href={`mailto:${settings.supportEmail}`}>{settings.supportEmail}</a>
             <a href={settings.instagram} target="_blank" rel="noopener noreferrer">

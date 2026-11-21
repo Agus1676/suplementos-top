@@ -3,7 +3,7 @@ import { Product, Category, StoreSettings, Order } from '../types';
 export const STORE_SETTINGS: StoreSettings = {
   storeName: 'Suplementos Top',
   legalName: 'Suplementos Top Argentina',
-  supportPhone: '+54 9 11 6565-1990',
+  supportPhone: '+54 9 11 6565-2990',
   supportEmail: 'suplementostopparg@gmail.com',
   instagram: 'https://instagram.com/suplementos_topp',
   hoursDescription: 'Lunes a Viernes de 8:00 a 23:00 hs | Sábados de 10:00 a 18:00 hs',

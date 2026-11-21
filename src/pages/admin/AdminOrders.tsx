@@ -367,7 +367,7 @@ export const AdminOrders: React.FC = () => {
                     className="btn btn-accent"
                   >
                     <Send size={16} />
-                    <span>Enviar Resumen a WhatsApp (11 6565 1990)</span>
+                    <span>Enviar Resumen a WhatsApp (11 6565-2990)</span>
                   </a>
                 );
               })()}

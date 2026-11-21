@@ -134,7 +134,7 @@ export const PaymentResultPage: React.FC = () => {
               className="btn btn-primary btn-lg wa-dispatch-btn"
             >
               <Phone size={18} />
-              <span>AVISAR AL WHATSAPP DE DESPACHO (11 6565 1990)</span>
+              <span>AVISAR AL WHATSAPP DE DESPACHO (11 6565-2990)</span>
             </a>
           </div>
         )}

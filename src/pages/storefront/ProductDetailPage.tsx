@@ -104,7 +104,7 @@ export const ProductDetailPage: React.FC = () => {
     { nutrient: 'Glutamina & Precursores', perServing: '4.6 g', dailyValue: '-' }
   ];
 
-  const waProductLink = `https://wa.me/5491165651990?text=${encodeURIComponent(
+  const waProductLink = `https://wa.me/5491165652990?text=${encodeURIComponent(
     `Hola! Quisiera consultar sobre el producto: ${product.name} (${selectedVariant.title}) - Precio: ${formatARS(selectedVariant.priceInCents)}`
   )}`;
 
@@ -377,7 +377,7 @@ export const ProductDetailPage: React.FC = () => {
                 rel="noopener noreferrer"
                 className="wa-link font-bold text-success"
               >
-                Chateá por WhatsApp con un asesor (11 6565 1990) →
+                Chateá por WhatsApp con un asesor (11 6565-2990) →
               </a>
             </div>
           </div>

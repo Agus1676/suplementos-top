@@ -129,7 +129,7 @@ export const TermsPage: React.FC = () => {
         <section className="legal-section">
           <h2>3. Botón de Arrepentimiento</h2>
           <p>
-            Conforme a la normativa de la Dirección Nacional de Defensa del Consumidor, tenés derecho a revocar la aceptación del producto dentro de los 10 (diez) días corridos computados a partir de la fecha de entrega. Para solicitar la cancelación, escribinos a <strong>suplementostopparg@gmail.com</strong> o a nuestro WhatsApp oficial <strong>11 6565 1990</strong>.
+            Conforme a la normativa de la Dirección Nacional de Defensa del Consumidor, tenés derecho a revocar la aceptación del producto dentro de los 10 (diez) días corridos computados a partir de la fecha de entrega. Para solicitar la cancelación, escribinos a <strong>suplementostopparg@gmail.com</strong> o a nuestro WhatsApp oficial <strong>11 6565-2990</strong>.
           </p>
         </section>
       </div>

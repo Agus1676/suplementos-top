@@ -22,7 +22,7 @@ export const ContactPage: React.FC = () => {
     const text = encodeURIComponent(
       `Hola Suplementos Top! Mi nombre es ${formData.name || 'un cliente'}. Tengo una consulta sobre: *${formData.topic}*.\n\nMensaje: ${formData.message || 'Quisiera asesoramiento'}`
     );
-    window.open(`https://wa.me/5491165651990?text=${text}`, '_blank');
+    window.open(`https://wa.me/5491165652990?text=${text}`, '_blank');
   };
 
   return (
@@ -68,7 +68,7 @@ export const ContactPage: React.FC = () => {
             <div>
               <h3>ASESORAMIENTO TÉCNICO</h3>
               <p>Respondemos dudas de tomas, ciclos y combinación de suplementos</p>
-              <span className="highlight-badge">WhatsApp 11 6565 1990</span>
+              <span className="highlight-badge">WhatsApp 11 6565-2990</span>
             </div>
           </div>
         </div>
@@ -115,8 +115,8 @@ export const ContactPage: React.FC = () => {
                 </div>
                 <div className="loc-item">
                   <strong className="text-white">WhatsApp:</strong>
-                  <a href="https://wa.me/5491165651990" target="_blank" rel="noopener noreferrer" className="text-accent font-bold">
-                    +54 9 11 6565 1990
+                  <a href="https://wa.me/5491165652990" target="_blank" rel="noopener noreferrer" className="text-accent font-bold">
+                    +54 9 11 6565-2990
                   </a>
                 </div>
                 <div className="loc-item">

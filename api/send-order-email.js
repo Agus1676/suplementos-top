@@ -120,7 +120,7 @@ function buildBuyerHtml(order) {
             : `<strong>Envío a domicilio:</strong><br/>${escapeHtml(order.shippingAddress?.street || '')} ${escapeHtml(order.shippingAddress?.number || '')}, ${escapeHtml(order.shippingAddress?.city || '')} (CP ${escapeHtml(order.shippingAddress?.postalCode || '')}).`
         }
       </div>
-      <p>Por cualquier consulta podés escribirnos directo a nuestro WhatsApp oficial: <a href="https://wa.me/5491165651990" style="color:#5B8C2A;font-weight:700;">11 6565 1990</a>.</p>
+      <p>Por cualquier consulta podés escribirnos directo a nuestro WhatsApp oficial: <a href="https://wa.me/5491165652990" style="color:#5B8C2A;font-weight:700;">11 6565-2990</a>.</p>
     </div>
   </div>`;
 }

@@ -39,7 +39,7 @@ export function buildWhatsAppDispatchLink(order: {
   totalText: string;
   paymentStatus: string;
 }): string {
-  const ownerNumber = '5491165651990';
+  const ownerNumber = '5491165652990';
   const methodLabel = order.deliveryMethod === 'pickup' ? '📍 RETIRO EN LOCAL (Uriburu 1163, CABA)' : '🚚 ENVÍO A DOMICILIO';
   
   const text = `🚨 *NUEVO PEDIDO CONFIRMADO PARA DESPACHO* 🚨

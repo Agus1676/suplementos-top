@@ -66,7 +66,7 @@ export const OrderTrackingPage: React.FC = () => {
           <AlertCircle size={36} className="text-primary" />
           <h3>No encontramos ningún pedido con ese identificador</h3>
           <p>
-            Revisá si el número coincide con el comprobante que recibiste por email. Si tenés dudas, podés contactarnos directamente por WhatsApp al <strong>11 6565 1990</strong>.
+            Revisá si el número coincide con el comprobante que recibiste por email. Si tenés dudas, podés contactarnos directamente por WhatsApp al <strong>11 6565-2990</strong>.
           </p>
         </div>
       )}

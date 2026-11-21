@@ -381,14 +381,14 @@ export const AdminLayout: React.FC = () => {
 
           <div className="admin-topbar-actions">
             <a 
-              href="https://wa.me/5491165651990" 
+              href="https://wa.me/5491165652990" 
               target="_blank" 
               rel="noopener noreferrer"
               className="admin-wa-pill"
               title="WhatsApp de atención"
             >
               <Send size={14} />
-              <span className="hide-on-mobile">WhatsApp Tienda: 11 6565 1990</span>
+              <span className="hide-on-mobile">WhatsApp Tienda: 11 6565-2990</span>
             </a>
             <div className="admin-avatar">
               <span>Admin</span>

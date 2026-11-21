@@ -297,7 +297,7 @@ export const HomePage: React.FC = () => {
                   <span>Cómo llegar en Google Maps</span>
                 </a>
                 <a
-                  href={`https://wa.me/${(settings.supportPhone || '5491165651990').replace(/[^0-9]/g, '')}`}
+                  href={`https://wa.me/${(settings.supportPhone || '5491165652990').replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-secondary btn-sm"

@@ -241,7 +241,7 @@ export const CatalogPage: React.FC = () => {
               Escribinos por WhatsApp y nuestro equipo te asesora de forma personalizada sobre qué suplemento se adapta a tu objetivo.
             </p>
             <a
-              href="https://wa.me/5491165651990"
+              href="https://wa.me/5491165652990"
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-outline btn-sm"

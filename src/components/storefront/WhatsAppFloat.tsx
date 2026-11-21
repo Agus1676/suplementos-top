@@ -2,7 +2,7 @@ import React from 'react';
 
 export const WhatsAppFloat: React.FC = () => {
   const whatsappUrl =
-    'https://wa.me/5491165651990?text=Hola!%20Tengo%20una%20consulta%20sobre%20los%20suplementos%20de%20la%20tienda';
+    'https://wa.me/5491165652990?text=Hola!%20Tengo%20una%20consulta%20sobre%20los%20suplementos%20de%20la%20tienda';
 
   return (
     <div className="wa-float-wrap">

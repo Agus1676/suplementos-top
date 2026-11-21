@@ -70,7 +70,7 @@ export const Header: React.FC = () => {
           <div className="pv-topbar-links">
             <span>Retiro sin cargo: Gimnasio Top Shape (Pres. José E. Uriburu 1163)</span>
             <span className="pv-topbar-sep">|</span>
-            <a href={`https://wa.me/${(settings.supportPhone || '5491165651990').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
+            <a href={`https://wa.me/${(settings.supportPhone || '5491165652990').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
               Consultas por WhatsApp
             </a>
           </div>

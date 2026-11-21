@@ -179,7 +179,7 @@ export const AdminDashboard: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn-wa-action"
-                          title="Enviar aviso de despacho por WhatsApp al 11 6565 1990"
+                          title="Enviar aviso de despacho por WhatsApp al 11 6565-2990"
                         >
                           <Phone size={13} />
                           <span>Aviso WA</span>
