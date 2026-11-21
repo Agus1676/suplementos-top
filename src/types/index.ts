@@ -144,4 +144,6 @@ export interface StoreSettings {
   dispatchAddress: string;
   freeShippingThresholdInCents: number;
   flatShippingRateInCents: number;
+  transferDiscountPercent?: number;
+  bankAlias?: string;
 }

@@ -11,6 +11,18 @@ interface StoreContextType {
   createOrder: (newOrder: Order) => void;
   updateOrderStatus: (orderId: string, paymentStatus?: Order['paymentStatus'], fulfillmentStatus?: Order['fulfillmentStatus'], trackingNumber?: string) => void;
   updateSettings: (newSettings: Partial<StoreSettings>) => void;
+  addProduct: (product: Product) => void;
+  updateProduct: (product: Product) => void;
+  deleteProduct: (productId: string) => void;
+  applyBulkPriceAdjustment: (params: {
+    targetCategory?: string;
+    targetBrand?: string;
+    direction: 'increase' | 'decrease';
+    type: 'percent' | 'fixed';
+    amount: number;
+    roundHundreds: boolean;
+  }) => void;
+  resetToFactoryProducts: () => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -130,6 +142,72 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setSettings((prev) => ({ ...prev, ...newSettings }));
   };
 
+  const addProduct = (newProd: Product) => {
+    setProducts((prev) => [newProd, ...prev]);
+  };
+
+  const updateProduct = (updatedProd: Product) => {
+    setProducts((prev) => prev.map((p) => (p.id === updatedProd.id ? updatedProd : p)));
+  };
+
+  const deleteProduct = (productId: string) => {
+    setProducts((prev) => prev.filter((p) => p.id !== productId));
+  };
+
+  const applyBulkPriceAdjustment = ({
+    targetCategory = 'all',
+    targetBrand = 'all',
+    direction,
+    type,
+    amount,
+    roundHundreds,
+  }: {
+    targetCategory?: string;
+    targetBrand?: string;
+    direction: 'increase' | 'decrease';
+    type: 'percent' | 'fixed';
+    amount: number;
+    roundHundreds: boolean;
+  }) => {
+    setProducts((prev) =>
+      prev.map((prod) => {
+        if (targetCategory !== 'all' && prod.category.slug !== targetCategory && prod.category.id !== targetCategory) {
+          return prod;
+        }
+        if (targetBrand !== 'all' && prod.brand.toLowerCase() !== targetBrand.toLowerCase()) {
+          return prod;
+        }
+
+        const updatedVariants = prod.variants.map((v) => {
+          let price = v.priceInCents;
+          if (type === 'percent') {
+            const factor = direction === 'increase' ? 1 + amount / 100 : Math.max(0.1, 1 - amount / 100);
+            price = Math.round(price * factor);
+          } else {
+            const deltaCents = amount * 100;
+            price = direction === 'increase' ? price + deltaCents : Math.max(10000, price - deltaCents);
+          }
+
+          if (roundHundreds) {
+            // Round to nearest 100 pesos (10,000 cents)
+            const pesos = price / 100;
+            const roundedPesos = Math.round(pesos / 100) * 100;
+            price = roundedPesos * 100;
+          }
+
+          return { ...v, priceInCents: price };
+        });
+
+        return { ...prod, variants: updatedVariants };
+      })
+    );
+  };
+
+  const resetToFactoryProducts = () => {
+    setProducts(INITIAL_PRODUCTS);
+    localStorage.removeItem(PRODUCTS_KEY);
+  };
+
   return (
     <StoreContext.Provider
       value={{
@@ -141,6 +219,11 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         createOrder,
         updateOrderStatus,
         updateSettings,
+        addProduct,
+        updateProduct,
+        deleteProduct,
+        applyBulkPriceAdjustment,
+        resetToFactoryProducts,
       }}
     >
       {children}

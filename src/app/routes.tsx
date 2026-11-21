@@ -27,6 +27,8 @@ const AdminLayout = named(() => import('../components/layout/AdminLayout'), 'Adm
 const AdminDashboard = named(() => import('../pages/admin/AdminDashboard'), 'AdminDashboard');
 const AdminOrders = named(() => import('../pages/admin/AdminOrders'), 'AdminOrders');
 const AdminProducts = named(() => import('../pages/admin/AdminProducts'), 'AdminProducts');
+const AdminStock = named(() => import('../pages/admin/AdminStock'), 'AdminStock');
+const AdminReports = named(() => import('../pages/admin/AdminReports'), 'AdminReports');
 const AdminSettings = named(() => import('../pages/admin/AdminSettings'), 'AdminSettings');
 
 const PageFallback: React.FC = () => (
@@ -74,6 +76,8 @@ export const AppRoutes: React.FC = () => {
           <Route index element={<AdminDashboard />} />
           <Route path="pedidos" element={<AdminOrders />} />
           <Route path="productos" element={<AdminProducts />} />
+          <Route path="stock" element={<AdminStock />} />
+          <Route path="reportes" element={<AdminReports />} />
           <Route path="configuracion" element={<AdminSettings />} />
         </Route>
       </Routes>

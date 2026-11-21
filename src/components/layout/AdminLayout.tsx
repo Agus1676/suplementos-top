@@ -4,6 +4,8 @@ import {
   LayoutDashboard, 
   ShoppingBag, 
   Package, 
+  Archive,
+  BarChart2,
   Settings, 
   Store, 
   MapPin, 
@@ -12,7 +14,7 @@ import {
   X,
   Lock,
   LogOut,
-  KeyRound,
+  ShieldCheck,
   ShieldAlert,
   ArrowRight
 } from 'lucide-react';
@@ -22,7 +24,7 @@ const ADMIN_MASTER_KEY = 'suplementos2026';
 
 export const AdminLayout: React.FC = () => {
   const location = useLocation();
-  const { orders } = useStore();
+  const { orders, products } = useStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Security Gate State
@@ -73,28 +75,40 @@ export const AdminLayout: React.FC = () => {
     setIsAuthenticated(false);
   };
 
-  // If not authenticated, render the Security Gate Screen
+  // Badges calculation
+  const pendingOrdersCount = orders.filter(
+    (o) => o.fulfillmentStatus === 'preparing' || o.fulfillmentStatus === 'unfulfilled'
+  ).length;
+
+  const lowStockCount = products.filter((p) => {
+    const total = p.variants?.length
+      ? p.variants.reduce((acc: number, f) => acc + (f.stock || 0), 0)
+      : 0;
+    return total <= 5;
+  }).length;
+
+  // Lock Screen (Jokers UI / Tienda May clean aesthetic)
   if (!isAuthenticated) {
     return (
       <div className="admin-lock-screen">
         <div className="admin-lock-card">
           <div className="admin-lock-header">
             <div className="admin-lock-icon-wrap">
-              <KeyRound size={32} className="text-accent" />
+              <ShieldCheck size={28} />
             </div>
-            <img src="/logo.png" alt="Suplementos Top" className="admin-lock-logo" />
-            <h1 className="admin-lock-title">Panel de Administración</h1>
+            <h1 className="admin-lock-title">Panel Administrador</h1>
+            <p className="admin-lock-subtitle">Suplementos Top • Recoleta, CABA</p>
             <p className="admin-lock-desc">
-              Acceso restringido para el personal y dueño de Suplementos Top.
+              Ingresá la clave de acceso de la tienda para gestionar catálogo, stock, facturación y pedidos.
             </p>
           </div>
 
           <form onSubmit={handleLoginSubmit} className="admin-lock-form">
-            <div className="lock-input-wrap">
-              <Lock size={18} className="lock-field-icon" />
+            <div className="admin-lock-input-wrap">
+              <Lock size={17} className="lock-icon" />
               <input
                 type="password"
-                placeholder="Ingresá la clave de acceso..."
+                placeholder="Contraseña de administrador"
                 value={enteredPin}
                 onChange={(e) => {
                   setEnteredPin(e.target.value);
@@ -116,143 +130,164 @@ export const AdminLayout: React.FC = () => {
             <button
               type="submit"
               disabled={!enteredPin.trim() || isLockedTemporarily}
-              className="btn btn-primary btn-block admin-lock-btn"
+              className="admin-lock-submit-btn"
             >
-              <span>Desbloquear Panel</span>
+              <span>Ingresar al Panel</span>
               <ArrowRight size={16} />
             </button>
           </form>
 
           <div className="admin-lock-footer">
-            <Link to="/" className="btn-return-store-link">
+            <Link to="/" className="admin-lock-back-link">
               ← Volver a la Tienda Pública
             </Link>
+            <p className="admin-lock-footnote">
+              Acceso administrativo exclusivo • Pres. José E. Uriburu 1163
+            </p>
           </div>
         </div>
 
         <style>{`
           .admin-lock-screen {
             min-height: 100vh;
-            background: #F4F5F7;
+            background: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 24px 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           }
           .admin-lock-card {
-            background: #FFFFFF;
-            border: 1px solid #E4E4E7;
-            border-radius: 12px;
-            width: 100%;
             max-width: 420px;
-            padding: 2.25rem 2rem;
-            box-shadow: 0 16px 40px -10px rgba(15, 23, 42, 0.12);
-          }
-          .admin-lock-header {
+            width: 100%;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 36px 30px;
             text-align: center;
-            margin-bottom: 1.75rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
           }
           .admin-lock-icon-wrap {
-            width: 58px;
-            height: 58px;
-            background: #FFF1F2;
-            border: 1px solid #FFE4E6;
-            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
-          }
-          .admin-lock-logo {
-            height: 48px;
-            width: auto;
-            margin: 0 auto 0.75rem;
-            display: block;
+            margin: 0 auto 16px auto;
+            color: #0F172A;
           }
           .admin-lock-title {
-            font-size: 1.35rem;
+            font-size: 1.45rem;
             font-weight: 800;
-            color: #18181B;
-            margin: 0 0 0.35rem;
+            color: #0F172A;
+            margin: 0 0 4px 0;
+            letter-spacing: -0.02em;
+          }
+          .admin-lock-subtitle {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #E63946;
+            margin: 0 0 12px 0;
           }
           .admin-lock-desc {
-            font-size: 0.82rem;
-            color: #71717A;
-            margin: 0;
-            line-height: 1.45;
+            font-size: 0.88rem;
+            color: #64748B;
+            margin: 0 0 24px 0;
+            line-height: 1.5;
           }
           .admin-lock-form {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 14px;
           }
-          .lock-input-wrap {
+          .admin-lock-input-wrap {
             position: relative;
             display: flex;
             align-items: center;
           }
-          .lock-field-icon {
+          .admin-lock-input-wrap .lock-icon {
             position: absolute;
-            left: 0.95rem;
-            color: #71717A;
+            left: 14px;
+            color: #94A3B8;
             pointer-events: none;
           }
           .admin-lock-input {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.6rem;
-            border: 1.5px solid #E4E4E7;
+            height: 44px;
+            padding: 0 14px 0 42px;
+            border: 1px solid #CBD5E1;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             outline: none;
-            transition: border-color 0.15s ease;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
           }
           .admin-lock-input:focus {
-            border-color: #18181B;
+            border-color: #0F172A;
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
           }
           .admin-lock-error {
+            background: #FEE2E2;
+            border: 1px solid #FCA5A5;
+            color: #B91C1C;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 0.45rem;
-            color: #DC2626;
-            font-size: 0.78rem;
-            font-weight: 600;
-            background: #FEF2F2;
-            padding: 0.55rem 0.75rem;
-            border-radius: 6px;
-            border: 1px solid #FEE2E2;
+            gap: 8px;
+            text-align: left;
           }
-          .admin-lock-btn {
+          .admin-lock-submit-btn {
+            height: 44px;
+            background: #0F172A;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.8rem;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border-radius: 8px;
+            gap: 8px;
+            transition: background 0.15s ease;
+          }
+          .admin-lock-submit-btn:hover:not(:disabled) {
+            background: #1E293B;
+          }
+          .admin-lock-submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
           }
           .admin-lock-footer {
-            margin-top: 1.5rem;
-            text-align: center;
-            padding-top: 1.25rem;
-            border-top: 1px solid #F4F4F5;
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid #F1F5F9;
           }
-          .btn-return-store-link {
-            font-size: 0.82rem;
+          .admin-lock-back-link {
+            font-size: 0.84rem;
             font-weight: 600;
-            color: #52525B;
+            color: #64748B;
             text-decoration: none;
+            transition: color 0.15s ease;
           }
-          .btn-return-store-link:hover {
-            color: #18181B;
+          .admin-lock-back-link:hover {
+            color: #0F172A;
             text-decoration: underline;
+          }
+          .admin-lock-footnote {
+            font-size: 0.75rem;
+            color: #94A3B8;
+            margin: 12px 0 0 0;
           }
         `}</style>
       </div>
     );
   }
-
-  const pendingCount = orders.filter((o) => o.fulfillmentStatus === 'preparing' || o.fulfillmentStatus === 'unfulfilled').length;
 
   const isActive = (path: string) => {
     if (path === '/admin' && location.pathname === '/admin') return true;
@@ -261,553 +296,639 @@ export const AdminLayout: React.FC = () => {
   };
 
   return (
-    <div className="admin-root">
+    <div className="admin">
+      {/* Mobile Top Header */}
+      <header className="admin__mobile-header">
+        <button
+          type="button"
+          className="admin__mobile-menu-btn"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Abrir menú de navegación"
+        >
+          <Menu size={22} />
+        </button>
+        <div className="admin__mobile-brand">
+          <span className="admin__mobile-title">Suplementos Top</span>
+          <span className="admin__mobile-subtitle">Admin Panel</span>
+        </div>
+        <button
+          type="button"
+          className="admin__mobile-logout-btn"
+          onClick={handleLogout}
+          title="Cerrar Sesión"
+          aria-label="Cerrar sesión"
+        >
+          <LogOut size={18} />
+        </button>
+      </header>
+
       {/* Mobile Backdrop */}
       {sidebarOpen && (
-        <div 
-          className="admin-backdrop" 
+        <div
+          className="admin__overlay"
           onClick={() => setSidebarOpen(false)}
-          aria-hidden="true" 
+          aria-hidden="true"
         />
       )}
 
-      {/* Admin Sidebar */}
-      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <div className="admin-brand-header">
-          <Link to="/" className="admin-brand-link">
-            <img src="/logo.png" alt="Suplementos Top" className="admin-logo-img" />
-            <div>
-              <span className="admin-title">ADMIN PANEL</span>
-              <span className="admin-sub">Suplementos Top</span>
-            </div>
-          </Link>
-          <button 
-            type="button" 
-            className="admin-sidebar-close" 
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Cerrar menú"
-          >
-            <X size={20} />
-          </button>
+      {/* Sidebar matching Jokers UI / Tienda May 100% */}
+      <aside className={`admin__sidebar ${sidebarOpen ? 'admin__sidebar--open' : ''}`}>
+        <div className="admin__sidebar-header">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Link to="/admin" className="admin__brand-link">
+              <div className="admin__brand-avatar">
+                <Package size={20} />
+              </div>
+              <div className="admin__brand-text">
+                <h3>Suplementos Top</h3>
+                <span className="admin__badge-tag">ADMIN PANEL</span>
+              </div>
+            </Link>
+            <button
+              type="button"
+              className="admin__sidebar-close-btn"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Cerrar menú"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
-        <nav className="admin-nav">
-          <Link 
-            to="/admin" 
-            className={`admin-nav-item ${isActive('/admin') ? 'active' : ''}`}
+        <nav className="admin__nav">
+          <Link
+            to="/admin"
+            className={`admin__nav-item ${isActive('/admin') ? 'admin__nav-item--active' : ''}`}
           >
             <LayoutDashboard size={18} />
             <span>Dashboard</span>
           </Link>
 
-          <Link 
-            to="/admin/pedidos" 
-            className={`admin-nav-item ${isActive('/admin/pedidos') ? 'active' : ''}`}
+          <Link
+            to="/admin/pedidos"
+            className={`admin__nav-item ${isActive('/admin/pedidos') ? 'admin__nav-item--active' : ''}`}
           >
             <ShoppingBag size={18} />
             <span>Pedidos</span>
-            {pendingCount > 0 && (
-              <span className="admin-pill-badge">{pendingCount}</span>
+            {pendingOrdersCount > 0 && (
+              <span className="admin__nav-badge admin__nav-badge--danger">{pendingOrdersCount}</span>
             )}
           </Link>
 
-          <Link 
-            to="/admin/productos" 
-            className={`admin-nav-item ${isActive('/admin/productos') ? 'active' : ''}`}
+          <Link
+            to="/admin/productos"
+            className={`admin__nav-item ${isActive('/admin/productos') ? 'admin__nav-item--active' : ''}`}
           >
             <Package size={18} />
-            <span>Productos & Stock</span>
+            <span>Productos &amp; Catálogo</span>
+            <span className="admin__nav-badge">{products.length}</span>
           </Link>
 
-          <Link 
-            to="/admin/configuracion" 
-            className={`admin-nav-item ${isActive('/admin/configuracion') ? 'active' : ''}`}
+          <Link
+            to="/admin/stock"
+            className={`admin__nav-item ${isActive('/admin/stock') ? 'admin__nav-item--active' : ''}`}
+          >
+            <Archive size={18} />
+            <span>Control de Stock</span>
+            {lowStockCount > 0 && (
+              <span className="admin__nav-badge admin__nav-badge--warning">{lowStockCount}</span>
+            )}
+          </Link>
+
+          <Link
+            to="/admin/reportes"
+            className={`admin__nav-item ${isActive('/admin/reportes') ? 'admin__nav-item--active' : ''}`}
+          >
+            <BarChart2 size={18} />
+            <span>Reportes de Ventas</span>
+          </Link>
+
+          <Link
+            to="/admin/configuracion"
+            className={`admin__nav-item ${isActive('/admin/configuracion') ? 'admin__nav-item--active' : ''}`}
           >
             <Settings size={18} />
             <span>Configuración</span>
           </Link>
         </nav>
 
-        <div className="admin-sidebar-footer">
-          <button 
-            type="button" 
-            onClick={handleLogout} 
-            className="btn-admin-logout"
-            title="Bloquear panel por seguridad"
+        {/* Sidebar Footer matching Jokers / Tienda May */}
+        <div className="admin__sidebar-footer">
+          <a
+            href="https://wa.me/5491165652990"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="admin__btn-wa-shortcut"
+            title="WhatsApp de atención"
           >
-            <LogOut size={15} />
-            <span>Cerrar Sesión / Bloquear</span>
-          </button>
-          <Link to="/" className="btn-return-store">
-            <Store size={16} />
+            <Send size={14} />
+            <span>WhatsApp: 11 6565-2990</span>
+          </a>
+
+          <Link to="/" className="admin__btn-store-link">
+            <Store size={15} />
             <span>Volver a la Tienda</span>
           </Link>
-          <div className="admin-store-tag">
-            <MapPin size={12} className="text-accent" />
-            <span>Uriburu 1163, CABA</span>
+
+          <div className="admin__location-pill">
+            <MapPin size={13} className="text-accent" />
+            <span>Pres. José E. Uriburu 1163, CABA</span>
           </div>
-          <div className="admin-sidebar-author">
-            <span className="admin-author-sub">Desarrollado por</span>
-            <a 
-              href="https://agustinpollan.vercel.app/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="admin-author-link"
-              title="Portafolio de Agustín Pollán"
+
+          <div className="admin__footer-credits">
+            <p className="admin-footer-credit">
+              Desarrollado por{' '}
+              <a
+                href="https://agustinpollan.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Agustín Pollán ↗
+              </a>
+            </p>
+            <button
+              type="button"
+              className="admin__logout-btn"
+              onClick={handleLogout}
+              title="Cerrar sesión"
             >
-              Agustín Pollán ↗
-            </a>
+              <LogOut size={14} />
+              <span>Cerrar Sesión</span>
+            </button>
           </div>
         </div>
       </aside>
 
-      {/* Main Admin Area */}
-      <div className="admin-main-wrap">
-        <header className="admin-topbar">
-          <div className="admin-topbar-left">
-            <button 
-              type="button" 
-              className="admin-menu-toggle" 
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label="Abrir menú"
-            >
-              <Menu size={22} />
-            </button>
-            <div className="admin-topbar-title">
-              <span>Panel de Gestión</span>
-              <span className="admin-store-name">Suplementos Top</span>
-            </div>
+      {/* Main Content Area */}
+      <div className="admin__main-container">
+        {/* Desktop Top Header Bar */}
+        <header className="admin__topbar">
+          <div className="admin__topbar-left">
+            <h1 className="admin__topbar-title">Panel de Gestión</h1>
+            <span className="admin__topbar-dot">•</span>
+            <span className="admin__topbar-store">Gimnasio Top Shape Recoleta</span>
           </div>
 
-          <div className="admin-topbar-actions">
-            <a 
-              href="https://wa.me/5491165652990" 
-              target="_blank" 
+          <div className="admin__topbar-actions">
+            <a
+              href="https://wa.me/5491165652990"
+              target="_blank"
               rel="noopener noreferrer"
-              className="admin-wa-pill"
-              title="WhatsApp de atención"
+              className="admin__topbar-wa-pill"
             >
-              <Send size={14} />
-              <span className="hide-on-mobile">WhatsApp Tienda: 11 6565-2990</span>
+              <Send size={13} />
+              <span>WhatsApp: 11 6565-2990</span>
             </a>
-            <div className="admin-avatar">
-              <span>Admin</span>
+            <div className="admin__topbar-avatar">
+              <span className="avatar-dot" />
+              <span>Admin Activo</span>
             </div>
           </div>
         </header>
 
-        <main className="admin-content">
+        {/* Dynamic Nested Page Content */}
+        <main className="admin__content">
           <Outlet />
         </main>
       </div>
 
-      {/* Mobile Sticky Bottom Nav Bar for ultra-fast 1-tap navigation */}
-      <nav className="admin-bottom-nav">
-        <Link 
-          to="/admin" 
-          className={`bottom-nav-item ${isActive('/admin') ? 'active' : ''}`}
-        >
-          <LayoutDashboard size={20} />
-          <span>Inicio</span>
-        </Link>
-        <Link 
-          to="/admin/pedidos" 
-          className={`bottom-nav-item ${isActive('/admin/pedidos') ? 'active' : ''}`}
-        >
-          <div className="bottom-nav-badge-wrap">
-            <ShoppingBag size={20} />
-            {pendingCount > 0 && <span className="bottom-badge-dot" />}
-          </div>
-          <span>Pedidos</span>
-        </Link>
-        <Link 
-          to="/admin/productos" 
-          className={`bottom-nav-item ${isActive('/admin/productos') ? 'active' : ''}`}
-        >
-          <Package size={20} />
-          <span>Stock</span>
-        </Link>
-        <Link 
-          to="/admin/configuracion" 
-          className={`bottom-nav-item ${isActive('/admin/configuracion') ? 'active' : ''}`}
-        >
-          <Settings size={20} />
-          <span>Config</span>
-        </Link>
-        <Link 
-          to="/" 
-          className="bottom-nav-item"
-        >
-          <Store size={20} />
-          <span>Tienda</span>
-        </Link>
-      </nav>
-
       <style>{`
-        .admin-root {
+        /* ========================================================
+           TIENDA MAY / JOKERS UI ENGINE - ADMIN STYLES FOR SUPLEMENTOS TOP
+           Pure White & Slate Aesthetic • 100% Clean & Professional
+           ======================================================== */
+        :root {
+          --admin-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          --admin-bg: #FFFFFF;
+          --admin-bg-subtle: #F8FAFC;
+          --admin-bg-hover: #F1F5F9;
+          --admin-border: #E2E8F0;
+          --admin-border-subtle: #F1F5F9;
+          --admin-text-main: #0F172A;
+          --admin-text-secondary: #64748B;
+          --admin-text-muted: #94A3B8;
+        }
+
+        .admin {
           display: flex;
           min-height: 100vh;
-          background: #F8FAFC;
+          position: relative;
+          background-color: #FFFFFF;
+          color: #0F172A;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
-        .admin-sidebar {
-          width: 260px;
-          background: #0B132B;
-          color: #E2E8F0;
-          display: flex;
-          flex-direction: column;
-          border-right: 1px solid rgba(255,255,255,0.06);
+
+        /* Mobile Header */
+        .admin__mobile-header {
+          display: none;
+        }
+        .admin__sidebar-close-btn {
+          display: none;
+        }
+
+        /* Sidebar */
+        .admin__sidebar {
+          width: 250px;
+          background: #FFFFFF;
+          border-right: 1px solid #E2E8F0;
+          padding: 24px 16px;
+          flex-shrink: 0;
           position: sticky;
           top: 0;
           height: 100vh;
-          z-index: 100;
-          flex-shrink: 0;
-        }
-        .admin-brand-header {
-          padding: 1.25rem 1.25rem;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-        .admin-sidebar-close {
-          display: none;
-          background: transparent;
-          border: none;
-          color: #94A3B8;
-          cursor: pointer;
-          padding: 4px;
-        }
-        .admin-brand-link {
-          display: flex;
-          align-items: center;
-          gap: 0.65rem;
-          color: #FFFFFF;
-          text-decoration: none;
-        }
-        .admin-logo-img {
-          height: 44px;
-          width: auto;
-          object-fit: contain;
-          display: block;
-          flex-shrink: 0;
-        }
-        .admin-title {
-          font-weight: 900;
-          font-size: 0.95rem;
-          display: block;
-          color: #FFFFFF;
-          letter-spacing: 0.02em;
-        }
-        .admin-sub {
-          font-size: 0.7rem;
-          color: #94A3B8;
-          display: block;
-        }
-        .admin-nav {
-          padding: 1rem 0.75rem;
+          overflow-y: auto;
           display: flex;
           flex-direction: column;
-          gap: 0.35rem;
+          z-index: 50;
+        }
+
+        .admin__sidebar-header {
+          margin-bottom: 20px;
+          padding-bottom: 14px;
+          border-bottom: 1px solid #F1F5F9;
+        }
+
+        .admin__brand-link {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+        }
+
+        .admin__brand-avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          background: #0F172A;
+          color: #FFFFFF;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .admin__brand-text h3 {
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0;
+          letter-spacing: -0.02em;
+          line-height: 1.2;
+        }
+
+        .admin__badge-tag {
+          font-size: 0.68rem;
+          font-weight: 700;
+          color: #64748B;
+          letter-spacing: 0.05em;
+        }
+
+        .admin__nav {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
           flex: 1;
         }
-        .admin-nav-item {
+
+        .admin__nav-item {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
-          padding: 0.75rem 1rem;
-          border-radius: var(--radius-md, 8px);
-          font-size: 0.9rem;
-          font-weight: 600;
-          color: #94A3B8;
-          transition: all 0.15s;
-          text-decoration: none;
-        }
-        .admin-nav-item:hover {
-          color: #FFFFFF;
-          background: rgba(255,255,255,0.06);
-        }
-        .admin-nav-item.active {
-          color: #FFFFFF;
-          background: #FF5500;
-          font-weight: 700;
-          box-shadow: 0 4px 12px rgba(255, 85, 0, 0.35);
-        }
-        .admin-pill-badge {
-          margin-left: auto;
-          background: #EF4444;
-          color: #FFF;
-          font-size: 0.72rem;
-          font-weight: 800;
-          padding: 0.15rem 0.45rem;
-          border-radius: 9999px;
-        }
-        .admin-sidebar-footer {
-          padding: 1.25rem;
-          border-top: 1px solid rgba(255,255,255,0.08);
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-        .btn-admin-logout {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: #F87171;
-          font-size: 0.8rem;
-          font-weight: 600;
-          padding: 0.55rem 0.85rem;
-          border-radius: var(--radius-sm, 6px);
-          border: 1px solid rgba(239, 68, 68, 0.2);
-          background: rgba(239, 68, 68, 0.08);
-          cursor: pointer;
-          transition: background 0.15s ease;
-          width: 100%;
-          margin-bottom: 0.35rem;
-        }
-        .btn-admin-logout:hover {
-          background: rgba(239, 68, 68, 0.2);
-          color: #FCA5A5;
-        }
-        .btn-return-store {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: #CBD5E1;
-          font-size: 0.85rem;
-          font-weight: 600;
-          padding: 0.5rem;
-          border-radius: var(--radius-sm, 6px);
-          text-decoration: none;
-          background: rgba(255,255,255,0.04);
-          transition: background 0.15s;
-        }
-        .btn-return-store:hover {
-          background: rgba(255,255,255,0.1);
-          color: #FFF;
-        }
-        .admin-store-tag {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          font-size: 0.725rem;
-          color: #94A3B8;
-        }
-        .admin-sidebar-author {
-          display: flex;
-          flex-direction: column;
-          gap: 0.2rem;
-          padding-top: 0.5rem;
-          border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        .admin-author-sub {
-          font-size: 0.65rem;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: #64748B;
-          font-weight: 700;
-        }
-        .admin-author-link {
-          font-size: 0.78rem;
-          font-weight: 700;
-          color: var(--color-accent, #3B82F6);
+          gap: 12px;
+          padding: 10px 14px;
+          border-radius: 8px;
+          color: #475569;
+          font-size: 0.92rem;
+          font-weight: 500;
           text-decoration: none;
           transition: all 0.15s ease;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.25rem;
         }
-        .admin-author-link:hover {
+
+        .admin__nav-item:hover {
+          background: #F8FAFC;
+          color: #0F172A;
+        }
+
+        .admin__nav-item--active {
+          background: #F1F5F9 !important;
+          color: #0F172A !important;
+          font-weight: 700 !important;
+        }
+
+        .admin__nav-badge {
+          margin-left: auto;
+          font-size: 0.74rem;
+          font-weight: 800;
+          padding: 2px 8px;
+          border-radius: 9999px;
+          background: #0F172A;
           color: #FFFFFF;
+          min-width: 20px;
+          text-align: center;
+        }
+
+        .admin__nav-badge--danger {
+          background: #EF4444 !important;
+          color: #FFFFFF !important;
+        }
+
+        .admin__nav-badge--warning {
+          background: #FEF3C7 !important;
+          color: #B45309 !important;
+        }
+
+        /* Sidebar Footer */
+        .admin__sidebar-footer {
+          margin-top: auto;
+          padding-top: 16px;
+          border-top: 1px solid #F1F5F9;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .admin__btn-wa-shortcut {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: #F0FDF4;
+          border: 1px solid #DCFCE7;
+          color: #166534;
+          padding: 8px 12px;
+          border-radius: 8px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: background 0.15s ease;
+        }
+        .admin__btn-wa-shortcut:hover {
+          background: #DCFCE7;
+        }
+
+        .admin__btn-store-link {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          color: #334155;
+          padding: 8px 12px;
+          border-radius: 8px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.15s ease;
+        }
+        .admin__btn-store-link:hover {
+          background: #F1F5F9;
+          color: #0F172A;
+        }
+
+        .admin__location-pill {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.72rem;
+          color: #64748B;
+          padding: 4px 6px;
+        }
+
+        .admin__footer-credits {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          padding-top: 8px;
+          border-top: 1px dashed #E2E8F0;
+        }
+
+        .admin-footer-credit {
+          font-size: 0.78rem;
+          color: #94A3B8;
+          margin: 0;
+          line-height: 1.4;
+        }
+        .admin-footer-credit a {
+          color: #0F172A;
+          font-weight: 700;
+          text-decoration: none;
+          transition: color 0.15s ease;
+        }
+        .admin-footer-credit a:hover {
+          color: #E63946;
           text-decoration: underline;
         }
-        .admin-main-wrap {
+
+        .admin__logout-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: none;
+          border: 1px solid #F1F5F9;
+          color: #94A3B8;
+          padding: 7px 10px;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s ease;
+          width: 100%;
+        }
+        .admin__logout-btn:hover {
+          background: #FEE2E2;
+          border-color: #FECACA;
+          color: #DC2626;
+        }
+
+        /* Main Container & Topbar */
+        .admin__main-container {
           flex: 1;
           display: flex;
           flex-direction: column;
-          overflow-x: hidden;
           min-width: 0;
-        }
-        .admin-topbar {
           background: #FFFFFF;
+        }
+
+        .admin__topbar {
+          height: 64px;
           border-bottom: 1px solid #E2E8F0;
-          padding: 0.85rem 2rem;
+          background: #FFFFFF;
+          padding: 0 32px;
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          justify-content: space-between;
           position: sticky;
           top: 0;
           z-index: 20;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.03);
         }
-        .admin-topbar-left {
+
+        .admin__topbar-left {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 10px;
         }
-        .admin-menu-toggle {
-          display: none;
-          background: transparent;
-          border: none;
-          color: #0F172A;
-          cursor: pointer;
-          padding: 6px;
-          border-radius: 6px;
-          align-items: center;
-          justify-content: center;
-        }
-        .admin-menu-toggle:hover {
-          background: #F1F5F9;
-        }
-        .admin-topbar-title {
-          display: flex;
-          flex-direction: column;
-        }
-        .admin-topbar-title span {
+        .admin__topbar-title {
+          font-size: 1.15rem;
           font-weight: 800;
           color: #0F172A;
-          font-size: 1.05rem;
-          line-height: 1.2;
+          letter-spacing: -0.02em;
+          margin: 0;
         }
-        .admin-store-name {
-          font-size: 0.72rem;
-          color: #64748B;
+        .admin__topbar-dot {
+          color: #CBD5E1;
+          font-size: 0.8rem;
+        }
+        .admin__topbar-store {
+          font-size: 0.85rem;
           font-weight: 600;
+          color: #64748B;
         }
-        .admin-topbar-actions {
+
+        .admin__topbar-actions {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 12px;
         }
-        .admin-wa-pill {
-          display: inline-flex;
+
+        .admin__topbar-wa-pill {
+          display: flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 6px;
           background: #F0FDF4;
-          color: #15803D;
-          border: 1px solid #BBF7D0;
-          padding: 0.35rem 0.75rem;
+          border: 1px solid #DCFCE7;
+          color: #166534;
+          padding: 6px 12px;
           border-radius: 9999px;
           font-size: 0.78rem;
           font-weight: 700;
           text-decoration: none;
-          transition: background 0.15s;
+          transition: background 0.15s ease;
         }
-        .admin-wa-pill:hover {
+        .admin__topbar-wa-pill:hover {
           background: #DCFCE7;
         }
-        .admin-avatar {
-          background: #0B132B;
-          color: #FFFFFF;
-          font-size: 0.78rem;
-          font-weight: 800;
-          padding: 0.35rem 0.8rem;
+
+        .admin__topbar-avatar {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          padding: 6px 12px;
           border-radius: 9999px;
-          letter-spacing: 0.05em;
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #0F172A;
         }
-        .admin-content {
-          padding: 1.75rem 2rem;
+        .avatar-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #16A34A;
+        }
+
+        .admin__content {
           flex: 1;
+          padding: 32px;
+          max-width: 1400px;
+          width: 100%;
+          margin: 0 auto;
+          box-sizing: border-box;
         }
 
-        .admin-bottom-nav {
-          display: none;
-        }
-
-        /* Responsive Overrides */
+        /* Mobile Responsive Styles */
         @media (max-width: 900px) {
-          .admin-root {
+          .admin {
             flex-direction: column;
-            padding-bottom: 64px; /* Space for mobile sticky bottom nav */
           }
-          .admin-menu-toggle {
+
+          .admin__topbar {
+            display: none;
+          }
+
+          .admin__mobile-header {
             display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            padding: 0 16px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            position: sticky;
+            top: 0;
+            z-index: 40;
           }
-          .admin-sidebar-close {
-            display: block;
+
+          .admin__mobile-menu-btn,
+          .admin__mobile-logout-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            color: #0F172A;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
-          .admin-sidebar {
+
+          .admin__mobile-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .admin__mobile-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #0F172A;
+          }
+          .admin__mobile-subtitle {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #E63946;
+            letter-spacing: 0.05em;
+          }
+
+          .admin__overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(3px);
+            z-index: 55;
+          }
+
+          .admin__sidebar {
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
-            width: 270px;
-            max-width: 80vw;
+            width: 280px;
             height: 100vh;
+            background: #FFFFFF;
             transform: translateX(-100%);
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 4px 0 24px rgba(0,0,0,0.3);
-          }
-          .admin-sidebar.open {
-            transform: translateX(0);
-          }
-          .admin-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.55);
-            backdrop-filter: blur(4px);
-            z-index: 95;
-          }
-          .admin-topbar {
-            padding: 0.75rem 1rem;
-          }
-          .admin-content {
-            padding: 1rem;
-          }
-          .hide-on-mobile {
-            display: none !important;
+            z-index: 60;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
           }
 
-          /* Mobile Bottom Navigation Bar */
-          .admin-bottom-nav {
-            display: flex;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 58px;
-            background: #0B132B;
-            border-top: 1px solid rgba(255,255,255,0.12);
-            z-index: 80;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 4px;
-            box-shadow: 0 -4px 16px rgba(0,0,0,0.2);
+          .admin__sidebar--open {
+            transform: translateX(0);
           }
-          .bottom-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #94A3B8;
-            font-size: 0.68rem;
-            font-weight: 700;
-            text-decoration: none;
-            gap: 2px;
-            flex: 1;
-            height: 100%;
-            transition: color 0.15s;
-          }
-          .bottom-nav-item.active {
-            color: #FF5500;
-          }
-          .bottom-nav-badge-wrap {
-            position: relative;
+
+          .admin__sidebar-close-btn {
             display: flex;
             align-items: center;
             justify-content: center;
+            background: none;
+            border: none;
+            padding: 6px;
+            color: #64748B;
+            cursor: pointer;
           }
-          .bottom-badge-dot {
-            position: absolute;
-            top: -2px;
-            right: -3px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #EF4444;
-            border: 2px solid #0B132B;
+
+          .admin__content {
+            padding: 16px;
           }
         }
       `}</style>
     </div>
   );
 };
+export default AdminLayout;

@@ -636,3 +636,5 @@ export const AdminOrders: React.FC = () => {
     </div>
   );
 };
+
+export default AdminOrders;
