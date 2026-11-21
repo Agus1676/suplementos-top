@@ -311,7 +311,7 @@ export const HomePage: React.FC = () => {
             <div className="location-map-side">
               <iframe
                 title="Mapa Suplementos Top — Gimnasio Top Shape, Pres. José E. Uriburu 1163, Recoleta"
-                src="https://maps.google.com/maps?q=Gimnasio+Top+Shape,+Pres.+Jose+Evaristo+Uriburu+1163,+Recoleta,+Buenos+Aires&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                src="https://maps.google.com/maps?q=Pres.+Jose+E.+Uriburu+1163,+Recoleta,+Buenos+Aires&t=&z=16&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0, minHeight: '260px', display: 'block' }}
