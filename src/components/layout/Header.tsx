@@ -94,66 +94,67 @@ export const Header: React.FC = () => {
             <span className="pv-brand-name">SUPLEMENTOS TOP</span>
           </Link>
 
-          <div className="pv-right-cluster">
-            <div className="pv-search-wrap" ref={searchRef}>
-              <form onSubmit={handleSearchSubmit} className="pv-search-form">
-                <input
-                  type="text"
-                  placeholder="Buscar productos o marcas..."
-                  value={searchQuery}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setIsSearchFocused(true);
-                  }}
-                  className="pv-search-input"
-                />
-                <button type="submit" className="pv-search-btn" aria-label="Buscar">
-                  <Search size={16} />
-                </button>
-              </form>
+          {/* Desktop Search Bar */}
+          <div className="pv-desktop-search" ref={searchRef}>
+            <form onSubmit={handleSearchSubmit} className="pv-search-form">
+              <input
+                type="text"
+                placeholder="Buscar productos o marcas..."
+                value={searchQuery}
+                onFocus={() => setIsSearchFocused(true)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsSearchFocused(true);
+                }}
+                className="pv-search-input"
+              />
+              <button type="submit" className="pv-search-btn" aria-label="Buscar">
+                <Search size={16} />
+              </button>
+            </form>
 
-              {isSearchFocused && searchQuery.trim().length >= 2 && (
-                <div className="pv-search-dropdown">
-                  {liveSearchResults.length > 0 ? (
-                    <>
-                      <div className="pv-search-list">
-                        {liveSearchResults.map((prod) => (
-                          <Link
-                            key={prod.id}
-                            to={`/producto/${prod.slug}`}
-                            onClick={() => setIsSearchFocused(false)}
-                            className="pv-search-item"
-                          >
-                            <img
-                              src={prod.images[0]?.url || '/logo.png'}
-                              alt={prod.name}
-                              className="pv-search-thumb"
-                            />
-                            <div className="pv-search-meta">
-                              <span className="pv-search-title">{prod.name}</span>
-                              <span className="pv-search-price">{formatARS(prod.basePriceInCents)}</span>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleSearchSubmit}
-                        className="pv-search-all"
-                      >
-                        Ver todos los resultados ({liveSearchResults.length})
-                      </button>
-                    </>
-                  ) : (
-                    <div className="pv-search-empty">
-                      Sin resultados para "{searchQuery}"
+            {isSearchFocused && searchQuery.trim().length >= 2 && (
+              <div className="pv-search-dropdown">
+                {liveSearchResults.length > 0 ? (
+                  <>
+                    <div className="pv-search-list">
+                      {liveSearchResults.map((prod) => (
+                        <Link
+                          key={prod.id}
+                          to={`/producto/${prod.slug}`}
+                          onClick={() => setIsSearchFocused(false)}
+                          className="pv-search-item"
+                        >
+                          <img
+                            src={prod.images[0]?.url || '/logo.png'}
+                            alt={prod.name}
+                            className="pv-search-thumb"
+                          />
+                          <div className="pv-search-meta">
+                            <span className="pv-search-title">{prod.name}</span>
+                            <span className="pv-search-price">{formatARS(prod.basePriceInCents)}</span>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
+                    <button
+                      type="button"
+                      onClick={handleSearchSubmit}
+                      className="pv-search-all"
+                    >
+                      Ver todos los resultados ({liveSearchResults.length})
+                    </button>
+                  </>
+                ) : (
+                  <div className="pv-search-empty">
+                    Sin resultados para "{searchQuery}"
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
+          <div className="pv-actions-cluster">
             <Link
               to="/seguimiento"
               className="pv-icon-btn"
@@ -173,6 +174,76 @@ export const Header: React.FC = () => {
               <ShoppingBag size={20} />
               <span className="pv-cart-badge">{totalItemsCount}</span>
             </button>
+          </div>
+        </div>
+
+        {/* Mobile Dedicated Full-Width Search Row */}
+        <div className="pv-mobile-search-row">
+          <div className="container">
+            <form onSubmit={handleSearchSubmit} className="pv-search-form pv-search-form--mobile">
+              <Search size={16} className="pv-search-mobile-icon" />
+              <input
+                type="text"
+                placeholder="Buscar proteínas, creatinas, marcas..."
+                value={searchQuery}
+                onFocus={() => setIsSearchFocused(true)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsSearchFocused(true);
+                }}
+                className="pv-search-input"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="pv-search-clear-btn"
+                  aria-label="Borrar búsqueda"
+                >
+                  <X size={15} />
+                </button>
+              )}
+            </form>
+
+            {isSearchFocused && searchQuery.trim().length >= 2 && (
+              <div className="pv-search-dropdown pv-search-dropdown--mobile">
+                {liveSearchResults.length > 0 ? (
+                  <>
+                    <div className="pv-search-list">
+                      {liveSearchResults.map((prod) => (
+                        <Link
+                          key={prod.id}
+                          to={`/producto/${prod.slug}`}
+                          onClick={() => setIsSearchFocused(false)}
+                          className="pv-search-item"
+                        >
+                          <img
+                            src={prod.images[0]?.url || '/logo.png'}
+                            alt={prod.name}
+                            className="pv-search-thumb"
+                          />
+                          <div className="pv-search-meta">
+                            <span className="pv-search-title">{prod.name}</span>
+                            <span className="pv-search-price">{formatARS(prod.basePriceInCents)}</span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleSearchSubmit}
+                      className="pv-search-all"
+                    >
+                      Ver todos los resultados ({liveSearchResults.length})
+                    </button>
+                  </>
+                ) : (
+                  <div className="pv-search-empty">
+                    Sin resultados para "{searchQuery}"
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -235,15 +306,27 @@ export const Header: React.FC = () => {
         .pv-topbar {
           background: #5B8C2A;
           font-size: 0.72rem;
-          font-weight: 500;
+          font-weight: 600;
           color: #FFFFFF;
           padding: 0.35rem 0;
+          text-align: center;
+        }
+        @media (max-width: 640px) {
+          .pv-topbar {
+            font-size: 0.65rem;
+            padding: 0.28rem 0.5rem;
+          }
         }
         .pv-topbar-inner {
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: center;
           gap: 1rem;
+        }
+        @media (min-width: 768px) {
+          .pv-topbar-inner {
+            justify-content: space-between;
+          }
         }
         .pv-topbar-links {
           display: none;
@@ -274,9 +357,9 @@ export const Header: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 1rem;
-          padding-top: 0.85rem;
-          padding-bottom: 0.75rem;
+          gap: 0.5rem;
+          padding-top: 0.65rem;
+          padding-bottom: 0.65rem;
         }
         .pv-mobile-btn {
           display: inline-flex;
@@ -286,9 +369,10 @@ export const Header: React.FC = () => {
           border: none;
           color: #18181B;
           cursor: pointer;
-          padding: 0.25rem;
+          padding: 0.4rem;
+          border-radius: 6px;
         }
-        @media (min-width: 900px) {
+        @media (min-width: 860px) {
           .pv-mobile-btn {
             display: none;
           }
@@ -297,37 +381,91 @@ export const Header: React.FC = () => {
         .pv-brand {
           display: inline-flex;
           align-items: center;
-          gap: 0.65rem;
+          gap: 0.5rem;
           text-decoration: none;
           color: #18181B;
-          flex-shrink: 0;
+          min-width: 0;
         }
         .pv-brand-logo {
-          height: 52px;
+          height: 42px;
           width: auto;
           object-fit: contain;
           display: block;
+          flex-shrink: 0;
+        }
+        @media (min-width: 768px) {
+          .pv-brand-logo {
+            height: 52px;
+          }
         }
         .pv-brand-name {
           font-family: var(--font-display);
-          font-size: 1.05rem;
+          font-size: 0.95rem;
           font-weight: 800;
           letter-spacing: 0.04em;
           color: #18181B;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        @media (max-width: 480px) {
+          .pv-brand-name {
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+          }
+        }
+        @media (max-width: 360px) {
+          .pv-brand-name {
+            display: none;
+          }
         }
 
-        .pv-right-cluster {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          flex: 1;
-          justify-content: flex-end;
-        }
-        .pv-search-wrap {
+        .pv-desktop-search {
+          display: none;
           position: relative;
           width: 100%;
-          max-width: 360px;
+          max-width: 380px;
+          margin: 0 1rem;
         }
+        @media (min-width: 860px) {
+          .pv-desktop-search {
+            display: block;
+          }
+        }
+
+        .pv-mobile-search-row {
+          display: block;
+          padding: 0 0 0.65rem;
+          background: #FFFFFF;
+          position: relative;
+        }
+        @media (min-width: 860px) {
+          .pv-mobile-search-row {
+            display: none;
+          }
+        }
+        .pv-search-mobile-icon {
+          color: #71717A;
+          margin-left: 0.75rem;
+          flex-shrink: 0;
+        }
+        .pv-search-clear-btn {
+          background: transparent;
+          border: none;
+          color: #71717A;
+          padding: 0.5rem 0.65rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+        }
+
+        .pv-actions-cluster {
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          flex-shrink: 0;
+        }
+
         .pv-search-form {
           display: flex;
           align-items: center;
@@ -336,6 +474,10 @@ export const Header: React.FC = () => {
           border-radius: 6px;
           overflow: hidden;
           transition: border-color 0.15s ease, background 0.15s ease;
+        }
+        .pv-search-form--mobile {
+          background: #F4F4F5;
+          width: 100%;
         }
         .pv-search-form:focus-within {
           border-color: #A1A1AA;
@@ -348,7 +490,7 @@ export const Header: React.FC = () => {
           color: #18181B;
           font-family: var(--font-body);
           font-size: 0.82rem;
-          padding: 0.5rem 0.75rem;
+          padding: 0.55rem 0.75rem;
           outline: none;
         }
         .pv-search-input::placeholder {
@@ -380,6 +522,11 @@ export const Header: React.FC = () => {
           border: 1px solid #E4E4E7;
           overflow: hidden;
           z-index: 200;
+        }
+        .pv-search-dropdown--mobile {
+          left: 1rem;
+          right: 1rem;
+          top: calc(100% - 0.25rem);
         }
         .pv-search-list {
           display: flex;

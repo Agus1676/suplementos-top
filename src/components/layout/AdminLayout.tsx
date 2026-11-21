@@ -9,19 +9,248 @@ import {
   MapPin, 
   Send,
   Menu,
-  X
+  X,
+  Lock,
+  LogOut,
+  KeyRound,
+  ShieldAlert,
+  ArrowRight
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
+
+const ADMIN_MASTER_KEY = 'suplementos2026';
 
 export const AdminLayout: React.FC = () => {
   const location = useLocation();
   const { orders } = useStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Security Gate State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem('st_admin_session') === 'active';
+  });
+  const [enteredPin, setEnteredPin] = useState('');
+  const [pinError, setPinError] = useState('');
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [isLockedTemporarily, setIsLockedTemporarily] = useState(false);
+
   // Close sidebar on navigation change
   useEffect(() => {
     setSidebarOpen(false);
   }, [location.pathname]);
+
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isLockedTemporarily) return;
+
+    if (enteredPin === ADMIN_MASTER_KEY) {
+      sessionStorage.setItem('st_admin_session', 'active');
+      setIsAuthenticated(true);
+      setPinError('');
+      setEnteredPin('');
+      setFailedAttempts(0);
+    } else {
+      const nextAttempts = failedAttempts + 1;
+      setFailedAttempts(nextAttempts);
+      setEnteredPin('');
+
+      if (nextAttempts >= 5) {
+        setIsLockedTemporarily(true);
+        setPinError('Demasiados intentos fallidos. Bloqueado por 30 segundos por seguridad.');
+        setTimeout(() => {
+          setIsLockedTemporarily(false);
+          setFailedAttempts(0);
+          setPinError('');
+        }, 30000);
+      } else {
+        setPinError(`Clave incorrecta. Te quedan ${5 - nextAttempts} intentos.`);
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('st_admin_session');
+    setIsAuthenticated(false);
+  };
+
+  // If not authenticated, render the Security Gate Screen
+  if (!isAuthenticated) {
+    return (
+      <div className="admin-lock-screen">
+        <div className="admin-lock-card">
+          <div className="admin-lock-header">
+            <div className="admin-lock-icon-wrap">
+              <KeyRound size={32} className="text-accent" />
+            </div>
+            <img src="/logo.png" alt="Suplementos Top" className="admin-lock-logo" />
+            <h1 className="admin-lock-title">Panel de Administración</h1>
+            <p className="admin-lock-desc">
+              Acceso restringido para el personal y dueño de Suplementos Top.
+            </p>
+          </div>
+
+          <form onSubmit={handleLoginSubmit} className="admin-lock-form">
+            <div className="lock-input-wrap">
+              <Lock size={18} className="lock-field-icon" />
+              <input
+                type="password"
+                placeholder="Ingresá la clave de acceso..."
+                value={enteredPin}
+                onChange={(e) => {
+                  setEnteredPin(e.target.value);
+                  setPinError('');
+                }}
+                disabled={isLockedTemporarily}
+                className="admin-lock-input"
+                autoFocus
+              />
+            </div>
+
+            {pinError && (
+              <div className="admin-lock-error">
+                <ShieldAlert size={16} />
+                <span>{pinError}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={!enteredPin.trim() || isLockedTemporarily}
+              className="btn btn-primary btn-block admin-lock-btn"
+            >
+              <span>Desbloquear Panel</span>
+              <ArrowRight size={16} />
+            </button>
+          </form>
+
+          <div className="admin-lock-footer">
+            <Link to="/" className="btn-return-store-link">
+              ← Volver a la Tienda Pública
+            </Link>
+          </div>
+        </div>
+
+        <style>{`
+          .admin-lock-screen {
+            min-height: 100vh;
+            background: #F4F5F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+          }
+          .admin-lock-card {
+            background: #FFFFFF;
+            border: 1px solid #E4E4E7;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            padding: 2.25rem 2rem;
+            box-shadow: 0 16px 40px -10px rgba(15, 23, 42, 0.12);
+          }
+          .admin-lock-header {
+            text-align: center;
+            margin-bottom: 1.75rem;
+          }
+          .admin-lock-icon-wrap {
+            width: 58px;
+            height: 58px;
+            background: #FFF1F2;
+            border: 1px solid #FFE4E6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+          }
+          .admin-lock-logo {
+            height: 48px;
+            width: auto;
+            margin: 0 auto 0.75rem;
+            display: block;
+          }
+          .admin-lock-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #18181B;
+            margin: 0 0 0.35rem;
+          }
+          .admin-lock-desc {
+            font-size: 0.82rem;
+            color: #71717A;
+            margin: 0;
+            line-height: 1.45;
+          }
+          .admin-lock-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+          }
+          .lock-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+          }
+          .lock-field-icon {
+            position: absolute;
+            left: 0.95rem;
+            color: #71717A;
+            pointer-events: none;
+          }
+          .admin-lock-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.6rem;
+            border: 1.5px solid #E4E4E7;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.15s ease;
+          }
+          .admin-lock-input:focus {
+            border-color: #18181B;
+          }
+          .admin-lock-error {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: #DC2626;
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: #FEF2F2;
+            padding: 0.55rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #FEE2E2;
+          }
+          .admin-lock-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 8px;
+          }
+          .admin-lock-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            padding-top: 1.25rem;
+            border-top: 1px solid #F4F4F5;
+          }
+          .btn-return-store-link {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #52525B;
+            text-decoration: none;
+          }
+          .btn-return-store-link:hover {
+            color: #18181B;
+            text-decoration: underline;
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   const pendingCount = orders.filter((o) => o.fulfillmentStatus === 'preparing' || o.fulfillmentStatus === 'unfulfilled').length;
 
@@ -100,6 +329,15 @@ export const AdminLayout: React.FC = () => {
         </nav>
 
         <div className="admin-sidebar-footer">
+          <button 
+            type="button" 
+            onClick={handleLogout} 
+            className="btn-admin-logout"
+            title="Bloquear panel por seguridad"
+          >
+            <LogOut size={15} />
+            <span>Cerrar Sesión / Bloquear</span>
+          </button>
           <Link to="/" className="btn-return-store">
             <Store size={16} />
             <span>Volver a la Tienda</span>
@@ -309,6 +547,26 @@ export const AdminLayout: React.FC = () => {
           display: flex;
           flex-direction: column;
           gap: 0.75rem;
+        }
+        .btn-admin-logout {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: #F87171;
+          font-size: 0.8rem;
+          font-weight: 600;
+          padding: 0.55rem 0.85rem;
+          border-radius: var(--radius-sm, 6px);
+          border: 1px solid rgba(239, 68, 68, 0.2);
+          background: rgba(239, 68, 68, 0.08);
+          cursor: pointer;
+          transition: background 0.15s ease;
+          width: 100%;
+          margin-bottom: 0.35rem;
+        }
+        .btn-admin-logout:hover {
+          background: rgba(239, 68, 68, 0.2);
+          color: #FCA5A5;
         }
         .btn-return-store {
           display: flex;

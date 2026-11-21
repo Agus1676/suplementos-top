@@ -1145,6 +1145,37 @@ export const ProductDetailPage: React.FC = () => {
         .tab-content-panel {
           padding: 2.5rem;
         }
+        @media (max-width: 640px) {
+          .tab-content-panel {
+            padding: 1.25rem 1rem;
+          }
+          .tab-nav-btn {
+            padding: 0.75rem 1rem;
+            font-size: 0.74rem;
+          }
+          .purchase-controls-row {
+            flex-direction: column;
+          }
+          .quantity-box {
+            width: 100%;
+            justify-content: space-between;
+          }
+          .quantity-box .qty-change-btn {
+            flex: 1;
+          }
+          .quantity-box .qty-number {
+            flex: 1;
+          }
+          .product-detail-grid {
+            gap: 1.5rem;
+          }
+          .detail-price-box {
+            padding: 1rem;
+          }
+          .detail-product-title {
+            font-size: 1.6rem;
+          }
+        }
         .tab-content-panel h3 {
           font-size: 1.25rem;
           font-weight: 900;

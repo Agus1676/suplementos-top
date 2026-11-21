@@ -1,7 +1,18 @@
 // Vercel Serverless Function: /api/send-order-email
 // Sends the complete dispatch sheet to suplementostopparg@gmail.com (and buyer confirmation) via Resend API.
+// Hardened against HTML injection, email header tampering, and XSS.
 
 const OWNER_EMAIL = process.env.OWNER_EMAIL || 'suplementostopparg@gmail.com';
+
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 function buildOwnerHtml(order) {
   const isPickup = order.deliveryMethod === 'pickup';
@@ -10,14 +21,14 @@ function buildOwnerHtml(order) {
       (item) => `
       <tr>
         <td style="padding:10px 12px;border-bottom:1px solid #E4E4E7;font-size:14px;color:#18181B;">
-          <strong>${item.productName}</strong><br/>
-          <span style="font-size:12px;color:#71717A;">${item.variantTitle || ''} ${item.sku ? `(SKU: ${item.sku})` : ''}</span>
+          <strong>${escapeHtml(item.productName)}</strong><br/>
+          <span style="font-size:12px;color:#71717A;">${escapeHtml(item.variantTitle || '')} ${item.sku ? `(SKU: ${escapeHtml(item.sku)})` : ''}</span>
         </td>
         <td style="padding:10px 12px;border-bottom:1px solid #E4E4E7;font-size:14px;text-align:center;color:#18181B;font-weight:700;">
-          x${item.quantity}
+          x${Math.max(1, Math.min(99, Number(item.quantity) || 1))}
         </td>
         <td style="padding:10px 12px;border-bottom:1px solid #E4E4E7;font-size:14px;text-align:right;color:#18181B;font-weight:700;">
-          ${item.totalFormatted || ''}
+          ${escapeHtml(item.totalFormatted || '')}
         </td>
       </tr>`
     )
@@ -29,16 +40,16 @@ function buildOwnerHtml(order) {
   <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:640px;margin:0 auto;background:#FFFFFF;border:1px solid #E4E4E7;border-radius:8px;overflow:hidden;">
     <div style="background:#18181B;color:#FFFFFF;padding:20px 24px;">
       <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#A1A1AA;">Suplementos Top — Alerta de Venta</div>
-      <h1 style="margin:6px 0 0;font-size:22px;">Nuevo Pedido #${order.orderNumber}</h1>
+      <h1 style="margin:6px 0 0;font-size:22px;">Nuevo Pedido #${escapeHtml(order.orderNumber)}</h1>
     </div>
 
     <div style="padding:24px;">
       <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:14px 16px;margin-bottom:20px;">
         <div style="font-size:13px;color:#166534;font-weight:700;">
-          Medio de pago: ${order.paymentMethod || 'Mercado Pago'} (${order.paymentStatus === 'approved' ? 'PAGO ACREDITADO' : 'PENDIENTE DE ACREDITACIÓN'})
+          Medio de pago: ${escapeHtml(order.paymentMethod || 'Mercado Pago')} (${order.paymentStatus === 'approved' ? 'PAGO ACREDITADO' : 'PENDIENTE DE ACREDITACIÓN'})
         </div>
         <div style="font-size:18px;color:#14532D;font-weight:800;margin-top:4px;">
-          Total: ${order.totalFormatted}
+          Total: ${escapeHtml(order.totalFormatted)}
         </div>
       </div>
 
@@ -46,10 +57,10 @@ function buildOwnerHtml(order) {
         1. Datos del Comprador
       </h2>
       <table style="width:100%;font-size:14px;color:#27272A;margin-bottom:22px;border-collapse:collapse;">
-        <tr><td style="padding:4px 0;color:#71717A;width:140px;">Nombre:</td><td style="padding:4px 0;font-weight:700;">${order.customerName}</td></tr>
-        <tr><td style="padding:4px 0;color:#71717A;">DNI / CUIL:</td><td style="padding:4px 0;font-weight:700;">${order.customerDni}</td></tr>
-        <tr><td style="padding:4px 0;color:#71717A;">Teléfono:</td><td style="padding:4px 0;font-weight:700;"><a href="https://wa.me/549${buyerWa}" style="color:#16A34A;text-decoration:none;">${order.customerPhone} (Abrir WhatsApp)</a></td></tr>
-        <tr><td style="padding:4px 0;color:#71717A;">Email:</td><td style="padding:4px 0;">${order.customerEmail}</td></tr>
+        <tr><td style="padding:4px 0;color:#71717A;width:140px;">Nombre:</td><td style="padding:4px 0;font-weight:700;">${escapeHtml(order.customerName)}</td></tr>
+        <tr><td style="padding:4px 0;color:#71717A;">DNI / CUIL:</td><td style="padding:4px 0;font-weight:700;">${escapeHtml(order.customerDni)}</td></tr>
+        <tr><td style="padding:4px 0;color:#71717A;">Teléfono:</td><td style="padding:4px 0;font-weight:700;"><a href="https://wa.me/549${buyerWa}" style="color:#16A34A;text-decoration:none;">${escapeHtml(order.customerPhone)} (Abrir WhatsApp)</a></td></tr>
+        <tr><td style="padding:4px 0;color:#71717A;">Email:</td><td style="padding:4px 0;">${escapeHtml(order.customerEmail)}</td></tr>
       </table>
 
       <h2 style="font-size:15px;text-transform:uppercase;letter-spacing:0.5px;color:#18181B;border-bottom:1px solid #E4E4E7;padding-bottom:8px;margin:0 0 12px;">
@@ -58,11 +69,11 @@ function buildOwnerHtml(order) {
       <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;padding:14px 16px;margin-bottom:22px;font-size:14px;color:#18181B;">
         ${
           isPickup
-            ? `<strong>RETIRO EN LOCAL RECOLETA</strong><br/>Uriburu 1163 (entre Av. Santa Fe y Arenales), CABA.<br/><span style="font-size:12px;color:#71717A;">El cliente retira presentando DNI ${order.customerDni}.</span>`
+            ? `<strong>RETIRO EN LOCAL RECOLETA</strong><br/>Uriburu 1163 (entre Av. Santa Fe y Arenales), CABA.<br/><span style="font-size:12px;color:#71717A;">El cliente retira presentando DNI ${escapeHtml(order.customerDni)}.</span>`
             : `<strong>ENVÍO A DOMICILIO</strong><br/>
-               Dirección: <strong>${order.shippingAddress?.street || ''} ${order.shippingAddress?.number || ''} ${order.shippingAddress?.apartment ? `(${order.shippingAddress.apartment})` : ''}</strong><br/>
-               Localidad: <strong>${order.shippingAddress?.city || ''}, ${order.shippingAddress?.province || ''} (CP: ${order.shippingAddress?.postalCode || ''})</strong>
-               ${order.shippingAddress?.deliveryNotes ? `<br/>Indicaciones: <em>${order.shippingAddress.deliveryNotes}</em>` : ''}`
+               Dirección: <strong>${escapeHtml(order.shippingAddress?.street || '')} ${escapeHtml(order.shippingAddress?.number || '')} ${order.shippingAddress?.apartment ? `(${escapeHtml(order.shippingAddress.apartment)})` : ''}</strong><br/>
+               Localidad: <strong>${escapeHtml(order.shippingAddress?.city || '')}, ${escapeHtml(order.shippingAddress?.province || '')} (CP: ${escapeHtml(order.shippingAddress?.postalCode || '')})</strong>
+               ${order.shippingAddress?.deliveryNotes ? `<br/>Indicaciones: <em>${escapeHtml(order.shippingAddress.deliveryNotes)}</em>` : ''}`
         }
       </div>
 
@@ -83,10 +94,10 @@ function buildOwnerHtml(order) {
       </table>
 
       <div style="text-align:right;font-size:14px;color:#27272A;line-height:1.7;">
-        <div>Subtotal: <strong>${order.subtotalFormatted || order.totalFormatted}</strong></div>
-        ${order.discountFormatted ? `<div style="color:#16A34A;">Descuento 10% Transferencia: <strong>-${order.discountFormatted}</strong></div>` : ''}
-        <div>Envío: <strong>${order.shippingFormatted || 'GRATIS'}</strong></div>
-        <div style="font-size:18px;font-weight:800;color:#18181B;margin-top:6px;">Total: ${order.totalFormatted}</div>
+        <div>Subtotal: <strong>${escapeHtml(order.subtotalFormatted || order.totalFormatted)}</strong></div>
+        ${order.discountFormatted ? `<div style="color:#16A34A;">Descuento 10% Transferencia: <strong>-${escapeHtml(order.discountFormatted)}</strong></div>` : ''}
+        <div>Envío: <strong>${escapeHtml(order.shippingFormatted || 'GRATIS')}</strong></div>
+        <div style="font-size:18px;font-weight:800;color:#18181B;margin-top:6px;">Total: ${escapeHtml(order.totalFormatted)}</div>
       </div>
     </div>
   </div>`;
@@ -98,15 +109,15 @@ function buildBuyerHtml(order) {
   <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:600px;margin:0 auto;background:#FFFFFF;border:1px solid #E4E4E7;border-radius:8px;overflow:hidden;">
     <div style="background:#5B8C2A;color:#FFFFFF;padding:20px 24px;">
       <h1 style="margin:0;font-size:20px;">¡Gracias por tu compra en Suplementos Top!</h1>
-      <div style="font-size:13px;opacity:0.9;margin-top:4px;">Pedido #${order.orderNumber}</div>
+      <div style="font-size:13px;opacity:0.9;margin-top:4px;">Pedido #${escapeHtml(order.orderNumber)}</div>
     </div>
     <div style="padding:24px;font-size:14px;color:#27272A;line-height:1.6;">
-      <p>Hola <strong>${order.customerName}</strong>, registramos tu pedido <strong>#${order.orderNumber}</strong> por un total de <strong>${order.totalFormatted}</strong>.</p>
+      <p>Hola <strong>${escapeHtml(order.customerName)}</strong>, registramos tu pedido <strong>#${escapeHtml(order.orderNumber)}</strong> por un total de <strong>${escapeHtml(order.totalFormatted)}</strong>.</p>
       <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;padding:14px 16px;margin:16px 0;">
         ${
           isPickup
-            ? `<strong>Punto de retiro sin cargo:</strong><br/>Uriburu 1163 (entre Av. Santa Fe y Arenales), Recoleta, CABA.<br/>Horarios: Lunes a Viernes de 8:00 a 23:00 hs | Sábados de 10:00 a 18:00 hs.<br/>Presentate con tu DNI (${order.customerDni}).`
-            : `<strong>Envío a domicilio:</strong><br/>${order.shippingAddress?.street || ''} ${order.shippingAddress?.number || ''}, ${order.shippingAddress?.city || ''} (CP ${order.shippingAddress?.postalCode || ''}).`
+            ? `<strong>Punto de retiro sin cargo:</strong><br/>Uriburu 1163 (entre Av. Santa Fe y Arenales), Recoleta, CABA.<br/>Horarios: Lunes a Viernes de 8:00 a 23:00 hs | Sábados de 10:00 a 18:00 hs.<br/>Presentate con tu DNI (${escapeHtml(order.customerDni)}).`
+            : `<strong>Envío a domicilio:</strong><br/>${escapeHtml(order.shippingAddress?.street || '')} ${escapeHtml(order.shippingAddress?.number || '')}, ${escapeHtml(order.shippingAddress?.city || '')} (CP ${escapeHtml(order.shippingAddress?.postalCode || '')}).`
         }
       </div>
       <p>Por cualquier consulta podés escribirnos directo a nuestro WhatsApp oficial: <a href="https://wa.me/5491165651990" style="color:#5B8C2A;font-weight:700;">11 6565 1990</a>.</p>

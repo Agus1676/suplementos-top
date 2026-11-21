@@ -229,8 +229,12 @@ export const HeroSlider: React.FC = () => {
           overflow: hidden;
           background: #F4F5F7;
           border-bottom: 1px solid #E4E4E7;
-          min-height: 360px;
-          height: clamp(360px, 44vh, 430px);
+          min-height: 340px;
+        }
+        @media (min-width: 900px) {
+          .pv-hero {
+            height: clamp(360px, 44vh, 430px);
+          }
         }
         .pv-hero-slides {
           position: relative;
@@ -246,12 +250,29 @@ export const HeroSlider: React.FC = () => {
           pointer-events: none;
           display: flex;
           align-items: center;
+          padding: 1.5rem 0 2.5rem;
         }
         .pv-hero-slide.active {
           opacity: 1;
           visibility: visible;
           pointer-events: auto;
           z-index: 2;
+        }
+        @media (max-width: 899px) {
+          .pv-hero-slides {
+            display: grid;
+            grid-template-columns: 1fr;
+          }
+          .pv-hero-slide {
+            grid-area: 1 / 1;
+            position: relative;
+            inset: auto;
+            min-height: 320px;
+            padding: 1.75rem 0 2.75rem;
+          }
+          .pv-hero-slide:not(.active) {
+            display: none;
+          }
         }
 
         .pv-hero-grid {
@@ -318,6 +339,15 @@ export const HeroSlider: React.FC = () => {
         .pv-hero-actions {
           display: flex;
           gap: 0.75rem;
+        }
+        @media (max-width: 640px) {
+          .pv-hero-actions {
+            width: 100%;
+          }
+          .pv-hero-cta {
+            width: 100%;
+            text-align: center;
+          }
         }
         .pv-hero-cta {
           display: inline-flex;

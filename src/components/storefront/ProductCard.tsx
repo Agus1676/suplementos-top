@@ -131,6 +131,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           flex-direction: column;
           height: 100%;
           padding: 0.5rem;
+          overflow: hidden;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .pv-card:hover {

@@ -702,6 +702,19 @@ export const CheckoutPage: React.FC = () => {
           background: #FFFFFF;
           border: 1px solid var(--color-border);
         }
+        @media (max-width: 600px) {
+          .checkout-card {
+            padding: 1.15rem 0.95rem;
+          }
+          .checkout-main-title {
+            font-size: 1.6rem !important;
+            margin-bottom: 1.25rem !important;
+          }
+          .summary-card {
+            padding: 1.15rem 0.95rem !important;
+            position: static !important;
+          }
+        }
         .card-section-title {
           font-size: 1.25rem;
           font-weight: 800;

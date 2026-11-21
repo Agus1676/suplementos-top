@@ -526,6 +526,20 @@ export const CartDrawer: React.FC = () => {
           color: var(--color-text-muted);
           margin-top: 0.15rem;
         }
+        @media (max-width: 420px) {
+          .cart-drawer-header {
+            padding: 1rem 1.15rem;
+          }
+          .free-shipping-bar-wrap {
+            padding: 0.75rem 1.15rem;
+          }
+          .cart-drawer-footer {
+            padding: 1rem 1.15rem;
+          }
+          .cart-items-scroll {
+            padding: 1rem 1.15rem;
+          }
+        }
       `}</style>
     </div>
   );

@@ -129,9 +129,9 @@ export const HomePage: React.FC = () => {
 
           <HorizontalScroller
             ariaLabel="Categorías de productos"
-            perView={{ mobile: 3, tablet: 5, desktop: 6 }}
+            perView={{ mobile: 2, tablet: 4, desktop: 6 }}
             gapRem={0.75}
-            mobilePeek={0.3}
+            mobilePeek={0.35}
           >
             {CATEGORY_TILES.map((cat) => (
               <Link
@@ -427,7 +427,7 @@ export const HomePage: React.FC = () => {
         }
         .promo-banner-card {
           border-radius: 8px;
-          padding: 1.75rem;
+          padding: 1.5rem;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -436,6 +436,22 @@ export const HomePage: React.FC = () => {
           text-decoration: none;
           overflow: hidden;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        @media (max-width: 480px) {
+          .promo-banner-card {
+            padding: 1.15rem 1rem;
+            gap: 0.75rem;
+          }
+          .promo-banner-packshot {
+            width: 90px !important;
+            height: 90px !important;
+          }
+          .promo-title {
+            font-size: 1.1rem !important;
+          }
+          .promo-desc {
+            font-size: 0.76rem !important;
+          }
         }
         .promo-banner-card:hover {
           transform: translateY(-2px);
@@ -593,10 +609,25 @@ export const HomePage: React.FC = () => {
           }
         }
         .location-info-side {
-          padding: 2rem;
+          padding: 1.25rem 1rem;
           display: flex;
           flex-direction: column;
           justify-content: center;
+        }
+        @media (min-width: 768px) {
+          .location-info-side {
+            padding: 2.25rem;
+          }
+        }
+        @media (max-width: 540px) {
+          .location-actions {
+            flex-direction: column;
+            width: 100%;
+          }
+          .location-actions .btn {
+            width: 100%;
+            justify-content: center;
+          }
         }
         .location-heading {
           font-size: 1.5rem;
