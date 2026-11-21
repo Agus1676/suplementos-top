@@ -198,14 +198,14 @@ export const HomePage: React.FC = () => {
               />
             </Link>
 
-            <Link to="/catalogo?categoria=creatinas" className="promo-banner-card promo-banner-light">
+            <Link to="/catalogo?categoria=creatinas" className="promo-banner-card promo-banner-dark-alt">
               <div className="promo-banner-content">
                 <span className="promo-badge-green">6 CUOTAS SIN INTERÉS</span>
                 <h3 className="promo-title">Creatinas Micronizadas 100% Puras</h3>
                 <p className="promo-desc">
                   Monohidrato micronizado de ENA Sport, Star Nutrition y Optimum Nutrition.
                 </p>
-                <span className="promo-cta-link promo-cta-dark">
+                <span className="promo-cta-link promo-cta-green">
                   Ver creatinas <ArrowRight size={15} />
                 </span>
               </div>
@@ -271,21 +271,24 @@ export const HomePage: React.FC = () => {
           <div className="location-callout-card">
             <div className="location-info-side">
               <h2 className="location-heading">Retiro sin cargo en Recoleta</h2>
+              <div className="location-gym-badge">
+                <span className="gym-tag">Gimnasio Top Shape</span>
+              </div>
               <p className="location-address">
                 <MapPin size={18} className="text-accent" />
-                <span>Uriburu 1163, entre Av. Santa Fe y Arenales — Recoleta, CABA</span>
+                <span>Pres. José E. Uriburu 1163 (entre Av. Santa Fe y Arenales) — Recoleta, CABA</span>
               </p>
               <p className="location-hours">
                 <Clock size={17} className="text-muted" />
                 <span>{settings.hoursDescription}</span>
               </p>
               <p className="location-details-text">
-                Comprá online y pasá a retirar tu pedido en el día presentando tu DNI, o pedí envío a domicilio a todo el país.
+                Comprá online y pasá a retirar tu pedido en el día presentando tu DNI en <strong>Gimnasio Top Shape</strong>, o pedí envío a domicilio a todo el país.
               </p>
 
               <div className="location-actions">
                 <a
-                  href="https://maps.google.com/?q=Jose+Evaristo+Uriburu+1163,+Recoleta,+Buenos+Aires"
+                  href="https://maps.google.com/?q=Gimnasio+Top+Shape,+Pres.+Jose+Evaristo+Uriburu+1163,+Recoleta,+Buenos+Aires"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-primary btn-sm"
@@ -294,21 +297,21 @@ export const HomePage: React.FC = () => {
                   <span>Cómo llegar en Google Maps</span>
                 </a>
                 <a
-                  href="https://wa.me/5491165651990"
+                  href={`https://wa.me/${(settings.supportPhone || '5491165651990').replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-secondary btn-sm"
                 >
                   <Phone size={15} />
-                  <span>WhatsApp 11 6565 1990</span>
+                  <span>Consultas por WhatsApp</span>
                 </a>
               </div>
             </div>
 
             <div className="location-map-side">
               <iframe
-                title="Mapa Suplementos Top — Uriburu 1163, Recoleta"
-                src="https://maps.google.com/maps?q=Jose+Evaristo+Uriburu+1163,+Recoleta,+Buenos+Aires&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                title="Mapa Suplementos Top — Gimnasio Top Shape, Pres. José E. Uriburu 1163, Recoleta"
+                src="https://maps.google.com/maps?q=Gimnasio+Top+Shape,+Pres.+Jose+Evaristo+Uriburu+1163,+Recoleta,+Buenos+Aires&t=&z=16&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0, minHeight: '260px', display: 'block' }}
@@ -458,20 +461,26 @@ export const HomePage: React.FC = () => {
           box-shadow: 0 12px 24px -10px rgba(15, 23, 42, 0.18);
         }
         .promo-banner-dark {
-          background: #F4F4F5;
-          color: #18181B;
-          border-color: #E4E4E7;
+          background: linear-gradient(135deg, #09090B 0%, #18181B 60%, #0F172A 100%);
+          color: #FFFFFF;
+          border-color: #27272A;
         }
         .promo-banner-dark .promo-title {
-          color: #18181B;
+          color: #FFFFFF;
         }
         .promo-banner-dark .promo-desc {
-          color: #52525B;
+          color: #CBD5E1;
         }
-        .promo-banner-light {
-          background: #F4F4F5;
-          color: #18181B;
-          border-color: #E4E4E7;
+        .promo-banner-dark-alt {
+          background: linear-gradient(135deg, #0F172A 0%, #1E293B 60%, #09090B 100%);
+          color: #FFFFFF;
+          border-color: #1E293B;
+        }
+        .promo-banner-dark-alt .promo-title {
+          color: #FFFFFF;
+        }
+        .promo-banner-dark-alt .promo-desc {
+          color: #CBD5E1;
         }
         .promo-banner-content {
           display: flex;
@@ -493,7 +502,7 @@ export const HomePage: React.FC = () => {
           font-size: 0.65rem;
           font-weight: 800;
           letter-spacing: 0.06em;
-          background-color: #5B8C2A;
+          background-color: #16A34A;
           color: #FFFFFF;
           padding: 0.22rem 0.55rem;
           border-radius: 4px;
@@ -516,11 +525,15 @@ export const HomePage: React.FC = () => {
           gap: 0.35rem;
           font-size: 0.8rem;
           font-weight: 700;
-          color: #18181B;
+          color: #FFFFFF;
           margin-top: 0.25rem;
+          transition: color 0.15s ease;
         }
-        .promo-cta-dark {
-          color: #18181B;
+        .promo-cta-link:hover {
+          color: var(--color-accent);
+        }
+        .promo-cta-green:hover {
+          color: #4ADE80;
         }
         .promo-banner-packshot {
           width: 120px;
@@ -528,8 +541,9 @@ export const HomePage: React.FC = () => {
           object-fit: contain;
           background: #FFFFFF;
           border-radius: 8px;
-          padding: 0.35rem;
+          padding: 0.4rem;
           flex-shrink: 0;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
         @media (min-width: 900px) {
           .promo-banner-packshot {
@@ -632,8 +646,25 @@ export const HomePage: React.FC = () => {
         .location-heading {
           font-size: 1.5rem;
           font-weight: 800;
-          margin: 0 0 0.85rem;
+          margin: 0 0 0.5rem;
           letter-spacing: -0.02em;
+        }
+        .location-gym-badge {
+          margin-bottom: 0.75rem;
+        }
+        .gym-tag {
+          display: inline-flex;
+          align-items: center;
+          font-family: var(--font-display);
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          background: #FEF2F2;
+          color: var(--color-accent);
+          border: 1px solid #FECACA;
+          padding: 0.2rem 0.65rem;
+          border-radius: var(--radius-full);
         }
         .location-address,
         .location-hours {

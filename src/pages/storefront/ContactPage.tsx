@@ -44,8 +44,8 @@ export const ContactPage: React.FC = () => {
               <MapPin size={24} className="text-red" />
             </div>
             <div>
-              <h3>PUNTO RECOLETA</h3>
-              <p>Uriburu 1163, entre Av. Santa Fe y Arenales</p>
+              <h3>PUNTO RECOLETA (GIMNASIO TOP SHAPE)</h3>
+              <p>Pres. José E. Uriburu 1163, entre Av. Santa Fe y Arenales</p>
               <span className="highlight-badge">Retiro Gratis en el día</span>
             </div>
           </div>
@@ -90,8 +90,8 @@ export const ContactPage: React.FC = () => {
               {/* Embedded Google Maps */}
               <div className="map-iframe-container">
                 <iframe
-                  title="Ubicación Suplementos Top - Uriburu 1163"
-                  src="https://maps.google.com/maps?q=Jose+Evaristo+Uriburu+1163,+Recoleta,+Buenos+Aires&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  title="Ubicación Suplementos Top - Gimnasio Top Shape, Pres. José E. Uriburu 1163"
+                  src="https://maps.google.com/maps?q=Gimnasio+Top+Shape,+Pres.+Jose+Evaristo+Uriburu+1163,+Recoleta,+Buenos+Aires&t=&z=16&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="260"
                   style={{ border: 0, borderRadius: 'var(--radius-sm)' }}
@@ -102,8 +102,12 @@ export const ContactPage: React.FC = () => {
 
               <div className="location-details-list">
                 <div className="loc-item">
+                  <strong className="text-white">Sede:</strong>
+                  <span>Gimnasio Top Shape</span>
+                </div>
+                <div className="loc-item">
                   <strong className="text-white">Dirección:</strong>
-                  <span>Uriburu 1163, Recoleta, CABA</span>
+                  <span>Pres. José E. Uriburu 1163, Recoleta, CABA</span>
                 </div>
                 <div className="loc-item">
                   <strong className="text-white">Horarios:</strong>

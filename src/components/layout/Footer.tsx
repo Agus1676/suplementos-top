@@ -48,7 +48,7 @@ export const Footer: React.FC = () => {
 
           <div className="ft-col">
             <h4>Retiro y envíos</h4>
-            <span>Uriburu 1163, Recoleta — sin cargo</span>
+            <span>Pres. José E. Uriburu 1163 (Gimnasio Top Shape) — sin cargo</span>
             <span>Lun a Vie 8 a 23 hs / Sáb 10 a 18 hs</span>
             <span>Envíos a todo el país</span>
             <span>Transferencia (10% OFF) y Mercado Pago</span>

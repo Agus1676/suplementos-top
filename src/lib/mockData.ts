@@ -7,8 +7,8 @@ export const STORE_SETTINGS: StoreSettings = {
   supportEmail: 'suplementostopparg@gmail.com',
   instagram: 'https://instagram.com/suplementos_topp',
   hoursDescription: 'Lunes a Viernes de 8:00 a 23:00 hs | Sábados de 10:00 a 18:00 hs',
-  pickupAddress: 'Uriburu 1163, entre Santa Fe y Arenales, Recoleta / CABA',
-  dispatchAddress: 'Uriburu 1163, Recoleta, CABA',
+  pickupAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape), entre Av. Santa Fe y Arenales, Recoleta, CABA',
+  dispatchAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape), Recoleta, CABA',
   freeShippingThresholdInCents: 8500000, // Envío gratis a partir de $85.000
   flatShippingRateInCents: 490000,       // Tarifa fija de envío $4.900
 };

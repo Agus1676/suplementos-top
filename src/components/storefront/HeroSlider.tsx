@@ -77,9 +77,9 @@ const SLIDES: Slide[] = [
     id: 3,
     title: 'Comprá online y retirá hoy en Recoleta',
     subtitle:
-      'Uriburu 1163 (entre Av. Santa Fe y Arenales). Lunes a Viernes de 8 a 23 hs y Sábados de 10 a 18 hs sin costo.',
+      'Gimnasio Top Shape — Pres. José E. Uriburu 1163 (entre Av. Santa Fe y Arenales). Lun a Vie 8 a 23 hs y Sáb 10 a 18 hs sin costo.',
     highlight1: 'Retiro en el día sin cargo',
-    highlight2: 'WhatsApp 11 6565 1990',
+    highlight2: 'Atención personalizada',
     ctaText: 'Ubicación y horarios',
     ctaLink: '/contacto',
     products: [

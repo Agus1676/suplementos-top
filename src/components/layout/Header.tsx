@@ -13,7 +13,7 @@ import { formatARS } from '../../lib/utils';
 
 export const Header: React.FC = () => {
   const { totalItemsCount, openCartDrawer } = useCart();
-  const { products } = useStore();
+  const { products, settings } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -68,10 +68,10 @@ export const Header: React.FC = () => {
         <div className="container pv-topbar-inner">
           <span>10% OFF por transferencia · 6 cuotas sin interés · Envío gratis desde $85.000</span>
           <div className="pv-topbar-links">
-            <span>Retiro sin cargo: Uriburu 1163, Recoleta</span>
+            <span>Retiro sin cargo: Gimnasio Top Shape (Pres. José E. Uriburu 1163)</span>
             <span className="pv-topbar-sep">|</span>
-            <a href="https://wa.me/5491165651990" target="_blank" rel="noopener noreferrer">
-              WhatsApp 11 6565 1990
+            <a href={`https://wa.me/${(settings.supportPhone || '5491165651990').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
+              Consultas por WhatsApp
             </a>
           </div>
         </div>

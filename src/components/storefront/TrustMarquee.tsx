@@ -2,12 +2,12 @@ import React from 'react';
 import { CreditCard, Truck, MapPin, MessageCircle, Percent, ShieldCheck } from 'lucide-react';
 
 const TRUST_ITEMS = [
-  { icon: CreditCard, title: '3 y 6 cuotas sin interés', desc: 'Con todas las tarjetas' },
-  { icon: Truck, title: 'Envíos a todo el país', desc: 'Gratis desde $85.000' },
-  { icon: MapPin, title: 'Retiro sin cargo en Recoleta', desc: 'Uriburu 1163' },
-  { icon: MessageCircle, title: 'Asesoramiento por WhatsApp', desc: '11 6565 1990' },
-  { icon: Percent, title: '10% OFF', desc: 'Por transferencia o efectivo' },
-  { icon: ShieldCheck, title: 'Productos 100% originales', desc: 'Distribuidores oficiales' },
+  { icon: CreditCard, title: '3 Y 6 CUOTAS SIN INTERÉS', desc: 'CON TODAS LAS TARJETAS' },
+  { icon: Truck, title: 'ENVÍOS A TODO EL PAÍS', desc: 'GRATIS DESDE $85.000' },
+  { icon: MapPin, title: 'RETIRO SIN CARGO EN RECOLETA', desc: 'GIMNASIO TOP SHAPE' },
+  { icon: MessageCircle, title: 'ASESORAMIENTO DIRECTO', desc: 'CONSULTAS POR WHATSAPP' },
+  { icon: Percent, title: '10% OFF', desc: 'POR TRANSFERENCIA O EFECTIVO' },
+  { icon: ShieldCheck, title: 'PRODUCTOS 100% ORIGINALES', desc: 'DISTRIBUIDORES OFICIALES' },
 ];
 
 export const TrustMarquee: React.FC = () => {
@@ -15,7 +15,7 @@ export const TrustMarquee: React.FC = () => {
     <ul className="tm-group" aria-hidden={ariaHidden}>
       {TRUST_ITEMS.map(({ icon: Icon, title, desc }) => (
         <li key={title} className="tm-item">
-          <Icon size={16} className="tm-icon" />
+          <Icon size={15} className="tm-icon" />
           <strong>{title}</strong>
           <span className="tm-desc">{desc}</span>
           <span className="tm-sep" aria-hidden="true">•</span>
@@ -41,7 +41,7 @@ export const TrustMarquee: React.FC = () => {
         .tm-track {
           display: flex;
           width: max-content;
-          animation: tm-scroll 38s linear infinite;
+          animation: tm-scroll 24s linear infinite;
         }
         .tm-root:hover .tm-track {
           animation-play-state: paused;
@@ -56,13 +56,15 @@ export const TrustMarquee: React.FC = () => {
         .tm-item {
           display: flex;
           align-items: center;
-          gap: 0.45rem;
-          padding: 0.65rem 0 0.65rem 1.75rem;
+          gap: 0.4rem;
+          padding: 0.55rem 0 0.55rem 0.85rem;
           white-space: nowrap;
-          font-size: 0.78rem;
+          font-size: 0.73rem;
+          text-transform: uppercase;
+          letter-spacing: 0.035em;
         }
         .tm-item strong {
-          font-weight: 700;
+          font-weight: 800;
           color: #18181B;
         }
         .tm-icon {
@@ -71,18 +73,18 @@ export const TrustMarquee: React.FC = () => {
         }
         .tm-desc {
           color: #52525B;
-          font-weight: 400;
+          font-weight: 600;
         }
         .tm-sep {
           color: #CBD5E1;
-          margin-left: 1.25rem;
+          margin-left: 0.85rem;
         }
         @keyframes tm-scroll {
           from { transform: translateX(0); }
           to   { transform: translateX(-50%); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .tm-track { animation-duration: 120s; }
+          .tm-track { animation-duration: 90s; }
         }
       `}</style>
     </section>
