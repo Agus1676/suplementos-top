@@ -88,21 +88,23 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const createOrder = (newOrder: Order) => {
     setOrders((prev) => [newOrder, ...prev]);
 
-    // Descontar stock correspondiente a cada item comprado
-    newOrder.items.forEach((item) => {
-      setProducts((prev) =>
-        prev.map((prod) => {
-          if (prod.id !== item.productId) return prod;
-          const updatedVariants = prod.variants.map((v) => {
-            if (v.id === item.variantId) {
-              return { ...v, stock: Math.max(0, v.stock - item.quantity) };
-            }
-            return v;
-          });
-          return { ...prod, variants: updatedVariants };
-        })
-      );
-    });
+    // Descontar stock atómicamente de cada producto y variante comprada
+    setProducts((prevProducts) =>
+      prevProducts.map((prod) => {
+        const boughtItems = newOrder.items.filter((item) => item.productId === prod.id);
+        if (boughtItems.length === 0) return prod;
+
+        const updatedVariants = prod.variants.map((v) => {
+          const matchedItem = boughtItems.find((item) => item.variantId === v.id);
+          if (matchedItem) {
+            return { ...v, stock: Math.max(0, v.stock - matchedItem.quantity) };
+          }
+          return v;
+        });
+
+        return { ...prod, variants: updatedVariants };
+      })
+    );
   };
 
   const updateOrderStatus = (
