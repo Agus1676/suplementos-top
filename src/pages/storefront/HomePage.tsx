@@ -378,6 +378,42 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
+      {/* 9. Local SEO Semantic Authority Section */}
+      <section className="seo-local-authority-section" aria-label="Información local de Suplementos Top en Recoleta">
+        <div className="container">
+          <div className="seo-authority-card">
+            <h2 className="seo-authority-title">
+              Tu Tienda de Suplementos Deportivos en Recoleta • Gimnasio Top Shape
+            </h2>
+            <div className="seo-authority-grid">
+              <div className="seo-authority-item">
+                <span className="seo-authority-tag">UBICACIÓN ESTRATÉGICA</span>
+                <h3>Sede Recoleta / Barrio Norte</h3>
+                <p>
+                  Estamos ubicados en <strong>Pres. José E. Uriburu 1163</strong> (entre Av. Santa Fe y Arenales), a solo una cuadra de Av. Pueyrredón y a pasos de la estación Pueyrredón (Subte Líneas D y H). Zona de fácil acceso en CABA con múltiples líneas de transporte.
+                </p>
+              </div>
+
+              <div className="seo-authority-item">
+                <span className="seo-authority-tag">RETIRO EN EL DÍA</span>
+                <h3>Mostrador Gimnasio Top Shape</h3>
+                <p>
+                  Comprá online con <strong>10% OFF por transferencia</strong> y retirá tu proteína, creatina o pre-entreno en el día sin costo de envío. Horarios amplios de Lunes a Viernes de 8:00 a 23:00 hs y Sábados de 10:00 a 18:00 hs.
+                </p>
+              </div>
+
+              <div className="seo-authority-item">
+                <span className="seo-authority-tag">CALIDAD CERTIFICADA</span>
+                <h3>Marcas Oficiales ANMAT</h3>
+                <p>
+                  Punto de venta autorizado de <strong>Star Nutrition, ENA Sport, Optimum Nutrition (Gold Standard), One Fit, Dymatize y Gentech</strong>. Suplementos 100% originales con precinto de seguridad y vencimiento visible.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <style>{`
         .home-root {
           display: flex;
@@ -759,6 +795,61 @@ export const HomePage: React.FC = () => {
             border-top: none;
             border-left: 1px solid var(--color-border);
           }
+        }
+
+        /* 9. SEO Local Authority Section */
+        .seo-local-authority-section {
+          padding: 2.5rem 0 3.5rem;
+          background: #FFFFFF;
+        }
+        .seo-authority-card {
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          border-radius: 16px;
+          padding: 2.25rem 2rem;
+        }
+        .seo-authority-title {
+          font-size: 1.35rem;
+          font-weight: 800;
+          color: #0F172A;
+          letter-spacing: -0.02em;
+          margin: 0 0 1.75rem 0;
+          text-align: center;
+        }
+        .seo-authority-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+          .seo-authority-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+          }
+        }
+        .seo-authority-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .seo-authority-tag {
+          font-size: 0.70rem;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          color: #E63946;
+          text-transform: uppercase;
+        }
+        .seo-authority-item h3 {
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: #0F172A;
+          margin: 0;
+        }
+        .seo-authority-item p {
+          font-size: 0.85rem;
+          color: #64748B;
+          line-height: 1.55;
+          margin: 0;
         }
       `}</style>
     </div>

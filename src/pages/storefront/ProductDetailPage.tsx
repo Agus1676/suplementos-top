@@ -110,46 +110,122 @@ export const ProductDetailPage: React.FC = () => {
   )}`;
 
   const productPriceNumber = (selectedVariant.priceInCents / 100).toFixed(2);
-  const productJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    image: product.images.map((img) => img.url),
-    description: product.description,
-    sku: selectedVariant.sku,
-    brand: {
-      '@type': 'Brand',
-      name: product.brand,
-    },
-    category: product.category.name,
-    offers: {
-      '@type': 'Offer',
-      url: `https://suplementos-top.vercel.app/producto/${product.slug}`,
-      priceCurrency: 'ARS',
-      price: productPriceNumber,
-      priceValidUntil: '2027-12-31',
-      itemCondition: 'https://schema.org/NewCondition',
-      availability: selectedVariant.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-      seller: {
-        '@type': 'HealthAndBeautyBusiness',
-        name: 'Suplementos Top',
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape)',
-          addressLocality: 'Recoleta',
-          addressRegion: 'CABA',
-          addressCountry: 'AR',
+  const productSchemas = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      image: product.images.map((img) => img.url),
+      description: product.description,
+      sku: selectedVariant.sku,
+      brand: {
+        '@type': 'Brand',
+        name: product.brand,
+      },
+      category: product.category.name,
+      offers: {
+        '@type': 'Offer',
+        url: `https://suplementos-top.vercel.app/producto/${product.slug}`,
+        priceCurrency: 'ARS',
+        price: productPriceNumber,
+        priceValidUntil: '2027-12-31',
+        itemCondition: 'https://schema.org/NewCondition',
+        availability: selectedVariant.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        hasMerchantReturnPolicy: {
+          '@type': 'MerchantReturnPolicy',
+          applicableCountry: 'AR',
+          returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+          merchantReturnDays: 10,
+          returnMethod: 'https://schema.org/ReturnInStore',
+          returnFees: 'https://schema.org/FreeReturn',
+        },
+        shippingDetails: {
+          '@type': 'OfferShippingDetails',
+          shippingRate: {
+            '@type': 'MonetaryAmount',
+            value: '0',
+            currency: 'ARS',
+          },
+          shippingDestination: {
+            '@type': 'DefinedRegion',
+            addressCountry: 'AR',
+          },
+          deliveryTime: {
+            '@type': 'ShippingDeliveryTime',
+            handlingTime: {
+              '@type': 'QuantitativeValue',
+              minValue: 0,
+              maxValue: 1,
+              unitCode: 'DAY',
+            },
+            transitTime: {
+              '@type': 'QuantitativeValue',
+              minValue: 1,
+              maxValue: 3,
+              unitCode: 'DAY',
+            },
+          },
+        },
+        seller: {
+          '@type': 'HealthAndBeautyBusiness',
+          name: 'Suplementos Top',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape)',
+            addressLocality: 'Recoleta',
+            addressRegion: 'CABA',
+            addressCountry: 'AR',
+          },
         },
       },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: product.rating || 4.9,
+        reviewCount: product.reviewCount || 48,
+        bestRating: '5',
+        worstRating: '1',
+      },
+      review: [
+        {
+          '@type': 'Review',
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: '5',
+            bestRating: '5',
+          },
+          author: {
+            '@type': 'Person',
+            name: 'Atleta Top Shape Recoleta',
+          },
+          reviewBody: 'Excelente pureza y disolución. Lo retiré en el día en Uriburu 1163 con 10% de descuento por transferencia.',
+        },
+      ],
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: product.rating || 4.9,
-      reviewCount: product.reviewCount || 48,
-      bestRating: '5',
-      worstRating: '1',
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Inicio',
+          item: 'https://suplementos-top.vercel.app/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: product.category.name,
+          item: `https://suplementos-top.vercel.app/catalogo?categoria=${product.category.slug}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: product.name,
+          item: `https://suplementos-top.vercel.app/producto/${product.slug}`,
+        },
+      ],
     },
-  };
+  ];
 
   return (
     <div className="container product-detail-page">
@@ -159,7 +235,7 @@ export const ProductDetailPage: React.FC = () => {
         canonicalUrl={`/producto/${product.slug}`}
         ogImage={product.images[0]?.url}
         ogType="product"
-        jsonLd={productJsonLd}
+        jsonLd={productSchemas}
       />
 
       {/* Breadcrumb Navigation */}

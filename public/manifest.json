@@ -1,0 +1,24 @@
+{
+  "short_name": "SuplementosTop",
+  "name": "Suplementos Top Recoleta • Nutrición Deportiva",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "es-AR",
+  "scope": "/",
+  "description": "Tienda oficial de suplementos deportivos en Recoleta, CABA. Retiro en Gimnasio Top Shape (Uriburu 1163) y envíos a todo el país."
+}

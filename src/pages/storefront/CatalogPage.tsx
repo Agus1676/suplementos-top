@@ -82,29 +82,49 @@ export const CatalogPage: React.FC = () => {
     ? `Comprá ${currentCategoryObj.name} en Recoleta, CABA. ${currentCategoryObj.description} Retiro inmediato en Gimnasio Top Shape (Uriburu 1163) y 10% OFF por transferencia.`
     : 'Catálogo completo de suplementos deportivos originales en Recoleta, CABA. Star Nutrition, ENA Sport, Optimum Nutrition. Retiro sin cargo en Uriburu 1163 o envíos a todo el país.';
 
-  const catalogJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: catalogPageTitle,
-    description: catalogMetaDesc,
-    url: `https://suplementos-top.vercel.app/catalogo${activeCategory !== 'all' ? `?categoria=${activeCategory}` : ''}`,
-    hasPart: filteredProducts.slice(0, 10).map((p) => ({
-      '@type': 'Product',
-      name: p.name,
-      url: `https://suplementos-top.vercel.app/producto/${p.slug}`,
-      image: p.images[0]?.url,
-      brand: {
-        '@type': 'Brand',
-        name: p.brand,
-      },
-      offers: {
-        '@type': 'Offer',
-        priceCurrency: 'ARS',
-        price: (p.basePriceInCents / 100).toFixed(2),
-        availability: 'https://schema.org/InStock',
-      },
-    })),
-  };
+  const catalogSchemas = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: catalogPageTitle,
+      description: catalogMetaDesc,
+      url: `https://suplementos-top.vercel.app/catalogo${activeCategory !== 'all' ? `?categoria=${activeCategory}` : ''}`,
+      hasPart: filteredProducts.slice(0, 10).map((p) => ({
+        '@type': 'Product',
+        name: p.name,
+        url: `https://suplementos-top.vercel.app/producto/${p.slug}`,
+        image: p.images[0]?.url,
+        brand: {
+          '@type': 'Brand',
+          name: p.brand,
+        },
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'ARS',
+          price: (p.basePriceInCents / 100).toFixed(2),
+          availability: 'https://schema.org/InStock',
+        },
+      })),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Inicio',
+          item: 'https://suplementos-top.vercel.app/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: currentCategoryObj ? currentCategoryObj.name : 'Catálogo',
+          item: `https://suplementos-top.vercel.app/catalogo${activeCategory !== 'all' ? `?categoria=${activeCategory}` : ''}`,
+        },
+      ],
+    },
+  ];
 
   return (
     <div className="container catalog-page-container">
@@ -112,7 +132,7 @@ export const CatalogPage: React.FC = () => {
         title={catalogPageTitle}
         description={catalogMetaDesc}
         canonicalUrl={`/catalogo${activeCategory !== 'all' ? `?categoria=${activeCategory}` : ''}`}
-        jsonLd={catalogJsonLd}
+        jsonLd={catalogSchemas}
       />
 
       {/* Top Header */}
