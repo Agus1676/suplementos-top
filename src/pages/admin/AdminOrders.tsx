@@ -6,14 +6,19 @@ import {
   Eye, 
   Phone, 
   X, 
-  Send
+  Send,
+  Printer,
+  ShoppingBag,
+  Clock,
+  CheckCircle2,
+  Package
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatARS, formatDate, buildWhatsAppDispatchLink } from '../../lib/utils';
 import { Order, FulfillmentStatus } from '../../types';
 
 export const AdminOrders: React.FC = () => {
-  const { orders, updateOrderStatus } = useStore();
+  const { orders, updateOrderStatus, settings } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -53,24 +58,45 @@ export const AdminOrders: React.FC = () => {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  // Helper to format clean date (e.g., "17 nov 2026 • 21:05 hs")
+  const formatOrderDate = (dateStr: string) => {
+    try {
+      const d = new Date(dateStr);
+      const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+      const day = d.getDate().toString().padStart(2, '0');
+      const month = months[d.getMonth()];
+      const year = d.getFullYear();
+      const hours = d.getHours().toString().padStart(2, '0');
+      const minutes = d.getMinutes().toString().padStart(2, '0');
+      return `${day} ${month} ${year} • ${hours}:${minutes} hs`;
+    } catch {
+      return formatDate(dateStr);
+    }
+  };
+
   return (
     <div className="admin-orders-page">
+      {/* Page Header */}
       <div className="page-header">
         <div>
-          <h1>Gestión de Pedidos & Despachos</h1>
-          <p className="text-muted">
-            Monitoreá pagos acreditados, armá paquetes y coordiná retiros en <strong>Uriburu 1163</strong> o envíos por transporte.
+          <h1 className="page-title">Gestión de Pedidos &amp; Despachos</h1>
+          <p className="page-subtitle">
+            Monitoreá pagos acreditados, coordiná retiros en <strong>Pres. José E. Uriburu 1163</strong> (Gimnasio Top Shape) y envíos a todo el país.
           </p>
         </div>
       </div>
 
-      {/* Controls & Search */}
-      <div className="card orders-filters-card">
+      {/* Controls Card: Search & Refined Status Pills */}
+      <div className="orders-filter-card">
         <div className="search-wrap">
           <Search size={18} className="search-icon" />
           <input
             type="text"
-            placeholder="Buscar por número de pedido, cliente, DNI o celular..."
+            placeholder="Buscar por número de pedido (#ST...), cliente, DNI o celular..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="filter-search-input"
@@ -79,69 +105,99 @@ export const AdminOrders: React.FC = () => {
 
         <div className="status-tabs-row">
           <button
+            type="button"
             onClick={() => setFilterStatus('all')}
             className={`status-tab ${filterStatus === 'all' ? 'active' : ''}`}
           >
-            Todos ({orders.length})
+            <span>Todos</span>
+            <span className="status-tab-count">{orders.length}</span>
           </button>
+
           <button
+            type="button"
             onClick={() => setFilterStatus('preparing')}
             className={`status-tab ${filterStatus === 'preparing' ? 'active' : ''}`}
           >
-            En Preparación ({orders.filter(o => o.fulfillmentStatus === 'preparing').length})
+            <span>En Preparación</span>
+            <span className="status-tab-count">
+              {orders.filter(o => o.fulfillmentStatus === 'preparing').length}
+            </span>
           </button>
+
           <button
+            type="button"
             onClick={() => setFilterStatus('ready_for_pickup')}
             className={`status-tab ${filterStatus === 'ready_for_pickup' ? 'active' : ''}`}
           >
-            Listo Retiro ({orders.filter(o => o.fulfillmentStatus === 'ready_for_pickup').length})
+            <span>Listo Retiro</span>
+            <span className="status-tab-count">
+              {orders.filter(o => o.fulfillmentStatus === 'ready_for_pickup').length}
+            </span>
           </button>
+
           <button
+            type="button"
             onClick={() => setFilterStatus('shipped')}
             className={`status-tab ${filterStatus === 'shipped' ? 'active' : ''}`}
           >
-            Despachados ({orders.filter(o => o.fulfillmentStatus === 'shipped').length})
+            <span>Despachados</span>
+            <span className="status-tab-count">
+              {orders.filter(o => o.fulfillmentStatus === 'shipped').length}
+            </span>
           </button>
+
           <button
+            type="button"
             onClick={() => setFilterStatus('delivered')}
             className={`status-tab ${filterStatus === 'delivered' ? 'active' : ''}`}
           >
-            Entregados ({orders.filter(o => o.fulfillmentStatus === 'delivered').length})
+            <span>Entregados</span>
+            <span className="status-tab-count">
+              {orders.filter(o => o.fulfillmentStatus === 'delivered').length}
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Orders Table */}
-      <div className="card table-card">
+      {/* Orders Table Card */}
+      <div className="orders-table-card">
         <div className="table-responsive">
-          <table className="admin-table">
+          <table className="orders-table">
             <thead>
               <tr>
-                <th>Pedido</th>
-                <th>Fecha</th>
-                <th>Cliente & Contacto</th>
-                <th>Modalidad</th>
-                <th>Total</th>
-                <th>Pago</th>
-                <th>Estado Logístico</th>
-                <th>Acciones</th>
+                <th style={{ width: '150px' }}>Pedido</th>
+                <th style={{ width: '160px' }}>Fecha</th>
+                <th>Cliente &amp; Contacto</th>
+                <th style={{ width: '170px' }}>Modalidad</th>
+                <th style={{ width: '130px' }}>Total</th>
+                <th style={{ width: '130px' }}>Pago</th>
+                <th style={{ width: '170px' }}>Estado Logístico</th>
+                <th style={{ width: '120px', textAlign: 'center' }}>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {filteredOrders.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="empty-table-cell">
-                    No se encontraron pedidos con los filtros aplicados.
+                    <ShoppingBag size={36} className="text-muted" style={{ margin: '0 auto 12px auto' }} />
+                    <p style={{ fontWeight: 700, margin: '0 0 4px 0', color: '#0F172A' }}>
+                      No se encontraron pedidos
+                    </p>
+                    <span style={{ fontSize: '0.84rem', color: '#64748B' }}>
+                      Probá modificando el término de búsqueda o cambiando el filtro de estado.
+                    </span>
                   </td>
                 </tr>
               ) : (
                 filteredOrders.map((order) => {
+                  const totalProductsQty = order.items.reduce((acc, i) => acc + i.quantity, 0);
                   const itemsText = order.items
                     .map((item) => `• ${item.quantity}x ${item.productName} (${item.variantTitle})`)
                     .join('\n');
                   const addressText = order.shippingAddress 
                     ? `${order.shippingAddress.street} ${order.shippingAddress.number}, ${order.shippingAddress.city}`
-                    : 'Retiro en sucursal Uriburu 1163';
+                    : 'Retiro en sucursal Uriburu 1163 (Gimnasio Top Shape)';
+                  
                   const waLink = buildWhatsAppDispatchLink({
                     orderNumber: order.orderNumber,
                     customerName: order.customerName,
@@ -154,44 +210,104 @@ export const AdminOrders: React.FC = () => {
                     paymentStatus: order.paymentStatus,
                   });
 
+                  // Format phone link for 1-click WhatsApp
+                  const rawPhone = order.customerPhone.replace(/\D/g, '');
+                  const waCustomerChat = rawPhone ? `https://wa.me/549${rawPhone.startsWith('54') ? rawPhone.slice(2) : rawPhone}` : null;
+
                   return (
-                    <tr key={order.id}>
-                      <td>
-                        <strong>#{order.orderNumber}</strong>
-                        <span className="text-xs text-muted d-block">{order.items.length} producto(s)</span>
+                    <tr key={order.id} className="orders-table-row">
+                      {/* Pedido */}
+                      <td className="cell-order-number">
+                        <div className="order-number-title">
+                          #{order.orderNumber}
+                        </div>
+                        <div className="order-items-badge">
+                          <Package size={12} />
+                          <span>{totalProductsQty} {totalProductsQty === 1 ? 'producto' : 'productos'}</span>
+                        </div>
                       </td>
-                      <td className="text-xs text-muted">
-                        {formatDate(order.createdAt)}
+
+                      {/* Fecha */}
+                      <td className="cell-date">
+                        <div className="order-date-text">
+                          <Clock size={12} className="date-icon" />
+                          <span>{formatOrderDate(order.createdAt)}</span>
+                        </div>
                       </td>
-                      <td>
-                        <strong>{order.customerName}</strong>
-                        <span className="text-xs text-muted d-block">DNI: {order.customerDni}</span>
-                        <span className="text-xs text-muted d-block">Tel: {order.customerPhone}</span>
+
+                      {/* Cliente & Contacto */}
+                      <td className="cell-customer">
+                        <div className="customer-info-box">
+                          <span className="customer-name">{order.customerName}</span>
+                          <div className="customer-meta-row">
+                            <span className="customer-dni-tag">DNI: {order.customerDni}</span>
+                            {waCustomerChat ? (
+                              <a
+                                href={waCustomerChat}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="customer-phone-link"
+                                title="Abrir chat en WhatsApp"
+                              >
+                                <Phone size={11} />
+                                <span>{order.customerPhone}</span>
+                              </a>
+                            ) : (
+                              <span className="customer-phone-plain">Tel: {order.customerPhone}</span>
+                            )}
+                          </div>
+                        </div>
                       </td>
-                      <td>
+
+                      {/* Modalidad */}
+                      <td className="cell-delivery">
                         {order.deliveryMethod === 'pickup' ? (
-                          <span className="pill-method pickup">
-                            <MapPin size={12} /> Retiro Recoleta
+                          <div className="delivery-pill-wrapper">
+                            <span className="badge-delivery badge-pickup">
+                              <MapPin size={12} />
+                              <span>Retiro Recoleta</span>
+                            </span>
+                            <span className="delivery-subtext">Gimnasio Top Shape</span>
+                          </div>
+                        ) : (
+                          <div className="delivery-pill-wrapper">
+                            <span className="badge-delivery badge-shipping">
+                              <Truck size={12} />
+                              <span>Envío Domicilio</span>
+                            </span>
+                            <span className="delivery-subtext">A todo el país</span>
+                          </div>
+                        )}
+                      </td>
+
+                      {/* Total */}
+                      <td className="cell-total">
+                        <span className="order-total-price">
+                          {formatARS(order.totalInCents)}
+                        </span>
+                      </td>
+
+                      {/* Pago */}
+                      <td className="cell-payment">
+                        {order.paymentStatus === 'approved' ? (
+                          <span className="badge-payment badge-payment-approved">
+                            <CheckCircle2 size={12} />
+                            <span>Aprobado (MP)</span>
                           </span>
                         ) : (
-                          <span className="pill-method shipping">
-                            <Truck size={12} /> Envío Domicilio
+                          <span className="badge-payment badge-payment-pending">
+                            <Clock size={12} />
+                            <span>Pendiente</span>
                           </span>
                         )}
                       </td>
-                      <td>
-                        <strong className="text-primary">{formatARS(order.totalInCents)}</strong>
-                      </td>
-                      <td>
-                        <span className="badge badge-success">
-                          {order.paymentStatus === 'approved' ? 'Aprobado (MP)' : order.paymentStatus}
-                        </span>
-                      </td>
-                      <td>
+
+                      {/* Estado Logístico (Refined Custom Select) */}
+                      <td className="cell-status">
                         <select
                           value={order.fulfillmentStatus}
                           onChange={(e) => handleUpdateStatus(order.id, e.target.value as FulfillmentStatus)}
-                          className="status-selector"
+                          className={`status-selector status-selector--${order.fulfillmentStatus}`}
                         >
                           <option value="unfulfilled">Sin procesar</option>
                           <option value="preparing">En preparación</option>
@@ -200,23 +316,29 @@ export const AdminOrders: React.FC = () => {
                           <option value="delivered">Entregado</option>
                         </select>
                       </td>
-                      <td>
-                        <div className="table-actions">
+
+                      {/* Acciones */}
+                      <td className="cell-actions">
+                        <div className="actions-cluster">
                           <button
+                            type="button"
                             onClick={() => setSelectedOrder(order)}
-                            className="btn-action-icon"
-                            title="Ver Detalle Completo"
+                            className="btn-action-view"
+                            title="Ver Remito y Detalle"
                           >
-                            <Eye size={16} />
+                            <Eye size={15} />
+                            <span>Ver</span>
                           </button>
+
                           <a
                             href={waLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn-action-wa"
-                            title="Enviar WhatsApp de Despacho"
+                            title="Avisar por WhatsApp al cliente"
                           >
-                            <Phone size={14} />
+                            <Send size={13} />
+                            <span>Aviso WA</span>
                           </a>
                         </div>
                       </td>
@@ -229,125 +351,174 @@ export const AdminOrders: React.FC = () => {
         </div>
       </div>
 
-      {/* Order Detail Modal */}
+      {/* Order Remito / Invoice Modal */}
       {selectedOrder && (
         <div className="modal-backdrop" onClick={() => setSelectedOrder(null)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <div>
-                <h2>Pedido #{selectedOrder.orderNumber}</h2>
-                <span className="text-xs text-muted">Fecha: {formatDate(selectedOrder.createdAt)}</span>
+            {/* Top Toolbar */}
+            <div className="modal-topbar">
+              <div className="modal-topbar-left">
+                <h2>Remito de Despacho #{selectedOrder.orderNumber}</h2>
+                <span className="modal-date-sub">{formatOrderDate(selectedOrder.createdAt)}</span>
               </div>
-              <button onClick={() => setSelectedOrder(null)} className="close-btn">
-                <X size={20} />
-              </button>
+              <div className="modal-topbar-actions">
+                <button type="button" onClick={handlePrint} className="btn-modal-print">
+                  <Printer size={15} />
+                  <span>Imprimir Remito</span>
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => setSelectedOrder(null)} 
+                  className="btn-modal-close"
+                  aria-label="Cerrar modal"
+                >
+                  <X size={18} />
+                </button>
+              </div>
             </div>
 
             <div className="modal-body">
-              {/* Customer Box */}
-              <div className="modal-section-box">
-                <h3>Datos del comprador</h3>
-                <div className="grid-2">
-                  <p><strong>Nombre y Apellido:</strong> {selectedOrder.customerName}</p>
-                  <p><strong>DNI / CUIL:</strong> {selectedOrder.customerDni}</p>
-                  <p><strong>Teléfono / Celular:</strong> {selectedOrder.customerPhone}</p>
-                  <p><strong>Email:</strong> {selectedOrder.customerEmail}</p>
+              {/* Store Identity Banner in Remito */}
+              <div className="remito-store-banner">
+                <div className="store-banner-left">
+                  <img src="/logo.png" alt="Suplementos Top" className="remito-logo-img" />
+                  <div>
+                    <h3 className="remito-brand-name">SUPLEMENTOS TOP</h3>
+                    <p className="remito-brand-address">
+                      Pres. José E. Uriburu 1163 (Gimnasio Top Shape) • Recoleta, CABA<br />
+                      WhatsApp: {settings.supportPhone || '11 6565-2990'} • Email: {settings.supportEmail}
+                    </p>
+                  </div>
+                </div>
+                <div className="store-banner-right">
+                  <span className="badge-remito-status">
+                    {selectedOrder.fulfillmentStatus === 'ready_for_pickup' ? 'LISTO PARA RETIRO'
+                      : selectedOrder.fulfillmentStatus === 'shipped' ? 'DESPACHADO'
+                      : selectedOrder.fulfillmentStatus === 'delivered' ? 'ENTREGADO'
+                      : 'EN PREPARACIÓN'}
+                  </span>
                 </div>
               </div>
 
-              {/* Delivery Box */}
-              <div className="modal-section-box">
-                <h3>Entrega y dirección</h3>
-                {selectedOrder.deliveryMethod === 'pickup' ? (
-                  <div>
-                    <span className="badge badge-accent">Retiro en Local Recoleta</span>
-                    <p className="mt-2"><strong>Punto de Entrega:</strong> Uriburu 1163, Recoleta, CABA (entre Santa Fe y Arenales)</p>
-                    <p className="text-xs text-muted">El cliente se presentará con su DNI.</p>
-                  </div>
-                ) : (
-                  <div>
-                    <span className="badge badge-dark">Envío a Domicilio</span>
-                    <div className="mt-2">
-                      <p><strong>Calle y Número:</strong> {selectedOrder.shippingAddress?.street} {selectedOrder.shippingAddress?.number} {selectedOrder.shippingAddress?.apartment && `(${selectedOrder.shippingAddress.apartment})`}</p>
-                      <p><strong>Localidad y Provincia:</strong> {selectedOrder.shippingAddress?.city}, {selectedOrder.shippingAddress?.province} (CP: {selectedOrder.shippingAddress?.postalCode})</p>
-                      {selectedOrder.shippingAddress?.deliveryNotes && (
-                        <p className="delivery-note-box">
-                          <strong>Indicaciones de entrega:</strong> {selectedOrder.shippingAddress.deliveryNotes}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
+              {/* Grid 2: Destination & Logistics */}
+              <div className="modal-grid-2">
+                <div className="modal-detail-card">
+                  <h4 className="detail-card-title">Datos del Comprador</h4>
+                  <p className="detail-line"><strong>Nombre:</strong> {selectedOrder.customerName}</p>
+                  <p className="detail-line"><strong>DNI / CUIL:</strong> {selectedOrder.customerDni}</p>
+                  <p className="detail-line"><strong>Teléfono:</strong> {selectedOrder.customerPhone}</p>
+                  <p className="detail-line"><strong>Email:</strong> {selectedOrder.customerEmail}</p>
+                </div>
+
+                <div className="modal-detail-card">
+                  <h4 className="detail-card-title">Logística &amp; Destino</h4>
+                  <p className="detail-line">
+                    <strong>Modalidad:</strong> {selectedOrder.deliveryMethod === 'pickup' 
+                      ? 'Retiro Presencial en Gimnasio Top Shape' 
+                      : 'Envío a Domicilio'}
+                  </p>
+                  {selectedOrder.shippingAddress && (
+                    <p className="detail-line">
+                      <strong>Dirección:</strong> {selectedOrder.shippingAddress.street} {selectedOrder.shippingAddress.number}
+                      {selectedOrder.shippingAddress.apartment ? ` Piso ${selectedOrder.shippingAddress.apartment}` : ''}, {selectedOrder.shippingAddress.city} (CP: {selectedOrder.shippingAddress.postalCode})
+                    </p>
+                  )}
+                  <p className="detail-line">
+                    <strong>Pago:</strong> {selectedOrder.paymentMethod || 'Mercado Pago Checkout Pro'} ({selectedOrder.paymentStatus.toUpperCase()})
+                  </p>
+                </div>
               </div>
 
               {/* Items List */}
-              <div className="modal-section-box">
-                <h3>Productos del pedido</h3>
+              <div className="modal-detail-card">
+                <h4 className="detail-card-title">Suplementos a Preparar</h4>
                 <div className="modal-items-list">
-                  {selectedOrder.items.map((item) => (
-                    <div key={item.id} className="modal-item-row">
-                      <div>
-                        <strong>{item.productName}</strong>
-                        <span className="d-block text-xs text-muted">{item.variantTitle} (SKU: {item.sku})</span>
+                  {selectedOrder.items.map((item, idx) => (
+                    <div key={idx} className="modal-item-row">
+                      <div className="item-name-col">
+                        <span className="item-title">{item.productName}</span>
+                        <span className="item-variant">{item.variantTitle}</span>
+                        <span className="item-sku">SKU: {item.sku}</span>
                       </div>
-                      <span className="qty-tag">Cant: {item.quantity}</span>
-                      <strong>{formatARS(item.totalPriceInCents)}</strong>
+                      <div className="item-qty-col">
+                        <span className="qty-tag">x{item.quantity}</span>
+                      </div>
+                      <div className="item-price-col">
+                        <span>{formatARS(item.totalPriceInCents)}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="modal-totals-box">
-                  <div className="line"><span>Subtotal:</span> <span>{formatARS(selectedOrder.subtotalInCents)}</span></div>
-                  <div className="line"><span>Costo Envío:</span> <span>{selectedOrder.shippingFeeInCents === 0 ? 'GRATIS' : formatARS(selectedOrder.shippingFeeInCents)}</span></div>
-                  <div className="line total"><span>Total Cobrado (MP):</span> <span>{formatARS(selectedOrder.totalInCents)}</span></div>
-                  {selectedOrder.mercadopagoPaymentId && (
-                    <span className="text-xs text-muted">ID Pago Mercado Pago: {selectedOrder.mercadopagoPaymentId}</span>
+                {/* Totals */}
+                <div className="modal-totals-block">
+                  <div className="totals-line">
+                    <span>Subtotal:</span>
+                    <span>{formatARS(selectedOrder.subtotalInCents)}</span>
+                  </div>
+                  {selectedOrder.discountInCents > 0 && (
+                    <div className="totals-line text-success">
+                      <span>Descuento Transferencia (10% OFF):</span>
+                      <span>-{formatARS(selectedOrder.discountInCents)}</span>
+                    </div>
                   )}
+                  <div className="totals-line">
+                    <span>Envío:</span>
+                    <span>{selectedOrder.shippingFeeInCents === 0 ? 'Sin cargo' : formatARS(selectedOrder.shippingFeeInCents)}</span>
+                  </div>
+                  <div className="totals-line totals-grand-total">
+                    <span>Total Pagado:</span>
+                    <span>{formatARS(selectedOrder.totalInCents)}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Logistics Tracking Updater */}
+              {/* Tracking Code Section for Shipping */}
               {selectedOrder.deliveryMethod === 'shipping' && (
-                <div className="modal-section-box tracking-update-box">
-                  <h3>Número de seguimiento</h3>
-                  {selectedOrder.trackingNumber ? (
-                    <p className="text-success font-bold">
-                      Código de seguimiento: <strong>{selectedOrder.trackingNumber}</strong>
-                    </p>
-                  ) : (
-                    <div className="tracking-input-group">
-                      <input
-                        type="text"
-                        placeholder="Ej: CORREO-AR-981240"
-                        value={newTrackingNumber}
-                        onChange={(e) => setNewTrackingNumber(e.target.value)}
-                        className="form-input"
-                      />
-                      <button
-                        onClick={() => handleSaveTracking(selectedOrder.id)}
-                        className="btn btn-primary btn-sm"
-                      >
-                        Guardar & Despachar
-                      </button>
-                    </div>
+                <div className="modal-detail-card tracking-section">
+                  <h4 className="detail-card-title">Código de Seguimiento de Correo</h4>
+                  <div className="tracking-controls-row">
+                    <input
+                      type="text"
+                      placeholder={selectedOrder.trackingNumber || 'Pegá aquí el código de envío (Andreani, Correo Arg)...'}
+                      value={newTrackingNumber}
+                      onChange={(e) => setNewTrackingNumber(e.target.value)}
+                      className="tracking-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleSaveTracking(selectedOrder.id)}
+                      className="btn-save-tracking"
+                    >
+                      Guardar Tracking
+                    </button>
+                  </div>
+                  {selectedOrder.trackingNumber && (
+                    <span className="current-tracking-tag">
+                      Guía actual: <strong>{selectedOrder.trackingNumber}</strong>
+                    </span>
                   )}
                 </div>
               )}
             </div>
 
+            {/* Modal Bottom Actions */}
             <div className="modal-footer">
-              <button onClick={() => setSelectedOrder(null)} className="btn btn-secondary">
-                Cerrar
+              <button
+                type="button"
+                onClick={() => setSelectedOrder(null)}
+                className="btn-modal-back"
+              >
+                Cerrar Ventana
               </button>
-              
-              {/* WhatsApp notification link */}
+
               {(() => {
                 const itemsText = selectedOrder.items
                   .map((item) => `• ${item.quantity}x ${item.productName} (${item.variantTitle})`)
                   .join('\n');
                 const addressText = selectedOrder.shippingAddress 
                   ? `${selectedOrder.shippingAddress.street} ${selectedOrder.shippingAddress.number}, ${selectedOrder.shippingAddress.city}`
-                  : 'Retiro en sucursal Uriburu 1163';
+                  : 'Retiro en sucursal Uriburu 1163 (Gimnasio Top Shape)';
                 const waLink = buildWhatsAppDispatchLink({
                   orderNumber: selectedOrder.orderNumber,
                   customerName: selectedOrder.customerName,
@@ -364,10 +535,10 @@ export const AdminOrders: React.FC = () => {
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-accent"
+                    className="btn-modal-wa-send"
                   >
-                    <Send size={16} />
-                    <span>Enviar Resumen a WhatsApp (11 6565-2990)</span>
+                    <Send size={15} />
+                    <span>Enviar Notificación a WhatsApp ({selectedOrder.customerPhone})</span>
                   </a>
                 );
               })()}
@@ -377,21 +548,48 @@ export const AdminOrders: React.FC = () => {
       )}
 
       <style>{`
+        /* ========================================================
+           TIENDA MAY / JOKERS UI - PROFESSIONAL ORDERS TABLE
+           Clean, Ultra-Prolijo, Responsive & Anti-Cramp Typography
+           ======================================================== */
         .admin-orders-page {
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 20px;
+          max-width: 1400px;
+          margin: 0 auto;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
-        .page-header h1 {
-          font-size: 1.8rem;
-          margin-bottom: 0.2rem;
+
+        .page-header {
+          margin-bottom: 4px;
         }
-        .orders-filters-card {
-          padding: 1.25rem;
+        .page-title {
+          font-size: 1.65rem;
+          font-weight: 800;
+          color: #0F172A;
+          letter-spacing: -0.02em;
+          margin: 0 0 6px 0;
+        }
+        .page-subtitle {
+          font-size: 0.9rem;
+          color: #64748B;
+          margin: 0;
+          line-height: 1.5;
+        }
+
+        /* Controls Card */
+        .orders-filter-card {
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 12px;
+          padding: 16px 20px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
           display: flex;
           flex-direction: column;
-          gap: 1rem;
+          gap: 14px;
         }
+
         .search-wrap {
           position: relative;
           display: flex;
@@ -399,237 +597,690 @@ export const AdminOrders: React.FC = () => {
         }
         .search-icon {
           position: absolute;
-          left: 0.85rem;
-          color: var(--color-text-subtle);
+          left: 14px;
+          color: #94A3B8;
+          pointer-events: none;
         }
         .filter-search-input {
           width: 100%;
-          padding: 0.65rem 1rem 0.65rem 2.5rem;
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius-md);
+          height: 42px;
+          padding: 0 14px 0 42px;
+          border: 1px solid #CBD5E1;
+          border-radius: 8px;
           font-size: 0.9rem;
+          color: #0F172A;
+          background: #FFFFFF;
+          outline: none;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
+        .filter-search-input:focus {
+          border-color: #0F172A;
+          box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+        }
+
         .status-tabs-row {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.5rem;
+          gap: 8px;
         }
         .status-tab {
-          padding: 0.4rem 0.8rem;
-          border-radius: var(--radius-full);
-          font-size: 0.8rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 7px 14px;
+          border-radius: 9999px;
+          font-size: 0.82rem;
           font-weight: 600;
-          background: var(--color-bg-muted);
-          color: var(--color-text-muted);
+          background: #F1F5F9;
+          color: #475569;
           border: 1px solid transparent;
-          transition: all 0.15s;
+          cursor: pointer;
+          transition: all 0.15s ease;
         }
         .status-tab:hover {
           background: #E2E8F0;
+          color: #0F172A;
         }
         .status-tab.active {
-          background: var(--color-primary);
+          background: #0F172A;
           color: #FFFFFF;
         }
-        .table-card {
-          padding: 0;
+        .status-tab-count {
+          font-size: 0.72rem;
+          font-weight: 800;
+          padding: 1px 7px;
+          border-radius: 9999px;
+          background: rgba(0, 0, 0, 0.08);
+        }
+        .status-tab.active .status-tab-count {
+          background: rgba(255, 255, 255, 0.2);
+          color: #FFFFFF;
+        }
+
+        /* Table Card */
+        .orders-table-card {
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+          overflow: hidden;
+        }
+        .table-responsive {
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
-          border-radius: var(--radius-md);
+          width: 100%;
         }
-        .empty-table-cell {
-          text-align: center;
-          padding: 3rem 1rem;
-          color: var(--color-text-muted);
+
+        .orders-table {
+          width: 100%;
+          min-width: 980px;
+          border-collapse: collapse;
+          font-size: 0.88rem;
+          text-align: left;
         }
-        .status-selector {
-          padding: 0.35rem 0.6rem;
-          border-radius: var(--radius-sm);
-          border: 1px solid var(--color-border);
-          font-size: 0.775rem;
+
+        .orders-table th {
+          background: #FAFAFA;
+          color: #64748B;
+          font-size: 0.74rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          padding: 14px 18px;
+          border-bottom: 1px solid #E2E8F0;
+          white-space: nowrap;
+        }
+
+        .orders-table td {
+          padding: 14px 18px;
+          border-bottom: 1px solid #F1F5F9;
+          vertical-align: middle;
+          color: #0F172A;
+        }
+
+        .orders-table-row:hover td {
+          background: #F8FAFC;
+        }
+
+        /* Column: Pedido */
+        .cell-order-number {
+          white-space: nowrap;
+        }
+        .order-number-title {
+          font-weight: 800;
+          font-size: 0.94rem;
+          color: #0F172A;
+          letter-spacing: -0.01em;
+          margin-bottom: 3px;
+        }
+        .order-items-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.74rem;
+          color: #64748B;
           font-weight: 600;
-          background: #FFFFFF;
-          cursor: pointer;
+          background: #F1F5F9;
+          padding: 2px 7px;
+          border-radius: 4px;
         }
-        .table-actions {
-          display: flex;
-          gap: 0.4rem;
+
+        /* Column: Fecha */
+        .cell-date {
+          white-space: nowrap;
         }
-        .btn-action-icon {
-          background: var(--color-bg-muted);
-          border: 1px solid var(--color-border);
-          padding: 0.35rem;
-          border-radius: var(--radius-sm);
-          color: var(--color-text-main);
-        }
-        .btn-action-icon:hover {
-          background: #E2E8F0;
-        }
-        .btn-action-wa {
-          background: #25D366;
-          color: #FFF;
-          padding: 0.35rem 0.5rem;
-          border-radius: var(--radius-sm);
+        .order-date-text {
           display: flex;
           align-items: center;
+          gap: 6px;
+          font-size: 0.82rem;
+          color: #475569;
+          font-weight: 500;
         }
-        /* Modal Styles */
+        .date-icon {
+          color: #94A3B8;
+        }
+
+        /* Column: Cliente & Contacto */
+        .cell-customer {
+          min-width: 220px;
+        }
+        .customer-info-box {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .customer-name {
+          font-weight: 700;
+          font-size: 0.92rem;
+          color: #0F172A;
+        }
+        .customer-meta-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+        .customer-dni-tag {
+          font-size: 0.76rem;
+          color: #64748B;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          padding: 1px 6px;
+          border-radius: 4px;
+        }
+        .customer-phone-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.78rem;
+          font-weight: 600;
+          color: #166534;
+          background: #F0FDF4;
+          border: 1px solid #DCFCE7;
+          padding: 1px 8px;
+          border-radius: 4px;
+          text-decoration: none;
+          transition: all 0.15s ease;
+        }
+        .customer-phone-link:hover {
+          background: #DCFCE7;
+          color: #14532D;
+        }
+        .customer-phone-plain {
+          font-size: 0.78rem;
+          color: #64748B;
+        }
+
+        /* Column: Modalidad */
+        .cell-delivery {
+          white-space: nowrap;
+        }
+        .delivery-pill-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .badge-delivery {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 4px 10px;
+          border-radius: 9999px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.01em;
+          width: fit-content;
+        }
+        .badge-pickup {
+          background: #FEF3C7;
+          color: #92400E;
+          border: 1px solid #FDE68A;
+        }
+        .badge-shipping {
+          background: #E0F2FE;
+          color: #0369A1;
+          border: 1px solid #BAE6FD;
+        }
+        .delivery-subtext {
+          font-size: 0.72rem;
+          color: #64748B;
+          padding-left: 2px;
+        }
+
+        /* Column: Total */
+        .cell-total {
+          white-space: nowrap;
+        }
+        .order-total-price {
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #0F172A;
+          letter-spacing: -0.01em;
+        }
+
+        /* Column: Pago */
+        .cell-payment {
+          white-space: nowrap;
+        }
+        .badge-payment {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 4px 9px;
+          border-radius: 9999px;
+          font-size: 0.74rem;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+        .badge-payment-approved {
+          background: #DCFCE7;
+          color: #15803D;
+          border: 1px solid #BBF7D0;
+        }
+        .badge-payment-pending {
+          background: #FEF3C7;
+          color: #B45309;
+          border: 1px solid #FDE68A;
+        }
+
+        /* Column: Estado Logístico (Refined Selector) */
+        .cell-status {
+          white-space: nowrap;
+        }
+        .status-selector {
+          height: 34px;
+          padding: 0 10px;
+          border-radius: 8px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          outline: none;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .status-selector--preparing {
+          background: #FFFBEB;
+          border: 1px solid #FDE68A;
+          color: #B45309;
+        }
+        .status-selector--ready_for_pickup {
+          background: #ECFDF5;
+          border: 1px solid #A7F3D0;
+          color: #047857;
+        }
+        .status-selector--shipped {
+          background: #EFF6FF;
+          border: 1px solid #BFDBFE;
+          color: #1D4ED8;
+        }
+        .status-selector--delivered {
+          background: #F8FAFC;
+          border: 1px solid #CBD5E1;
+          color: #334155;
+        }
+        .status-selector--unfulfilled {
+          background: #FEF2F2;
+          border: 1px solid #FECACA;
+          color: #B91C1C;
+        }
+
+        /* Column: Acciones */
+        .cell-actions {
+          white-space: nowrap;
+          text-align: center;
+        }
+        .actions-cluster {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .btn-action-view {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          color: #334155;
+          padding: 6px 10px;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .btn-action-view:hover {
+          background: #0F172A;
+          color: #FFFFFF;
+          border-color: #0F172A;
+        }
+        .btn-action-wa {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          background: #16A34A;
+          color: #FFFFFF;
+          padding: 6px 11px;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: background 0.15s ease;
+        }
+        .btn-action-wa:hover {
+          background: #15803D;
+        }
+
+        .empty-table-cell {
+          text-align: center;
+          padding: 48px 16px;
+        }
+
+        /* Modal / Remito Styles */
         .modal-backdrop {
           position: fixed;
           inset: 0;
           background: rgba(15, 23, 42, 0.6);
-          backdrop-filter: blur(2px);
+          backdrop-filter: blur(3px);
           z-index: 1000;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 1.5rem;
+          padding: 16px;
         }
         .modal-card {
           background: #FFFFFF;
-          border-radius: var(--radius-lg);
-          max-width: 680px;
+          border-radius: 16px;
+          max-width: 720px;
           width: 100%;
-          max-height: 90vh;
+          max-height: 92vh;
           display: flex;
           flex-direction: column;
-          box-shadow: var(--shadow-xl);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
           overflow: hidden;
         }
-        .modal-header {
+        .modal-topbar {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 1.25rem 1.5rem;
-          border-bottom: 1px solid var(--color-border);
+          padding: 18px 24px;
+          border-bottom: 1px solid #E2E8F0;
+          background: #FFFFFF;
         }
-        .modal-header h2 {
+        .modal-topbar-left h2 {
           font-size: 1.25rem;
-          margin: 0;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0 0 2px 0;
+          letter-spacing: -0.01em;
         }
+        .modal-date-sub {
+          font-size: 0.8rem;
+          color: #64748B;
+        }
+        .modal-topbar-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .btn-modal-print {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: #F8FAFC;
+          border: 1px solid #CBD5E1;
+          color: #334155;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .btn-modal-print:hover {
+          background: #E2E8F0;
+          color: #0F172A;
+        }
+        .btn-modal-close {
+          background: transparent;
+          border: none;
+          color: #64748B;
+          padding: 6px;
+          cursor: pointer;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .btn-modal-close:hover {
+          background: #F1F5F9;
+          color: #0F172A;
+        }
+
         .modal-body {
-          padding: 1.5rem;
+          padding: 24px;
           overflow-y: auto;
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
-        }
-        .modal-section-box {
+          gap: 16px;
           background: #F8FAFC;
-          border: 1px solid var(--color-border);
-          padding: 1.25rem;
-          border-radius: var(--radius-md);
         }
-        .modal-section-box h3 {
-          font-size: 0.95rem;
-          margin-bottom: 0.75rem;
-          color: var(--color-primary);
+
+        .remito-store-banner {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 14px 18px;
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 10px;
         }
-        .grid-2 {
+        .store-banner-left {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+        .remito-logo-img {
+          height: 42px;
+          width: auto;
+          object-fit: contain;
+        }
+        .remito-brand-name {
+          font-size: 1rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0 0 2px 0;
+        }
+        .remito-brand-address {
+          font-size: 0.74rem;
+          color: #64748B;
+          margin: 0;
+          line-height: 1.4;
+        }
+        .badge-remito-status {
+          background: #0F172A;
+          color: #FFFFFF;
+          padding: 5px 12px;
+          border-radius: 9999px;
+          font-size: 0.75rem;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+        }
+
+        .modal-grid-2 {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 0.5rem;
-          font-size: 0.85rem;
+          gap: 12px;
         }
-        @media (min-width: 600px) {
-          .grid-2 {
+        @media (min-width: 640px) {
+          .modal-grid-2 {
             grid-template-columns: 1fr 1fr;
           }
         }
-        .delivery-note-box {
-          background: #FFFBEB;
-          border: 1px solid #FCD34D;
-          padding: 0.5rem 0.75rem;
-          border-radius: var(--radius-sm);
-          font-size: 0.8rem;
-          margin-top: 0.5rem;
+
+        .modal-detail-card {
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 10px;
+          padding: 16px;
         }
+        .detail-card-title {
+          font-size: 0.85rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0 0 10px 0;
+          padding-bottom: 8px;
+          border-bottom: 1px solid #F1F5F9;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+        .detail-line {
+          font-size: 0.82rem;
+          color: #475569;
+          margin: 0 0 6px 0;
+          line-height: 1.4;
+        }
+        .detail-line strong {
+          color: #0F172A;
+        }
+
         .modal-items-list {
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
-          border-bottom: 1px solid var(--color-border);
-          padding-bottom: 0.75rem;
-          margin-bottom: 0.75rem;
+          gap: 8px;
+          margin-bottom: 12px;
         }
         .modal-item-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-size: 0.85rem;
+          padding: 8px 12px;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          border-radius: 6px;
+          font-size: 0.84rem;
         }
-        .qty-tag {
-          font-weight: 700;
-          color: var(--color-text-muted);
-        }
-        .modal-totals-box {
+        .item-name-col {
           display: flex;
           flex-direction: column;
-          gap: 0.35rem;
-          font-size: 0.85rem;
+          gap: 2px;
         }
-        .modal-totals-box .line {
+        .item-title {
+          font-weight: 700;
+          color: #0F172A;
+        }
+        .item-variant {
+          font-size: 0.76rem;
+          color: #64748B;
+        }
+        .item-sku {
+          font-size: 0.70rem;
+          color: #94A3B8;
+        }
+        .qty-tag {
+          font-weight: 800;
+          color: #0F172A;
+          background: #E2E8F0;
+          padding: 2px 8px;
+          border-radius: 4px;
+        }
+        .item-price-col {
+          font-weight: 700;
+          color: #0F172A;
+        }
+
+        .modal-totals-block {
+          border-top: 1px dashed #CBD5E1;
+          padding-top: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .totals-line {
           display: flex;
           justify-content: space-between;
+          font-size: 0.82rem;
+          color: #64748B;
         }
-        .modal-totals-box .total {
-          font-weight: 800;
+        .totals-line.text-success {
+          color: #16A34A;
+          font-weight: 600;
+        }
+        .totals-grand-total {
           font-size: 1.05rem;
-          border-top: 1px solid var(--color-border);
-          padding-top: 0.35rem;
-          margin-top: 0.25rem;
-          color: var(--color-primary);
+          font-weight: 800;
+          color: #0F172A;
+          padding-top: 6px;
+          border-top: 1px solid #E2E8F0;
+          margin-top: 2px;
         }
-        .tracking-update-box {
+
+        .tracking-section {
           background: #EFF6FF;
           border-color: #BFDBFE;
         }
-        .tracking-input-group {
+        .tracking-controls-row {
           display: flex;
-          gap: 0.5rem;
+          gap: 8px;
         }
+        .tracking-input {
+          flex: 1;
+          height: 38px;
+          padding: 0 12px;
+          border: 1px solid #93C5FD;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          background: #FFFFFF;
+          outline: none;
+        }
+        .btn-save-tracking {
+          background: #1D4ED8;
+          color: #FFFFFF;
+          border: none;
+          border-radius: 6px;
+          padding: 0 14px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          cursor: pointer;
+        }
+        .current-tracking-tag {
+          font-size: 0.78rem;
+          color: #1E40AF;
+          margin-top: 6px;
+          display: block;
+        }
+
         .modal-footer {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 1.25rem 1.5rem;
-          border-top: 1px solid var(--color-border);
-          background: #F8FAFC;
+          padding: 16px 24px;
+          border-top: 1px solid #E2E8F0;
+          background: #FFFFFF;
+        }
+        .btn-modal-back {
+          background: #F1F5F9;
+          border: 1px solid #CBD5E1;
+          color: #475569;
+          padding: 9px 16px;
+          border-radius: 8px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .btn-modal-wa-send {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #16A34A;
+          color: #FFFFFF;
+          padding: 9px 18px;
+          border-radius: 8px;
+          font-size: 0.86rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: background 0.15s ease;
+        }
+        .btn-modal-wa-send:hover {
+          background: #15803D;
         }
 
-        @media (max-width: 768px) {
-          .orders-filter-card {
-            padding: 1rem;
+        /* Print Media Styles */
+        @media print {
+          body * {
+            visibility: hidden;
           }
-          .status-tabs-row {
-            gap: 0.35rem;
-          }
-          .status-tab {
-            padding: 0.3rem 0.65rem;
-            font-size: 0.75rem;
+          .modal-backdrop, .modal-card, .modal-card * {
+            visibility: visible;
           }
           .modal-backdrop {
-            padding: 0.75rem;
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 0;
+            background: none;
           }
-          .modal-card {
-            max-height: 94vh;
-          }
-          .modal-header {
-            padding: 1rem;
-          }
-          .modal-body {
-            padding: 1rem;
-            gap: 1rem;
-          }
-          .modal-footer {
-            flex-direction: column;
-            gap: 0.75rem;
-            align-items: stretch;
-            padding: 1rem;
-          }
-          .modal-footer button {
-            width: 100%;
-            justify-content: center;
+          .modal-topbar-actions, .modal-footer, .tracking-section {
+            display: none !important;
           }
         }
       `}</style>
