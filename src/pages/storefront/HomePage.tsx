@@ -11,6 +11,7 @@ import { ProductCard } from '../../components/storefront/ProductCard';
 import { HeroSlider } from '../../components/storefront/HeroSlider';
 import { TrustMarquee } from '../../components/storefront/TrustMarquee';
 import { HorizontalScroller } from '../../components/ui/HorizontalScroller';
+import { SEO } from '../../components/common/SEO';
 
 interface CategoryTile {
   title: string;
@@ -108,8 +109,62 @@ export const HomePage: React.FC = () => {
   const featuredRaw = products.filter((p) => p.isFeatured);
   const featuredProducts = (featuredRaw.length >= 4 ? featuredRaw : products).slice(0, 10);
 
+  const homeFaqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '¿Dónde queda el local de Suplementos Top en Recoleta y qué horarios tienen?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Estamos ubicados en Pres. José E. Uriburu 1163 (dentro del Gimnasio Top Shape), entre Av. Santa Fe y Arenales, Recoleta, CABA. Atendemos de Lunes a Viernes de 8:00 a 23:00 hs y Sábados de 10:00 a 18:00 hs.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Tienen descuento abonando por transferencia bancaria?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Sí, tenés un 10% de descuento automático en toda la tienda abonando mediante transferencia bancaria. Al finalizar tu pedido en el checkout se aplica la bonificación de forma inmediata.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Qué marcas de suplementos deportivos trabajan?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Trabajamos con líneas oficiales 100% originales de Star Nutrition, ENA Sport, Optimum Nutrition (Gold Standard), One Fit, Dymatize y Gentech. Todos los productos cuentan con precinto de seguridad de fábrica y registro ANMAT.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Puedo retirar mi compra en el día sin cargo?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Sí, podés comprar online a través de la web o WhatsApp y retirar tu pedido en el día sin ningún costo de envío en nuestro punto de entrega en Recoleta (Gimnasio Top Shape).',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '¿Hacen envíos a domicilio a todo el país?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Realizamos envíos en el día en CABA y despachos a todo el país por correo expreso con código de seguimiento online. Además, tenés envío gratis superando el monto mínimo de compra.',
+        },
+      },
+    ],
+  };
+
   return (
     <div className="home-root">
+      <SEO
+        title="Suplementos Top Recoleta | Proteínas, Creatinas y Nutrición Deportiva CABA"
+        description="Tienda oficial de suplementos deportivos en Recoleta, CABA. Retiro en el día en Gimnasio Top Shape (Pres. José E. Uriburu 1163) o envíos a todo el país. Star Nutrition, ENA Sport, Optimum Nutrition. 10% OFF transferencia."
+        canonicalUrl="/"
+        jsonLd={homeFaqJsonLd}
+      />
+
       {/* 1. Interactive Hero Slider */}
       <HeroSlider />
 

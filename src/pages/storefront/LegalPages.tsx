@@ -1,12 +1,18 @@
 import React from 'react';
 import { Truck, MapPin, ShieldCheck } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
+import { SEO } from '../../components/common/SEO';
 
 export const ShippingPolicyPage: React.FC = () => {
   const { settings } = useStore();
 
   return (
     <div className="container legal-page">
+      <SEO
+        title="Políticas de Envío y Retiro en Recoleta"
+        description="Envíos a todo el país y retiro sin cargo en Gimnasio Top Shape (Pres. José E. Uriburu 1163, Recoleta). Envíos gratis en compras superiores a $85.000."
+        canonicalUrl="/envios"
+      />
       <h1 className="legal-title">Políticas de Envío y Retiro en Sucursal</h1>
       
       <div className="card legal-card">
@@ -62,6 +68,11 @@ export const ShippingPolicyPage: React.FC = () => {
 export const FAQPage: React.FC = () => {
   return (
     <div className="container legal-page">
+      <SEO
+        title="Preguntas Frecuentes | Retiros en Recoleta y Envíos"
+        description="Respuestas sobre retiros en Uriburu 1163 (Gimnasio Top Shape), pagos con 10% OFF en transferencia, medios de pago Mercado Pago, autenticidad de suplementos y plazos de entrega."
+        canonicalUrl="/faq"
+      />
       <h1 className="legal-title">Preguntas Frecuentes (FAQ)</h1>
 
       <div className="card legal-card">
@@ -109,6 +120,11 @@ export const FAQPage: React.FC = () => {
 export const TermsPage: React.FC = () => {
   return (
     <div className="container legal-page">
+      <SEO
+        title="Términos y Condiciones Legales"
+        description="Términos de servicio, garantías oficiales y políticas de compra y devolución de Suplementos Top Argentina."
+        canonicalUrl="/terminos"
+      />
       <h1 className="legal-title">Términos, Condiciones y Devoluciones</h1>
 
       <div className="card legal-card">

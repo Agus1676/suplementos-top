@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MapPin, Clock, Mail, Send, CheckCircle2, Navigation, MessageCircle, HelpCircle } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
+import { SEO } from '../../components/common/SEO';
 
 export const ContactPage: React.FC = () => {
   const { settings } = useStore();
@@ -27,6 +28,11 @@ export const ContactPage: React.FC = () => {
 
   return (
     <div className="contact-page-wrapper">
+      <SEO
+        title="Contacto y Punto de Retiro en Recoleta"
+        description="Punto de retiro oficial en Gimnasio Top Shape (Pres. José E. Uriburu 1163, entre Av. Santa Fe y Arenales, Recoleta). WhatsApp oficial: 11 6565-2990. Horarios: Lun a Vie 8 a 23 hs, Sáb 10 a 18 hs."
+        canonicalUrl="/contacto"
+      />
       <div className="container">
         {/* Header */}
         <div className="contact-hero-header">

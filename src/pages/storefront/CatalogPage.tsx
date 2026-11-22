@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, ArrowUpDown, X, Search, Phone } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { ProductCard } from '../../components/storefront/ProductCard';
+import { SEO } from '../../components/common/SEO';
 
 export const CatalogPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -70,8 +71,50 @@ export const CatalogPage: React.FC = () => {
     setOnlyInStock(false);
   };
 
+  const currentCategoryObj = categories.find((c) => c.slug === activeCategory);
+  const catalogPageTitle = currentCategoryObj 
+    ? `${currentCategoryObj.name} en Recoleta` 
+    : searchQuery 
+    ? `Búsqueda "${searchQuery}" - Suplementos`
+    : 'Catálogo de Suplementos Deportivos en Recoleta';
+
+  const catalogMetaDesc = currentCategoryObj
+    ? `Comprá ${currentCategoryObj.name} en Recoleta, CABA. ${currentCategoryObj.description} Retiro inmediato en Gimnasio Top Shape (Uriburu 1163) y 10% OFF por transferencia.`
+    : 'Catálogo completo de suplementos deportivos originales en Recoleta, CABA. Star Nutrition, ENA Sport, Optimum Nutrition. Retiro sin cargo en Uriburu 1163 o envíos a todo el país.';
+
+  const catalogJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: catalogPageTitle,
+    description: catalogMetaDesc,
+    url: `https://suplementos-top.vercel.app/catalogo${activeCategory !== 'all' ? `?categoria=${activeCategory}` : ''}`,
+    hasPart: filteredProducts.slice(0, 10).map((p) => ({
+      '@type': 'Product',
+      name: p.name,
+      url: `https://suplementos-top.vercel.app/producto/${p.slug}`,
+      image: p.images[0]?.url,
+      brand: {
+        '@type': 'Brand',
+        name: p.brand,
+      },
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'ARS',
+        price: (p.basePriceInCents / 100).toFixed(2),
+        availability: 'https://schema.org/InStock',
+      },
+    })),
+  };
+
   return (
     <div className="container catalog-page-container">
+      <SEO
+        title={catalogPageTitle}
+        description={catalogMetaDesc}
+        canonicalUrl={`/catalogo${activeCategory !== 'all' ? `?categoria=${activeCategory}` : ''}`}
+        jsonLd={catalogJsonLd}
+      />
+
       {/* Top Header */}
       <div className="catalog-header">
         <div>

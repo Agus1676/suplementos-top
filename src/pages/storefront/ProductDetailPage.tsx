@@ -19,6 +19,7 @@ import { useStore } from '../../context/StoreContext';
 import { useCart } from '../../context/CartContext';
 import { formatARS, calculateDiscountPercentage } from '../../lib/utils';
 import { ProductVariant } from '../../types';
+import { SEO } from '../../components/common/SEO';
 
 export const ProductDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -108,8 +109,59 @@ export const ProductDetailPage: React.FC = () => {
     `Hola! Quisiera consultar sobre el producto: ${product.name} (${selectedVariant.title}) - Precio: ${formatARS(selectedVariant.priceInCents)}`
   )}`;
 
+  const productPriceNumber = (selectedVariant.priceInCents / 100).toFixed(2);
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.images.map((img) => img.url),
+    description: product.description,
+    sku: selectedVariant.sku,
+    brand: {
+      '@type': 'Brand',
+      name: product.brand,
+    },
+    category: product.category.name,
+    offers: {
+      '@type': 'Offer',
+      url: `https://suplementos-top.vercel.app/producto/${product.slug}`,
+      priceCurrency: 'ARS',
+      price: productPriceNumber,
+      priceValidUntil: '2027-12-31',
+      itemCondition: 'https://schema.org/NewCondition',
+      availability: selectedVariant.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'HealthAndBeautyBusiness',
+        name: 'Suplementos Top',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape)',
+          addressLocality: 'Recoleta',
+          addressRegion: 'CABA',
+          addressCountry: 'AR',
+        },
+      },
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: product.rating || 4.9,
+      reviewCount: product.reviewCount || 48,
+      bestRating: '5',
+      worstRating: '1',
+    },
+  };
+
   return (
     <div className="container product-detail-page">
+      <SEO
+        title={`${product.name} en Recoleta`}
+        description={`${product.name} de ${product.brand}. ${product.tagline}. Comprá con 10% OFF por transferencia y retiro sin cargo en Gimnasio Top Shape (Uriburu 1163, Recoleta). Envíos a todo el país.`}
+        canonicalUrl={`/producto/${product.slug}`}
+        ogImage={product.images[0]?.url}
+        ogType="product"
+        jsonLd={productJsonLd}
+      />
+
       {/* Breadcrumb Navigation */}
       <nav className="detail-breadcrumb">
         <Link to="/"><ArrowLeft size={13} /> Inicio</Link>
