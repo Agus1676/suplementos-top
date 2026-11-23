@@ -158,16 +158,22 @@ export const CartDrawer: React.FC = () => {
               <span><strong>{formatInstallments(subtotalInCents, 3)}</strong> con Mercado Pago</span>
             </div>
 
-            <div className="summary-line">
-              <span className="summary-label">SUBTOTAL:</span>
-              <span className="summary-amount">{formatARS(subtotalInCents)}</span>
-            </div>
-            
-            <div className="summary-line text-xs">
-              <span className="text-muted">ENVÍO:</span>
-              <span>
-                <span>A calcular en checkout (o retiro sin cargo en Recoleta)</span>
-              </span>
+            <div className="cart-summary-block">
+              <div className="summary-line">
+                <span className="summary-label">SUBTOTAL:</span>
+                <span className="summary-amount">{formatARS(subtotalInCents)}</span>
+              </div>
+              
+              <div className="cart-shipping-box">
+                <div className="shipping-main-row">
+                  <span className="shipping-title">ENVÍO:</span>
+                  <span className="shipping-status">A calcular en checkout</span>
+                </div>
+                <div className="shipping-details-row">
+                  <span className="shipping-pickup-badge">✓ Retiro GRATIS en Recoleta</span>
+                  <span className="shipping-country-badge">Envíos a todo el país</span>
+                </div>
+              </div>
             </div>
 
             <button 
@@ -479,23 +485,79 @@ export const CartDrawer: React.FC = () => {
           font-size: 0.8rem;
           font-weight: 600;
         }
+        .cart-summary-block {
+          display: flex;
+          flex-direction: column;
+          gap: 0.65rem;
+          background: #FFFFFF;
+          padding: 0.85rem 1rem;
+          border-radius: 10px;
+          border: 1px solid var(--color-border);
+        }
         .summary-line {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          font-size: 0.95rem;
+          align-items: baseline;
+          gap: 0.75rem;
         }
         .summary-label {
-          font-weight: 700;
+          font-weight: 800;
           color: var(--color-text-muted);
-          font-size: 0.85rem;
+          font-size: 0.82rem;
           letter-spacing: 0.05em;
+          flex-shrink: 0;
         }
         .summary-amount {
           font-family: var(--font-display);
           font-size: 1.45rem;
           font-weight: 800;
           color: var(--color-text);
+          text-align: right;
+        }
+        .cart-shipping-box {
+          display: flex;
+          flex-direction: column;
+          gap: 0.35rem;
+          padding-top: 0.6rem;
+          border-top: 1px dashed var(--color-border);
+        }
+        .shipping-main-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 0.75rem;
+        }
+        .shipping-title {
+          font-size: 0.78rem;
+          font-weight: 800;
+          color: var(--color-text-muted);
+          letter-spacing: 0.05em;
+          flex-shrink: 0;
+        }
+        .shipping-status {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: var(--color-text);
+          text-align: right;
+        }
+        .shipping-details-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+          font-size: 0.74rem;
+          flex-wrap: wrap;
+        }
+        .shipping-pickup-badge {
+          color: #166534;
+          background: #DCFCE7;
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-weight: 700;
+        }
+        .shipping-country-badge {
+          color: var(--color-text-muted);
+          font-weight: 500;
         }
         .checkout-cta {
           margin-top: 0.25rem;
