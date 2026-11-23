@@ -96,18 +96,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
             <div className="pv-mp-brand-row">
               <span>con</span>
-              <span className="pv-mp-pill" aria-label="Mercado Pago">
-                <svg width="14" height="10" viewBox="0 0 24 16" fill="none" aria-hidden="true">
-                  <ellipse cx="12" cy="8" rx="11" ry="7" fill="#009EE3" />
-                  <path
-                    d="M6.5 8.5c1.5-2 3.5-2 5 0 1.5-2 3.5-2 5 0"
-                    stroke="#fff"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <b>mercado pago</b>
-              </span>
+              <img 
+                src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.19.5/mercadopago/logo__small@2x.png" 
+                alt="Mercado Pago" 
+                className="pv-mp-logo"
+              />
             </div>
           </div>
         </div>
@@ -264,21 +257,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           color: #3F3F46;
           font-weight: 600;
         }
-        .pv-mp-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.25rem;
-          background: #FFFFFF;
-          border: 1px solid #E4E4E7;
-          border-radius: 999px;
-          padding: 0.1rem 0.45rem 0.1rem 0.3rem;
-          font-size: 0.65rem;
-          color: #009EE3;
-          line-height: 1;
-        }
-        .pv-mp-pill b {
-          font-weight: 800;
-          letter-spacing: -0.01em;
+        .pv-mp-logo {
+          height: 15px;
+          width: auto;
+          object-fit: contain;
+          vertical-align: middle;
+          display: inline-block;
         }
         .pv-add-btn {
           width: 100%;

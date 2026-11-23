@@ -904,12 +904,11 @@ export const ProductDetailPage: React.FC = () => {
           font-weight: 800 !important;
         }
         .product-detail-page {
-          padding-top: 2rem;
+          padding-top: 1.5rem;
           padding-bottom: 5rem;
           width: 100%;
           max-width: 100%;
           box-sizing: border-box;
-          overflow-x: hidden;
         }
         .detail-breadcrumb {
           display: flex;
@@ -917,12 +916,10 @@ export const ProductDetailPage: React.FC = () => {
           gap: 0.5rem;
           font-size: 0.82rem;
           color: var(--color-text-muted);
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
           flex-wrap: wrap;
           width: 100%;
           box-sizing: border-box;
-        }
-          flex-wrap: wrap;
         }
         .detail-breadcrumb a {
           display: flex;
@@ -943,18 +940,24 @@ export const ProductDetailPage: React.FC = () => {
         .product-detail-grid {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 3rem;
-          margin-bottom: 4rem;
+          gap: 2rem;
+          margin-bottom: 3rem;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
         @media (min-width: 992px) {
           .product-detail-grid {
             grid-template-columns: 1fr 1.15fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
           }
         }
-        .gallery-section {
-          display: flex;
-          flex-direction: column;
-          gap: 1.25rem;
+        .gallery-section, .info-section {
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          min-width: 0;
         }
         .main-image-wrap {
           position: relative;
@@ -1416,40 +1419,70 @@ export const ProductDetailPage: React.FC = () => {
           from { opacity: 0; transform: translateY(-4px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        @media (max-width: 640px) {
-          .accordion-header-btn {
-            padding: 0.95rem 0.85rem;
-          }
-          .accordion-title-text {
-            font-size: 0.82rem;
-          }
-          .accordion-body-panel {
-            padding: 1.25rem 0.85rem;
-          }
-          .accordion-status-pill {
-            display: none;
-          }
-          .purchase-controls-row {
-            flex-direction: column;
-          }
-          .quantity-box {
-            width: 100%;
-            justify-content: space-between;
-          }
-          .quantity-box .qty-change-btn {
-            flex: 1;
-          }
-          .quantity-box .qty-number {
-            flex: 1;
+        @media (max-width: 768px) {
+          .product-detail-page {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
           }
           .product-detail-grid {
-            gap: 1.5rem;
+            gap: 1.25rem !important;
+            width: 100% !important;
+            margin-bottom: 2rem !important;
+          }
+          .gallery-section, .info-section {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          .main-image-wrap {
+            padding: 1rem !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          .detail-trust-cards {
+            padding: 1rem 0.85rem !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
           }
           .detail-price-box {
-            padding: 1rem;
+            padding: 1rem 0.85rem !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
           }
           .detail-product-title {
-            font-size: 1.5rem;
+            font-size: 1.5rem !important;
+            word-break: break-word !important;
+          }
+          .purchase-controls-row {
+            flex-direction: column !important;
+            width: 100% !important;
+            gap: 0.65rem !important;
+          }
+          .product-main-cta, .purchase-controls-row .btn-secondary {
+            width: 100% !important;
+          }
+          .quantity-box {
+            width: 100% !important;
+            justify-content: space-between !important;
+          }
+          .quantity-box .qty-change-btn {
+            flex: 1 !important;
+          }
+          .quantity-box .qty-number {
+            flex: 1 !important;
+          }
+          .accordion-header-btn {
+            padding: 0.95rem 0.85rem !important;
+          }
+          .accordion-title-text {
+            font-size: 0.82rem !important;
+          }
+          .accordion-body-panel {
+            padding: 1.25rem 0.85rem !important;
+          }
+          .accordion-status-pill {
+            display: none !important;
           }
         }
         .accordion-body-panel h3 {
