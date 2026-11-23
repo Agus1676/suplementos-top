@@ -3,7 +3,7 @@ import { CreditCard, Truck, MapPin, MessageCircle, Percent, ShieldCheck } from '
 
 const TRUST_ITEMS = [
   { icon: CreditCard, title: '3 Y 6 CUOTAS SIN INTERÉS', desc: 'CON TODAS LAS TARJETAS' },
-  { icon: Truck, title: 'ENVÍOS A TODO EL PAÍS', desc: 'GRATIS DESDE $85.000' },
+  { icon: Truck, title: 'ENVÍOS A TODO EL PAÍS', desc: 'ENTREGA RÁPIDA Y SEGURA' },
   { icon: MapPin, title: 'RETIRO SIN CARGO EN RECOLETA', desc: 'GIMNASIO TOP SHAPE' },
   { icon: MessageCircle, title: 'ASESORAMIENTO DIRECTO', desc: 'CONSULTAS POR WHATSAPP' },
   { icon: Percent, title: '10% OFF', desc: 'POR TRANSFERENCIA O EFECTIVO' },

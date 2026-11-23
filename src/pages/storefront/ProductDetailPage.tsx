@@ -498,12 +498,8 @@ export const ProductDetailPage: React.FC = () => {
                       <p>Entrega en 24 a 48 hs hábiles</p>
                     </div>
                   </div>
-                  <span className="calc-res-price">
-                    {selectedVariant.priceInCents >= 8500000 ? (
-                      <span className="text-success font-bold">¡GRATIS!</span>
-                    ) : (
-                      formatARS(490000)
-                    )}
+                  <span className="calc-res-price font-bold">
+                    {formatARS(settings.flatShippingRateInCents || 490000)}
                   </span>
                 </div>
               </div>

@@ -629,9 +629,9 @@ export const CheckoutPage: React.FC = () => {
                       <div style={{ fontWeight: 800, marginBottom: '0.25rem', color: '#166534' }}>
                         💳 Datos para transferir tras confirmar:
                       </div>
-                      <div><strong>Alias:</strong> SUPLEMENTOS.TOP.MP</div>
-                      <div><strong>CBU/CVU:</strong> 0000003100012345678901</div>
-                      <div><strong>Titular:</strong> Suplementos Top</div>
+                      <div><strong>Alias:</strong> {settings.bankAlias || 'Suplementos.top'}</div>
+                      <div><strong>CVU:</strong> {settings.bankCvu || '0000076500000020117357'}</div>
+                      <div><strong>Titular:</strong> {settings.bankHolder || 'Camila Cettour'}</div>
                       <div style={{ marginTop: '0.3rem', fontSize: '0.72rem', color: '#15803D' }}>
                         * Al tocar Confirmar Pedido verás la pantalla con los botones para copiar los datos y enviar el comprobante directo por WhatsApp.
                       </div>

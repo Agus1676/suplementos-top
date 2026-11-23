@@ -146,4 +146,6 @@ export interface StoreSettings {
   flatShippingRateInCents: number;
   transferDiscountPercent?: number;
   bankAlias?: string;
+  bankCvu?: string;
+  bankHolder?: string;
 }

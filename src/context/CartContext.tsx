@@ -104,14 +104,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const totalItemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const subtotalInCents = items.reduce((acc, item) => acc + item.priceInCents * item.quantity, 0);
 
-  const isFreeShippingEligible = subtotalInCents >= STORE_SETTINGS.freeShippingThresholdInCents;
-  const centsRemainingForFreeShipping = Math.max(0, STORE_SETTINGS.freeShippingThresholdInCents - subtotalInCents);
-  const freeShippingProgress = Math.min(
-    100,
-    Math.round((subtotalInCents / STORE_SETTINGS.freeShippingThresholdInCents) * 100)
-  );
+  const isFreeShippingEligible = STORE_SETTINGS.freeShippingThresholdInCents > 0 && subtotalInCents >= STORE_SETTINGS.freeShippingThresholdInCents;
+  const centsRemainingForFreeShipping = 0;
+  const freeShippingProgress = 0;
 
-  const shippingFeeInCents = subtotalInCents === 0 ? 0 : isFreeShippingEligible ? 0 : STORE_SETTINGS.flatShippingRateInCents;
+  const shippingFeeInCents = subtotalInCents === 0 ? 0 : STORE_SETTINGS.flatShippingRateInCents;
   const totalInCents = subtotalInCents + shippingFeeInCents;
 
   return (

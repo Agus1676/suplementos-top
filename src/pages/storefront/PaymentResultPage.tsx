@@ -29,14 +29,18 @@ export const PaymentResultPage: React.FC = () => {
 
   const order = orders.find((o) => o.orderNumber === orderNumber) || orders[0];
 
+  const bankAlias = settings.bankAlias || 'Suplementos.top';
+  const bankCvu = settings.bankCvu || '0000076500000020117357';
+  const bankHolder = settings.bankHolder || 'Camila Cettour';
+
   const handleCopyAlias = () => {
-    navigator.clipboard.writeText('SUPLEMENTOS.TOP.MP');
+    navigator.clipboard.writeText(bankAlias);
     setCopiedAlias(true);
     setTimeout(() => setCopiedAlias(false), 2000);
   };
 
   const handleCopyCbu = () => {
-    navigator.clipboard.writeText('0000003100012345678901');
+    navigator.clipboard.writeText(bankCvu);
     setCopiedCbu(true);
     setTimeout(() => setCopiedCbu(false), 2000);
   };
@@ -72,7 +76,7 @@ export const PaymentResultPage: React.FC = () => {
   });
 
   const waTransferReceiptLink = `https://wa.me/5491165652990?text=${encodeURIComponent(
-    `Hola Suplementos Top! Realicé la transferencia para mi Pedido #${order.orderNumber} por ${formatARS(order.totalInCents)} a nombre de ${order.customerName} (DNI ${order.customerDni}). Adjunto comprobante:`
+    `Hola Suplementos Top! Realicé la transferencia para mi Pedido #${order.orderNumber} por ${formatARS(order.totalInCents)} a nombre de ${order.customerName} a la cuenta de ${bankHolder}. Adjunto comprobante:`
   )}`;
 
   const isApproved = mpStatus === 'approved';
@@ -154,23 +158,18 @@ export const PaymentResultPage: React.FC = () => {
             <div className="bank-data-grid">
               <div className="bank-data-row">
                 <span className="bank-data-label">Banco / Billetera:</span>
-                <strong className="bank-data-val">Mercado Pago / Banco Santander</strong>
+                <strong className="bank-data-val">Mercado Pago / Billetera Virtual</strong>
               </div>
 
               <div className="bank-data-row">
                 <span className="bank-data-label">Titular de la Cuenta:</span>
-                <strong className="bank-data-val">Suplementos Top</strong>
-              </div>
-
-              <div className="bank-data-row">
-                <span className="bank-data-label">CUIT / CUIL:</span>
-                <strong className="bank-data-val">20-44535622-9</strong>
+                <strong className="bank-data-val">{bankHolder}</strong>
               </div>
 
               <div className="bank-data-row highlight-row">
                 <div className="code-text-group">
                   <span className="bank-data-label">Alias:</span>
-                  <strong className="bank-data-code">SUPLEMENTOS.TOP.MP</strong>
+                  <strong className="bank-data-code">{bankAlias}</strong>
                 </div>
                 <button 
                   onClick={handleCopyAlias}
@@ -184,8 +183,8 @@ export const PaymentResultPage: React.FC = () => {
 
               <div className="bank-data-row highlight-row">
                 <div className="code-text-group">
-                  <span className="bank-data-label">CVU / CBU:</span>
-                  <strong className="bank-data-code">0000003100012345678901</strong>
+                  <span className="bank-data-label">CVU:</span>
+                  <strong className="bank-data-code">{bankCvu}</strong>
                 </div>
                 <button 
                   onClick={handleCopyCbu}

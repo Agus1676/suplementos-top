@@ -10,7 +10,7 @@ export const ShippingPolicyPage: React.FC = () => {
     <div className="container legal-page">
       <SEO
         title="Políticas de Envío y Retiro en Recoleta"
-        description="Envíos a todo el país y retiro sin cargo en Gimnasio Top Shape (Pres. José E. Uriburu 1163, Recoleta). Envíos gratis en compras superiores a $85.000."
+        description="Envíos a todo el país y retiro sin cargo en Gimnasio Top Shape (Pres. José E. Uriburu 1163, Recoleta)."
         canonicalUrl="/envios"
       />
       <h1 className="legal-title">Políticas de Envío y Retiro en Sucursal</h1>
@@ -45,7 +45,7 @@ export const ShippingPolicyPage: React.FC = () => {
           <ul>
             <li><strong>CABA y GBA:</strong> Entregas en 24 a 48 hs hábiles.</li>
             <li><strong>Interior del País:</strong> Plazo habitual de 3 a 5 días hábiles según la localidad.</li>
-            <li><strong>Envío Gratis:</strong> Todas las compras que superen los \$85.000 ARS cuentan con costo de envío 100% bonificado.</li>
+            <li><strong>Retiro Gratis:</strong> Todos los retiros presenciales en Uriburu 1163, Recoleta son 100% sin cargo.</li>
           </ul>
         </section>
 

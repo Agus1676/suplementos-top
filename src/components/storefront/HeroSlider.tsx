@@ -52,7 +52,7 @@ const SLIDES: Slide[] = [
     subtitle:
       'Doypacks de 2 lb y baldes de 3 kg con sello de fábrica. Llevá tu combo de proteína + creatina con descuento.',
     highlight1: 'Hasta 20% OFF en combos',
-    highlight2: 'Envío gratis desde $85.000',
+    highlight2: 'Envíos a todo el país',
     ctaText: 'Ver proteínas',
     ctaLink: '/catalogo?categoria=proteinas',
     products: [

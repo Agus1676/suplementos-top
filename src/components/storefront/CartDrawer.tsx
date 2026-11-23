@@ -15,9 +15,6 @@ export const CartDrawer: React.FC = () => {
     removeItem,
     subtotalInCents,
     totalItemsCount,
-    isFreeShippingEligible,
-    freeShippingProgress,
-    centsRemainingForFreeShipping,
   } = useCart();
   const { products } = useStore();
 
@@ -48,23 +45,13 @@ export const CartDrawer: React.FC = () => {
           </button>
         </div>
 
-        {/* Free Shipping Progress Indicator */}
+        {/* Shipping & Pickup Highlight */}
         <div className="free-shipping-bar-wrap">
           <div className="free-shipping-text">
-            <Truck size={16} className={isFreeShippingEligible ? 'text-success' : 'text-primary'} />
-            {isFreeShippingEligible ? (
-              <span className="text-success font-bold">Tenés envío gratis a todo el país</span>
-            ) : (
-              <span>
-                Agregá <strong>{formatARS(centsRemainingForFreeShipping)}</strong> para tener <strong>Envío Gratis</strong>
-              </span>
-            )}
-          </div>
-          <div className="progress-track">
-            <div 
-              className={`progress-fill ${isFreeShippingEligible ? 'bg-success' : 'bg-primary'}`}
-              style={{ width: `${freeShippingProgress}%` }}
-            />
+            <Truck size={16} className="text-primary" />
+            <span>
+              <strong>Envíos a todo el país</strong> · Retiro sin cargo en Recoleta
+            </span>
           </div>
         </div>
 
@@ -179,11 +166,7 @@ export const CartDrawer: React.FC = () => {
             <div className="summary-line text-xs">
               <span className="text-muted">ENVÍO:</span>
               <span>
-                {isFreeShippingEligible ? (
-                  <strong className="text-success font-bold">¡GRATIS!</strong>
-                ) : (
-                  <span>A calcular en checkout (o retiro en Uriburu 1163)</span>
-                )}
+                <span>A calcular en checkout (o retiro sin cargo en Recoleta)</span>
               </span>
             </div>
 

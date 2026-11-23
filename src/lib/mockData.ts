@@ -9,8 +9,11 @@ export const STORE_SETTINGS: StoreSettings = {
   hoursDescription: 'Lunes a Viernes de 8:00 a 23:00 hs | Sábados de 10:00 a 18:00 hs',
   pickupAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape), entre Av. Santa Fe y Arenales, Recoleta, CABA',
   dispatchAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape), Recoleta, CABA',
-  freeShippingThresholdInCents: 8500000, // Envío gratis a partir de $85.000
+  freeShippingThresholdInCents: 0, // Envíos a todo el país (retiro sin cargo en Recoleta)
   flatShippingRateInCents: 490000,       // Tarifa fija de envío $4.900
+  bankAlias: 'Suplementos.top',
+  bankCvu: '0000076500000020117357',
+  bankHolder: 'Camila Cettour',
 };
 
 export const CATEGORIES: Category[] = [
@@ -624,7 +627,7 @@ export const INITIAL_ORDERS: Order[] = [
       },
     ],
     subtotalInCents: 8880000,
-    shippingFeeInCents: 0, // Envío gratis por superar $85.000
+    shippingFeeInCents: 0, // Envío bonificado
     discountInCents: 0,
     totalInCents: 8880000,
     paymentStatus: 'approved',

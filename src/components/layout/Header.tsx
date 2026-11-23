@@ -66,7 +66,7 @@ export const Header: React.FC = () => {
       {/* Top Promo Strip */}
       <div className="pv-topbar">
         <div className="container pv-topbar-inner">
-          <span>10% OFF por transferencia · 6 cuotas sin interés · Envío gratis desde $85.000</span>
+          <span>10% OFF por transferencia · 6 cuotas sin interés · Envíos a todo el país</span>
           <div className="pv-topbar-links">
             <span>Retiro sin cargo: Gimnasio Top Shape (Pres. José E. Uriburu 1163)</span>
             <span className="pv-topbar-sep">|</span>

@@ -261,14 +261,36 @@ export const AdminSettings: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Alias o CBU para Transferencias</label>
+              <label className="form-label">Alias para Transferencias</label>
               <input
                 type="text"
                 className="form-input"
-                value={formData.bankAlias || 'SUPLEMENTOS.TOP.MP'}
+                value={formData.bankAlias || 'Suplementos.top'}
                 onChange={(e) => setFormData({ ...formData, bankAlias: e.target.value })}
               />
-              <span className="field-hint">Mostrado en el checkout cuando el cliente elige abonar por transferencia.</span>
+              <span className="field-hint">Alias de la cuenta para recibir transferencias</span>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">CVU / CBU para Transferencias</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.bankCvu || '0000076500000020117357'}
+                onChange={(e) => setFormData({ ...formData, bankCvu: e.target.value })}
+              />
+              <span className="field-hint">CVU / CBU de 22 dígitos</span>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Titular de la Cuenta</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.bankHolder || 'Camila Cettour'}
+                onChange={(e) => setFormData({ ...formData, bankHolder: e.target.value })}
+              />
+              <span className="field-hint">Nombre que verá el cliente al transferir</span>
             </div>
           </div>
         </div>
