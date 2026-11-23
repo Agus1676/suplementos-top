@@ -13,7 +13,11 @@ import {
   ArrowLeft,
   Award,
   Zap,
-  Clock
+  Clock,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  BarChart2
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { useCart } from '../../context/CartContext';
@@ -46,7 +50,19 @@ export const ProductDetailPage: React.FC = () => {
   );
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.url);
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState<'desc' | 'nutrition' | 'usage' | 'guarantee'>('desc');
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    desc: true,
+    nutrition: true,
+    usage: true,
+    guarantee: true,
+  });
+
+  const toggleSection = (key: string) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
   
   // Shipping calculator state
   const [postalCode, setPostalCode] = useState('');
@@ -512,38 +528,30 @@ export const ProductDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Multi-Tab Detailed Technical Information Section */}
-      <section className="product-tabs-section">
-        <div className="tabs-header-nav">
+      {/* Multi-Section Accordion / Desplegables Verticales */}
+      <section className="product-accordion-section">
+        {/* Accordion Item 1: Descripción & Beneficios */}
+        <div className={`accordion-card ${openSections.desc ? 'expanded' : ''}`}>
           <button 
-            onClick={() => setActiveTab('desc')}
-            className={`tab-nav-btn ${activeTab === 'desc' ? 'active' : ''}`}
+            type="button"
+            onClick={() => toggleSection('desc')}
+            className="accordion-header-btn"
+            aria-expanded={openSections.desc}
           >
-            DESCRIPCIÓN & BENEFICIOS
+            <div className="accordion-title-group">
+              <span className="accordion-icon-box bg-rose">
+                <FileText size={18} className="text-accent" />
+              </span>
+              <span className="accordion-title-text">DESCRIPCIÓN & BENEFICIOS DE LA FÓRMULA</span>
+            </div>
+            <div className="accordion-right-toggle">
+              <span className="accordion-status-pill">{openSections.desc ? 'Ocultar' : 'Ver detalle'}</span>
+              {openSections.desc ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </div>
           </button>
-          <button 
-            onClick={() => setActiveTab('nutrition')}
-            className={`tab-nav-btn ${activeTab === 'nutrition' ? 'active' : ''}`}
-          >
-            TABLA NUTRICIONAL OFICIAL
-          </button>
-          <button 
-            onClick={() => setActiveTab('usage')}
-            className={`tab-nav-btn ${activeTab === 'usage' ? 'active' : ''}`}
-          >
-            MODO DE USO & DOSIFICACIÓN
-          </button>
-          <button 
-            onClick={() => setActiveTab('guarantee')}
-            className={`tab-nav-btn ${activeTab === 'guarantee' ? 'active' : ''}`}
-          >
-            ORIGEN & GARANTÍA OFICIAL
-          </button>
-        </div>
 
-        <div className="tab-content-panel">
-          {activeTab === 'desc' && (
-            <div className="tab-pane-desc">
+          {openSections.desc && (
+            <div className="accordion-body-panel">
               <h3>FÓRMULA Y CARACTERÍSTICAS PRINCIPALES</h3>
               <p className="tab-body-text">{product.description}</p>
               
@@ -569,9 +577,30 @@ export const ProductDetailPage: React.FC = () => {
               )}
             </div>
           )}
+        </div>
 
-          {activeTab === 'nutrition' && (
-            <div className="tab-pane-nutrition">
+        {/* Accordion Item 2: Tabla Nutricional Oficial */}
+        <div className={`accordion-card ${openSections.nutrition ? 'expanded' : ''}`}>
+          <button 
+            type="button"
+            onClick={() => toggleSection('nutrition')}
+            className="accordion-header-btn"
+            aria-expanded={openSections.nutrition}
+          >
+            <div className="accordion-title-group">
+              <span className="accordion-icon-box bg-blue">
+                <BarChart2 size={18} className="text-blue-600" />
+              </span>
+              <span className="accordion-title-text">TABLA NUTRICIONAL OFICIAL CERTIFICADA</span>
+            </div>
+            <div className="accordion-right-toggle">
+              <span className="accordion-status-pill">{openSections.nutrition ? 'Ocultar' : 'Ver tabla'}</span>
+              {openSections.nutrition ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </div>
+          </button>
+
+          {openSections.nutrition && (
+            <div className="accordion-body-panel">
               <h3>INFORMACIÓN NUTRICIONAL CERTIFICADA</h3>
               <p className="text-muted text-xs mb-3">
                 Valores calculados por porción de referencia. Los porcentajes de valores diarios (%VD) están basados en una dieta de 2.000 kcal.
@@ -599,9 +628,30 @@ export const ProductDetailPage: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
 
-          {activeTab === 'usage' && (
-            <div className="tab-pane-usage">
+        {/* Accordion Item 3: Modo de Uso & Dosificación */}
+        <div className={`accordion-card ${openSections.usage ? 'expanded' : ''}`}>
+          <button 
+            type="button"
+            onClick={() => toggleSection('usage')}
+            className="accordion-header-btn"
+            aria-expanded={openSections.usage}
+          >
+            <div className="accordion-title-group">
+              <span className="accordion-icon-box bg-amber">
+                <Zap size={18} className="text-amber-500" />
+              </span>
+              <span className="accordion-title-text">MODO DE PREPARACIÓN & DOSIFICACIÓN</span>
+            </div>
+            <div className="accordion-right-toggle">
+              <span className="accordion-status-pill">{openSections.usage ? 'Ocultar' : 'Ver guía'}</span>
+              {openSections.usage ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </div>
+          </button>
+
+          {openSections.usage && (
+            <div className="accordion-body-panel">
               <h3>MODO DE PREPARACIÓN Y DOSIFICACIÓN RECOMENDADA</h3>
               <div className="usage-steps-grid">
                 <div className="usage-step-card">
@@ -622,9 +672,30 @@ export const ProductDetailPage: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
 
-          {activeTab === 'guarantee' && (
-            <div className="tab-pane-guarantee">
+        {/* Accordion Item 4: Origen & Garantía */}
+        <div className={`accordion-card ${openSections.guarantee ? 'expanded' : ''}`}>
+          <button 
+            type="button"
+            onClick={() => toggleSection('guarantee')}
+            className="accordion-header-btn"
+            aria-expanded={openSections.guarantee}
+          >
+            <div className="accordion-title-group">
+              <span className="accordion-icon-box bg-emerald">
+                <Award size={18} className="text-emerald-600" />
+              </span>
+              <span className="accordion-title-text">COMPROMISO DE CALIDAD & RETIRO EN RECOLETA</span>
+            </div>
+            <div className="accordion-right-toggle">
+              <span className="accordion-status-pill">{openSections.guarantee ? 'Ocultar' : 'Ver garantías'}</span>
+              {openSections.guarantee ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </div>
+          </button>
+
+          {openSections.guarantee && (
+            <div className="accordion-body-panel">
               <h3>COMPROMISO DE CALIDAD Y RETIRO OFICIAL</h3>
               <div className="guarantee-features-grid">
                 <div className="guarantee-feature-item">
@@ -839,6 +910,10 @@ export const ProductDetailPage: React.FC = () => {
         .product-detail-page {
           padding-top: 2rem;
           padding-bottom: 5rem;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow-x: hidden;
         }
         .detail-breadcrumb {
           display: flex;
@@ -847,6 +922,10 @@ export const ProductDetailPage: React.FC = () => {
           font-size: 0.82rem;
           color: var(--color-text-muted);
           margin-bottom: 2rem;
+          flex-wrap: wrap;
+          width: 100%;
+          box-sizing: border-box;
+        }
           flex-wrap: wrap;
         }
         .detail-breadcrumb a {
@@ -1238,48 +1317,121 @@ export const ProductDetailPage: React.FC = () => {
           text-decoration: underline;
         }
 
-        /* Technical Tabs Section */
-        .product-tabs-section {
-          border: 1px solid var(--color-border);
+        /* Technical Accordion Section (Vertical Desplegables) */
+        .product-accordion-section {
+          display: flex;
+          flex-direction: column;
+          gap: 0.85rem;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          margin-top: 1.5rem;
+        }
+        .accordion-card {
+          background: #FFFFFF;
+          border: 1.5px solid var(--color-border);
           border-radius: var(--radius-sm);
           overflow: hidden;
-          background: #FFFFFF;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+          width: 100%;
+          box-sizing: border-box;
         }
-        .tabs-header-nav {
+        .accordion-card.expanded {
+          border-color: #94A3B8;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+        }
+        .accordion-header-btn {
+          width: 100%;
+          padding: 1.1rem 1.25rem;
+          background: #F8FAFC;
           display: flex;
-          background: var(--color-bg-secondary);
-          border-bottom: 1px solid var(--color-border);
-          overflow-x: auto;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.85rem;
+          cursor: pointer;
+          border: none;
+          text-align: left;
+          transition: background-color 0.15s ease;
+          box-sizing: border-box;
         }
-        .tab-nav-btn {
-          padding: 1rem 1.5rem;
-          font-family: var(--font-body);
-          font-size: 0.82rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          color: var(--color-text-muted);
-          border-bottom: 2px solid transparent;
-          white-space: nowrap;
-          transition: all 0.15s ease;
+        .accordion-header-btn:hover {
+          background: #F1F5F9;
         }
-        .tab-nav-btn:hover {
-          color: var(--color-text-main);
-        }
-        .tab-nav-btn.active {
-          color: var(--color-accent);
-          border-bottom-color: var(--color-accent);
+        .accordion-card.expanded .accordion-header-btn {
           background: #FFFFFF;
+          border-bottom: 1px solid var(--color-border);
         }
-        .tab-content-panel {
-          padding: 2.5rem;
+        .accordion-title-group {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          min-width: 0;
+          flex: 1;
+        }
+        .accordion-icon-box {
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .bg-rose { background: #FFE4E6; }
+        .bg-blue { background: #EFF6FF; }
+        .bg-amber { background: #FEF3C7; }
+        .bg-emerald { background: #DCFCE7; }
+
+        .accordion-title-text {
+          font-family: var(--font-display);
+          font-size: 0.92rem;
+          font-weight: 800;
+          color: #0F172A;
+          letter-spacing: -0.01em;
+          line-height: 1.3;
+        }
+        .accordion-right-toggle {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: #64748B;
+          flex-shrink: 0;
+        }
+        .accordion-status-pill {
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #475569;
+          background: #E2E8F0;
+          padding: 0.2rem 0.55rem;
+          border-radius: 999px;
+        }
+        .accordion-card.expanded .accordion-status-pill {
+          background: #F1F5F9;
+          color: #0F172A;
+        }
+        .accordion-body-panel {
+          padding: 1.75rem 1.5rem;
+          background: #FFFFFF;
+          width: 100%;
+          box-sizing: border-box;
+          animation: accordionFade 0.2s ease-out;
+        }
+        @keyframes accordionFade {
+          from { opacity: 0; transform: translateY(-4px); }
+          to { opacity: 1; transform: translateY(0); }
         }
         @media (max-width: 640px) {
-          .tab-content-panel {
-            padding: 1.25rem 1rem;
+          .accordion-header-btn {
+            padding: 0.95rem 0.85rem;
           }
-          .tab-nav-btn {
-            padding: 0.75rem 1rem;
-            font-size: 0.74rem;
+          .accordion-title-text {
+            font-size: 0.82rem;
+          }
+          .accordion-body-panel {
+            padding: 1.25rem 0.85rem;
+          }
+          .accordion-status-pill {
+            display: none;
           }
           .purchase-controls-row {
             flex-direction: column;
@@ -1301,13 +1453,14 @@ export const ProductDetailPage: React.FC = () => {
             padding: 1rem;
           }
           .detail-product-title {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
           }
         }
-        .tab-content-panel h3 {
-          font-size: 1.25rem;
+        .accordion-body-panel h3 {
+          font-size: 1.15rem;
           font-weight: 900;
-          margin-bottom: 1rem;
+          margin-bottom: 0.85rem;
+          color: #0F172A;
         }
         .tab-body-text {
           font-size: 0.92rem;
@@ -1349,9 +1502,15 @@ export const ProductDetailPage: React.FC = () => {
         /* Nutrition Table */
         .nutrition-table-wrapper {
           overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          width: 100%;
+          max-width: 100%;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-xs);
         }
         .nutrition-table {
           width: 100%;
+          min-width: 440px;
           border-collapse: collapse;
           font-size: 0.85rem;
         }

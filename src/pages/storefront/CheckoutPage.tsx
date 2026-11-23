@@ -614,6 +614,29 @@ export const CheckoutPage: React.FC = () => {
                       <span style={{ fontSize: '0.74rem', color: '#15803D' }}>Ahorrás {formatARS(Math.round(subtotalInCents * 0.10))} en tu compra</span>
                     </div>
                   </label>
+
+                  {paymentChoice === 'transfer' && (
+                    <div style={{
+                      marginTop: '0.35rem',
+                      padding: '0.75rem',
+                      background: '#F0FDF4',
+                      border: '1px dashed #22C55E',
+                      borderRadius: '6px',
+                      fontSize: '0.78rem',
+                      color: '#14532D',
+                      lineHeight: '1.4'
+                    }}>
+                      <div style={{ fontWeight: 800, marginBottom: '0.25rem', color: '#166534' }}>
+                        💳 Datos para transferir tras confirmar:
+                      </div>
+                      <div><strong>Alias:</strong> SUPLEMENTOS.TOP.MP</div>
+                      <div><strong>CBU/CVU:</strong> 0000003100012345678901</div>
+                      <div><strong>Titular:</strong> Suplementos Top</div>
+                      <div style={{ marginTop: '0.3rem', fontSize: '0.72rem', color: '#15803D' }}>
+                        * Al tocar Confirmar Pedido verás la pantalla con los botones para copiar los datos y enviar el comprobante directo por WhatsApp.
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <button
@@ -646,61 +669,86 @@ export const CheckoutPage: React.FC = () => {
         .checkout-bg {
           background-color: #F8F9FA;
           min-height: 100vh;
+          width: 100%;
+          overflow-x: hidden;
         }
         .checkout-page {
           padding-top: 2rem;
           padding-bottom: 5rem;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
         .checkout-top-bar {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 1.5rem;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          width: 100%;
+          box-sizing: border-box;
         }
         .back-link {
-          display: flex;
+          display: inline-flex;
           align-items: center;
           gap: 0.4rem;
-          font-size: 0.9rem;
-          font-weight: 600;
+          font-size: 0.88rem;
+          font-weight: 700;
           color: #374151;
         }
         .back-link:hover {
           color: #111827;
         }
         .secure-badge {
-          display: flex;
+          display: inline-flex;
           align-items: center;
           gap: 0.4rem;
-          font-size: 0.8rem;
-          font-weight: 600;
+          font-size: 0.78rem;
+          font-weight: 700;
           color: #059669;
+          background: #ECFDF5;
+          padding: 0.3rem 0.65rem;
+          border-radius: 999px;
+          border: 1px solid #A7F3D0;
         }
         .checkout-main-title {
           font-size: 2.2rem;
           font-weight: 900;
           margin-bottom: 2rem;
           color: #111827;
+          word-break: break-word;
         }
         .checkout-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 2rem;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
         @media (min-width: 992px) {
           .checkout-grid {
             grid-template-columns: 1.35fr 1fr;
           }
         }
-        .checkout-form-column {
+        .checkout-form-column, .checkout-summary-column {
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          min-width: 0;
         }
         .checkout-card {
           padding: 1.75rem;
           background: #FFFFFF;
           border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
         @media (max-width: 600px) {
           .checkout-card {

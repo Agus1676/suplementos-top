@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { 
   CheckCircle2, 
@@ -8,7 +8,10 @@ import {
   Send,
   Clock,
   AlertCircle,
-  RotateCcw
+  RotateCcw,
+  Copy,
+  Check,
+  Building2
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatARS, buildWhatsAppDispatchLink, formatDate } from '../../lib/utils';
@@ -16,6 +19,8 @@ import { formatARS, buildWhatsAppDispatchLink, formatDate } from '../../lib/util
 export const PaymentResultPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { orders, settings } = useStore();
+  const [copiedAlias, setCopiedAlias] = useState(false);
+  const [copiedCbu, setCopiedCbu] = useState(false);
   
   // Read params from internal router or Mercado Pago return redirect
   const orderNumber = searchParams.get('orden') || searchParams.get('external_reference');
@@ -23,6 +28,18 @@ export const PaymentResultPage: React.FC = () => {
   const mpPaymentId = searchParams.get('payment_id') || searchParams.get('collection_id');
 
   const order = orders.find((o) => o.orderNumber === orderNumber) || orders[0];
+
+  const handleCopyAlias = () => {
+    navigator.clipboard.writeText('SUPLEMENTOS.TOP.MP');
+    setCopiedAlias(true);
+    setTimeout(() => setCopiedAlias(false), 2000);
+  };
+
+  const handleCopyCbu = () => {
+    navigator.clipboard.writeText('0000003100012345678901');
+    setCopiedCbu(true);
+    setTimeout(() => setCopiedCbu(false), 2000);
+  };
 
   if (!order) {
     return (
@@ -54,9 +71,14 @@ export const PaymentResultPage: React.FC = () => {
     paymentStatus: mpStatus === 'approved' ? 'approved' : mpStatus,
   });
 
+  const waTransferReceiptLink = `https://wa.me/5491165652990?text=${encodeURIComponent(
+    `Hola Suplementos Top! Realicé la transferencia para mi Pedido #${order.orderNumber} por ${formatARS(order.totalInCents)} a nombre de ${order.customerName} (DNI ${order.customerDni}). Adjunto comprobante:`
+  )}`;
+
   const isApproved = mpStatus === 'approved';
   const isPending = mpStatus === 'pending' || mpStatus === 'in_process';
   const isRejected = mpStatus === 'rejected' || mpStatus === 'failure';
+  const isTransfer = isPending || order.paymentMethod?.toLowerCase().includes('transferencia') || order.paymentStatus === 'pending';
 
   return (
     <div className="container payment-result-page">
@@ -115,8 +137,91 @@ export const PaymentResultPage: React.FC = () => {
           )}
         </div>
 
-        {/* Priority Dispatch Notification Alert for Owner */}
-        {!isRejected && (
+        {/* Bank Transfer Details Section */}
+        {isTransfer && !isRejected && (
+          <div className="bank-transfer-card">
+            <div className="bank-card-header">
+              <div className="bank-header-badge">
+                <Building2 size={16} />
+                <span>DATOS BANCARIOS OFICIALES (10% OFF APLICADO)</span>
+              </div>
+              <h3 className="bank-card-title">Realizá la transferencia por {formatARS(order.totalInCents)}</h3>
+              <p className="bank-card-sub">
+                Transferí desde cualquier app bancaria o billetera virtual (Mercado Pago, Santander, Galicia, BBVA, Modo, etc.) y enviá el comprobante por WhatsApp:
+              </p>
+            </div>
+
+            <div className="bank-data-grid">
+              <div className="bank-data-row">
+                <span className="bank-data-label">Banco / Billetera:</span>
+                <strong className="bank-data-val">Mercado Pago / Banco Santander</strong>
+              </div>
+
+              <div className="bank-data-row">
+                <span className="bank-data-label">Titular de la Cuenta:</span>
+                <strong className="bank-data-val">Suplementos Top</strong>
+              </div>
+
+              <div className="bank-data-row">
+                <span className="bank-data-label">CUIT / CUIL:</span>
+                <strong className="bank-data-val">20-44535622-9</strong>
+              </div>
+
+              <div className="bank-data-row highlight-row">
+                <div className="code-text-group">
+                  <span className="bank-data-label">Alias:</span>
+                  <strong className="bank-data-code">SUPLEMENTOS.TOP.MP</strong>
+                </div>
+                <button 
+                  onClick={handleCopyAlias}
+                  className={`copy-data-btn ${copiedAlias ? 'copied' : ''}`}
+                  type="button"
+                >
+                  {copiedAlias ? <Check size={14} /> : <Copy size={14} />}
+                  <span>{copiedAlias ? '¡Copiado!' : 'Copiar Alias'}</span>
+                </button>
+              </div>
+
+              <div className="bank-data-row highlight-row">
+                <div className="code-text-group">
+                  <span className="bank-data-label">CVU / CBU:</span>
+                  <strong className="bank-data-code">0000003100012345678901</strong>
+                </div>
+                <button 
+                  onClick={handleCopyCbu}
+                  className={`copy-data-btn ${copiedCbu ? 'copied' : ''}`}
+                  type="button"
+                >
+                  {copiedCbu ? <Check size={14} /> : <Copy size={14} />}
+                  <span>{copiedCbu ? '¡Copiado!' : 'Copiar CVU'}</span>
+                </button>
+              </div>
+
+              <div className="bank-data-row total-transfer-row">
+                <span className="bank-data-label">Monto Exacto a Transferir:</span>
+                <strong className="bank-total-val">{formatARS(order.totalInCents)}</strong>
+              </div>
+            </div>
+
+            <div className="receipt-cta-wrap">
+              <a
+                href={waTransferReceiptLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary btn-lg wa-receipt-btn"
+              >
+                <Phone size={18} />
+                <span>ENVIAR COMPROBANTE POR WHATSAPP (11 6565-2990)</span>
+              </a>
+              <span className="receipt-cta-hint">
+                Al enviar el comprobante con tu número de pedido #{order.orderNumber}, se acredita en minutos y preparamos tu paquete.
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Priority Dispatch Notification Alert for Owner (si no es transferencia o ya pagó) */}
+        {!isRejected && !isTransfer && (
           <div className="dispatch-alert-banner">
             <div className="alert-badge">
               <Send size={15} />
@@ -198,7 +303,7 @@ export const PaymentResultPage: React.FC = () => {
               </span>
             </div>
             <div className="total-line grand-total">
-              <span>Total Abonado (Mercado Pago):</span>
+              <span>{isTransfer ? 'Total con Descuento 10% (Transferencia):' : 'Total Abonado (Mercado Pago):'}</span>
               <span>{formatARS(order.totalInCents)}</span>
             </div>
           </div>
@@ -217,15 +322,28 @@ export const PaymentResultPage: React.FC = () => {
 
       <style>{`
         .payment-result-page {
-          padding-top: 2.5rem;
+          padding-top: 2rem;
           padding-bottom: 5rem;
           max-width: 760px;
+          width: 100%;
+          box-sizing: border-box;
+          overflow-x: hidden;
         }
         .result-card {
-          padding: 2.5rem;
+          padding: 2.25rem 2rem;
           background: #FFFFFF;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-md);
+          width: 100%;
+          box-sizing: border-box;
+        }
+        @media (max-width: 600px) {
+          .result-card {
+            padding: 1.25rem 1rem;
+          }
+          .result-title {
+            font-size: 1.4rem !important;
+          }
         }
         .result-header {
           text-align: center;
@@ -274,6 +392,7 @@ export const PaymentResultPage: React.FC = () => {
           color: var(--color-text-main);
           margin: 0;
           letter-spacing: -0.01em;
+          word-break: break-word;
         }
         .order-num-text {
           font-size: 0.9rem;
@@ -291,6 +410,157 @@ export const PaymentResultPage: React.FC = () => {
           max-width: 500px;
           line-height: 1.45;
         }
+
+        /* Bank Transfer Card */
+        .bank-transfer-card {
+          background: #F0FDF4;
+          border: 2px solid #22C55E;
+          border-radius: var(--radius-md);
+          padding: 1.5rem;
+          margin-bottom: 2rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+          box-shadow: 0 4px 15px rgba(34, 197, 94, 0.08);
+        }
+        .bank-card-header {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+        .bank-header-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.72rem;
+          font-weight: 800;
+          color: #166534;
+          background: #DCFCE7;
+          padding: 0.25rem 0.6rem;
+          border-radius: 999px;
+          width: fit-content;
+          letter-spacing: 0.05em;
+        }
+        .bank-card-title {
+          font-size: 1.35rem;
+          font-weight: 900;
+          color: #14532D;
+          margin: 0;
+        }
+        .bank-card-sub {
+          font-size: 0.85rem;
+          color: #166534;
+          margin: 0;
+          line-height: 1.45;
+        }
+        .bank-data-grid {
+          background: #FFFFFF;
+          border: 1px solid #BBF7D0;
+          border-radius: var(--radius-sm);
+          padding: 1rem 1.25rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+        .bank-data-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 0.5rem;
+          border-bottom: 1px solid #F0FDF4;
+          font-size: 0.85rem;
+          flex-wrap: wrap;
+          gap: 0.4rem;
+        }
+        .bank-data-row:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+        .bank-data-label {
+          color: #475569;
+          font-weight: 600;
+          font-size: 0.82rem;
+        }
+        .bank-data-val {
+          color: #0F172A;
+          font-weight: 700;
+        }
+        .code-text-group {
+          display: flex;
+          flex-direction: column;
+        }
+        .bank-data-code {
+          font-family: monospace;
+          font-size: 0.95rem;
+          font-weight: 800;
+          color: #0F172A;
+          letter-spacing: 0.03em;
+        }
+        .copy-data-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          padding: 0.4rem 0.75rem;
+          background: #F1F5F9;
+          border: 1px solid #CBD5E1;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          color: #334155;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .copy-data-btn:hover {
+          background: #E2E8F0;
+          color: #0F172A;
+        }
+        .copy-data-btn.copied {
+          background: #DCFCE7;
+          border-color: #86EFAC;
+          color: #166534;
+        }
+        .total-transfer-row {
+          background: #F8FAFC;
+          padding: 0.75rem;
+          border-radius: 6px;
+          border: 1px dashed #CBD5E1;
+          margin-top: 0.25rem;
+        }
+        .bank-total-val {
+          font-size: 1.25rem;
+          font-weight: 900;
+          color: #166534;
+        }
+        .receipt-cta-wrap {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .wa-receipt-btn {
+          background: #25D366 !important;
+          border-color: #25D366 !important;
+          color: #FFFFFF !important;
+          font-weight: 800 !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 0.5rem !important;
+          padding: 0.9rem 1.25rem !important;
+          font-size: 0.95rem !important;
+          border-radius: var(--radius-sm) !important;
+          box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        .wa-receipt-btn:hover {
+          background: #1EBE5D !important;
+          border-color: #1EBE5D !important;
+        }
+        .receipt-cta-hint {
+          font-size: 0.78rem;
+          color: #15803D;
+          text-align: center;
+          line-height: 1.35;
+        }
+
         .dispatch-alert-banner {
           background: #FFF1F2;
           border: 1px solid #FECDD3;
@@ -419,6 +689,7 @@ export const PaymentResultPage: React.FC = () => {
           gap: 1rem;
           justify-content: center;
           margin-top: 2rem;
+          flex-wrap: wrap;
         }
       `}</style>
     </div>
