@@ -494,12 +494,64 @@ export const ProductDetailPage: React.FC = () => {
                   <div className="calc-res-info">
                     <Truck size={16} className="text-accent" />
                     <div>
-                      <strong>Envío Express a Domicilio</strong>
-                      <p>Entrega en 24 a 48 hs hábiles</p>
+                      <strong>CABA (Capital Federal)</strong>
+                      <p>Entrega en el día / 24 hs</p>
                     </div>
                   </div>
                   <span className="calc-res-price font-bold">
-                    {formatARS(settings.flatShippingRateInCents || 490000)}
+                    {formatARS(settings.shippingRates?.cabaInCents || 500000)}
+                  </span>
+                </div>
+
+                <div className="calc-result-row">
+                  <div className="calc-res-info">
+                    <Truck size={16} className="text-accent" />
+                    <div>
+                      <strong>GBA 1 (Primer Cordón)</strong>
+                      <p>Vte. López, San Isidro, Morón, Lanús, Avellaneda...</p>
+                    </div>
+                  </div>
+                  <span className="calc-res-price font-bold">
+                    {formatARS(settings.shippingRates?.gba1InCents || 670000)}
+                  </span>
+                </div>
+
+                <div className="calc-result-row">
+                  <div className="calc-res-info">
+                    <Truck size={16} className="text-accent" />
+                    <div>
+                      <strong>GBA 2 (Segundo Cordón)</strong>
+                      <p>Tigre, Quilmes, San Miguel, Moreno, Ezeiza...</p>
+                    </div>
+                  </div>
+                  <span className="calc-res-price font-bold">
+                    {formatARS(settings.shippingRates?.gba2InCents || 870000)}
+                  </span>
+                </div>
+
+                <div className="calc-result-row">
+                  <div className="calc-res-info">
+                    <Truck size={16} className="text-accent" />
+                    <div>
+                      <strong>GBA 3 / La Plata (Tercer Cordón)</strong>
+                      <p>Escobar, Pilar, La Plata, Berisso, Ensenada...</p>
+                    </div>
+                  </div>
+                  <span className="calc-res-price font-bold">
+                    {formatARS(settings.shippingRates?.gba3InCents || 970000)}
+                  </span>
+                </div>
+
+                <div className="calc-result-row">
+                  <div className="calc-res-info">
+                    <Truck size={16} className="text-accent" />
+                    <div>
+                      <strong>Resto del País (Interior de Argentina)</strong>
+                      <p>Correo Express con seguimiento</p>
+                    </div>
+                  </div>
+                  <span className="calc-res-price font-bold">
+                    {formatARS(settings.shippingRates?.interiorInCents || 990000)}
                   </span>
                 </div>
               </div>

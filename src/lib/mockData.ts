@@ -10,11 +10,70 @@ export const STORE_SETTINGS: StoreSettings = {
   pickupAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape), entre Av. Santa Fe y Arenales, Recoleta, CABA',
   dispatchAddress: 'Pres. José E. Uriburu 1163 (Gimnasio Top Shape), Recoleta, CABA',
   freeShippingThresholdInCents: 0, // Envíos a todo el país (retiro sin cargo en Recoleta)
-  flatShippingRateInCents: 490000,       // Tarifa fija de envío $4.900
+  flatShippingRateInCents: 500000,       // Tarifa base CABA $5.000
+  shippingRates: {
+    cabaInCents: 500000,      // $5.000 ($4.000 base + $1.000)
+    gba1InCents: 670000,      // $6.700 ($5.700 base + $1.000)
+    gba2InCents: 870000,      // $8.700 ($7.700 base + $1.000)
+    gba3InCents: 970000,      // $9.700 ($8.700 base + $1.000)
+    interiorInCents: 990000,  // $9.900 Interior / Resto del país
+  },
   bankAlias: 'Suplementos.top',
   bankCvu: '0000076500000020117357',
   bankHolder: 'Camila Cettour',
 };
+
+export interface ShippingZoneOption {
+  id: 'caba' | 'gba1' | 'gba2' | 'gba3' | 'interior';
+  name: string;
+  tag: string;
+  defaultPriceInCents: number;
+  deliveryTime: string;
+  partidos: string;
+}
+
+export const SHIPPING_ZONES_CONFIG: ShippingZoneOption[] = [
+  {
+    id: 'caba',
+    name: 'CABA (Capital Federal)',
+    tag: 'CAPITAL',
+    defaultPriceInCents: 500000,
+    deliveryTime: 'Entrega Express en 24 hs',
+    partidos: 'Todos los barrios de Ciudad Autónoma de Buenos Aires',
+  },
+  {
+    id: 'gba1',
+    name: 'GBA 1 (Primer Cordón)',
+    tag: 'GBA 1',
+    defaultPriceInCents: 670000,
+    deliveryTime: 'Entrega Express en 24 a 48 hs',
+    partidos: 'Vicente López, San Isidro, San Fernando, San Martín, 3 de Febrero, Hurlingham, Morón, Ituzaingó, Lanús, Avellaneda, Lomas de Zamora, La Matanza Norte',
+  },
+  {
+    id: 'gba2',
+    name: 'GBA 2 (Segundo Cordón)',
+    tag: 'GBA 2',
+    defaultPriceInCents: 870000,
+    deliveryTime: 'Entrega en 24 a 48 hs',
+    partidos: 'Tigre, Malvinas Argentinas, San Miguel, José C. Paz, Moreno, Merlo, La Matanza Sur, Ezeiza, Esteban Echeverría, Almirante Brown, Quilmes, Berazategui, Florencio Varela',
+  },
+  {
+    id: 'gba3',
+    name: 'GBA 3 / Gran La Plata (Tercer Cordón)',
+    tag: 'GBA 3',
+    defaultPriceInCents: 970000,
+    deliveryTime: 'Entrega en 48 a 72 hs',
+    partidos: 'Escobar, Pilar, General Rodríguez, Marcos Paz, Cañuelas, San Vicente, Guernica, La Plata (Norte, Centro, Oeste), Berisso, Ensenada',
+  },
+  {
+    id: 'interior',
+    name: 'Resto del País (Interior de Argentina)',
+    tag: 'INTERIOR',
+    defaultPriceInCents: 990000,
+    deliveryTime: 'Correo Express (3 a 5 días hábiles)',
+    partidos: 'Despacho con seguimiento a todas las provincias de Argentina',
+  },
+];
 
 export const CATEGORIES: Category[] = [
   {

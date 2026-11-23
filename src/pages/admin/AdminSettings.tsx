@@ -218,7 +218,7 @@ export const AdminSettings: React.FC = () => {
 
           <div className="form-row-2">
             <div className="form-group">
-              <label className="form-label">Costo Fijo de Envío a Domicilio (Centavos)</label>
+              <label className="form-label">Tarifa Base CABA (Centavos)</label>
               <input
                 type="number"
                 className="form-input"
@@ -228,15 +228,109 @@ export const AdminSettings: React.FC = () => {
               <span className="field-hint">Equivale a {formatARS(formData.flatShippingRateInCents)}</span>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Monto Mínimo para Envío Gratis (Centavos)</label>
-              <input
-                type="number"
-                className="form-input"
-                value={formData.freeShippingThresholdInCents}
-                onChange={(e) => setFormData({ ...formData, freeShippingThresholdInCents: Number(e.target.value) })}
-              />
-              <span className="field-hint">Equivale a {formatARS(formData.freeShippingThresholdInCents)}</span>
+            <div className="form-group" style={{ gridColumn: '1 / -1', marginTop: '0.5rem' }}>
+              <label className="form-label" style={{ fontWeight: 800 }}>Tarifas de Envío por Zona (según mapa oficial logístico)</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', marginTop: '0.35rem' }}>
+                <div>
+                  <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#DB2777' }}>🟣 CABA</span>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={formData.shippingRates?.cabaInCents ?? 500000}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      shippingRates: {
+                        cabaInCents: Number(e.target.value),
+                        gba1InCents: formData.shippingRates?.gba1InCents ?? 670000,
+                        gba2InCents: formData.shippingRates?.gba2InCents ?? 870000,
+                        gba3InCents: formData.shippingRates?.gba3InCents ?? 970000,
+                        interiorInCents: formData.shippingRates?.interiorInCents ?? 990000,
+                      }
+                    })}
+                  />
+                  <span className="field-hint">{formatARS(formData.shippingRates?.cabaInCents ?? 500000)}</span>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#0D9488' }}>🟢 GBA 1</span>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={formData.shippingRates?.gba1InCents ?? 670000}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      shippingRates: {
+                        cabaInCents: formData.shippingRates?.cabaInCents ?? 500000,
+                        gba1InCents: Number(e.target.value),
+                        gba2InCents: formData.shippingRates?.gba2InCents ?? 870000,
+                        gba3InCents: formData.shippingRates?.gba3InCents ?? 970000,
+                        interiorInCents: formData.shippingRates?.interiorInCents ?? 990000,
+                      }
+                    })}
+                  />
+                  <span className="field-hint">{formatARS(formData.shippingRates?.gba1InCents ?? 670000)}</span>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#1E40AF' }}>🔵 GBA 2</span>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={formData.shippingRates?.gba2InCents ?? 870000}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      shippingRates: {
+                        cabaInCents: formData.shippingRates?.cabaInCents ?? 500000,
+                        gba1InCents: formData.shippingRates?.gba1InCents ?? 670000,
+                        gba2InCents: Number(e.target.value),
+                        gba3InCents: formData.shippingRates?.gba3InCents ?? 970000,
+                        interiorInCents: formData.shippingRates?.interiorInCents ?? 990000,
+                      }
+                    })}
+                  />
+                  <span className="field-hint">{formatARS(formData.shippingRates?.gba2InCents ?? 870000)}</span>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#DC2626' }}>🔴 GBA 3 / La Plata</span>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={formData.shippingRates?.gba3InCents ?? 970000}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      shippingRates: {
+                        cabaInCents: formData.shippingRates?.cabaInCents ?? 500000,
+                        gba1InCents: formData.shippingRates?.gba1InCents ?? 670000,
+                        gba2InCents: formData.shippingRates?.gba2InCents ?? 870000,
+                        gba3InCents: Number(e.target.value),
+                        interiorInCents: formData.shippingRates?.interiorInCents ?? 990000,
+                      }
+                    })}
+                  />
+                  <span className="field-hint">{formatARS(formData.shippingRates?.gba3InCents ?? 970000)}</span>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#334155' }}>📦 Interior País</span>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={formData.shippingRates?.interiorInCents ?? 990000}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      shippingRates: {
+                        cabaInCents: formData.shippingRates?.cabaInCents ?? 500000,
+                        gba1InCents: formData.shippingRates?.gba1InCents ?? 670000,
+                        gba2InCents: formData.shippingRates?.gba2InCents ?? 870000,
+                        gba3InCents: formData.shippingRates?.gba3InCents ?? 970000,
+                        interiorInCents: Number(e.target.value),
+                      }
+                    })}
+                  />
+                  <span className="field-hint">{formatARS(formData.shippingRates?.interiorInCents ?? 990000)}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

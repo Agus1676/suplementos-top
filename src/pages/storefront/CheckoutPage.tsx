@@ -16,6 +16,7 @@ import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
 import { formatARS, formatInstallments } from '../../lib/utils';
 import { Order, OrderItem } from '../../types';
+import { SHIPPING_ZONES_CONFIG } from '../../lib/mockData';
 import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 
 const checkoutSchema = z.object({
@@ -46,16 +47,18 @@ const checkoutSchema = z.object({
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
 export const CheckoutPage: React.FC = () => {
-  const { items, subtotalInCents, isFreeShippingEligible, clearCart } = useCart();
+  const { items, subtotalInCents, clearCart } = useCart();
   const { settings, createOrder } = useStore();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentChoice, setPaymentChoice] = useState<'mercadopago' | 'transfer'>('mercadopago');
+  const [selectedZone, setSelectedZone] = useState<'caba' | 'gba1' | 'gba2' | 'gba3' | 'interior'>('caba');
 
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
@@ -67,6 +70,16 @@ export const CheckoutPage: React.FC = () => {
   });
 
   const selectedDeliveryMethod = watch('deliveryMethod');
+
+  const zoneRates: Record<string, number> = {
+    caba: settings.shippingRates?.cabaInCents ?? 500000,
+    gba1: settings.shippingRates?.gba1InCents ?? 670000,
+    gba2: settings.shippingRates?.gba2InCents ?? 870000,
+    gba3: settings.shippingRates?.gba3InCents ?? 970000,
+    interior: settings.shippingRates?.interiorInCents ?? 990000,
+  };
+
+  const currentZoneRateInCents = zoneRates[selectedZone] ?? 500000;
 
   if (items.length === 0) {
     return (
@@ -83,9 +96,7 @@ export const CheckoutPage: React.FC = () => {
 
   const effectiveShippingCost = selectedDeliveryMethod === 'pickup' 
     ? 0 
-    : isFreeShippingEligible 
-      ? 0 
-      : settings.flatShippingRateInCents;
+    : currentZoneRateInCents;
 
   const transferDiscountInCents = paymentChoice === 'transfer' ? Math.round(subtotalInCents * 0.10) : 0;
   const finalTotalInCents = subtotalInCents - transferDiscountInCents + effectiveShippingCost;
@@ -124,6 +135,8 @@ export const CheckoutPage: React.FC = () => {
           phone: data.phone,
           dni: data.dni,
           deliveryMethod: 'shipping',
+          shippingZone: selectedZone,
+          shippingZoneName: SHIPPING_ZONES_CONFIG.find((z) => z.id === selectedZone)?.name,
           street: data.street || '',
           number: data.number || '',
           apartment: data.apartment,
@@ -365,13 +378,13 @@ export const CheckoutPage: React.FC = () => {
                       <span className="box-title">Envío a Domicilio</span>
                     </div>
                     <span className="box-price">
-                      {isFreeShippingEligible ? (
-                        <strong className="text-green-600 font-bold">¡GRATIS!</strong>
-                      ) : (
-                        formatARS(settings.flatShippingRateInCents)
-                      )}
+                      {formatARS(currentZoneRateInCents)}
                     </span>
-                    <p className="box-detail">A todo el país por correo y logística prioritaria.</p>
+                    <p className="box-detail">
+                      {selectedDeliveryMethod === 'shipping' 
+                        ? `${SHIPPING_ZONES_CONFIG.find(z => z.id === selectedZone)?.tag} (${formatARS(currentZoneRateInCents)})`
+                        : 'Tarifas por zona: CABA, GBA 1, 2, 3 e Interior.'}
+                    </p>
                   </div>
                 </label>
 
@@ -392,6 +405,48 @@ export const CheckoutPage: React.FC = () => {
                   </div>
                 </label>
               </div>
+
+              {selectedDeliveryMethod === 'shipping' && (
+                <div className="shipping-zones-box">
+                  <div className="zones-header">
+                    <MapPin size={17} className="text-accent" />
+                    <div>
+                      <strong>Seleccioná tu Zona de Entrega:</strong>
+                      <p className="zones-sub-text">El costo de envío se actualiza automáticamente según tu ubicación.</p>
+                    </div>
+                  </div>
+
+                  <div className="zones-grid">
+                    {SHIPPING_ZONES_CONFIG.map((zone) => {
+                      const cost = zoneRates[zone.id] ?? zone.defaultPriceInCents;
+                      const isSelected = selectedZone === zone.id;
+                      return (
+                        <div
+                          key={zone.id}
+                          onClick={() => {
+                            setSelectedZone(zone.id);
+                            if (zone.id === 'caba') {
+                              setValue('province', 'CABA');
+                              setValue('city', 'Ciudad Autónoma de Buenos Aires');
+                            } else if (zone.id === 'gba1' || zone.id === 'gba2' || zone.id === 'gba3') {
+                              setValue('province', 'Buenos Aires');
+                            }
+                          }}
+                          className={`zone-card ${isSelected ? 'selected' : ''}`}
+                        >
+                          <div className="zone-card-header">
+                            <span className={`zone-tag-pill tag-${zone.id}`}>{zone.tag}</span>
+                            <strong className="zone-card-price">{formatARS(cost)}</strong>
+                          </div>
+                          <div className="zone-card-title">{zone.name}</div>
+                          <div className="zone-card-partidos">{zone.partidos}</div>
+                          <div className="zone-card-time">⚡ {zone.deliveryTime}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {selectedDeliveryMethod === 'pickup' ? (
                 <div className="pickup-info-alert">
@@ -536,7 +591,11 @@ export const CheckoutPage: React.FC = () => {
                 )}
 
                 <div className="financial-row">
-                  <span>Costo de envío:</span>
+                  <span>
+                    {selectedDeliveryMethod === 'pickup' 
+                      ? 'Costo de entrega:' 
+                      : `Costo de envío (${SHIPPING_ZONES_CONFIG.find(z => z.id === selectedZone)?.tag || 'Domicilio'}):`}
+                  </span>
                   <span>
                     {effectiveShippingCost === 0 ? (
                       <strong className="text-green-600 font-bold">GRATIS</strong>
@@ -850,6 +909,95 @@ export const CheckoutPage: React.FC = () => {
           font-size: 0.775rem;
           color: #6B7280;
         }
+
+        /* Shipping Zones Selector Styles */
+        .shipping-zones-box {
+          background: #F8FAFC;
+          border: 1.5px solid #E2E8F0;
+          border-radius: var(--radius-sm);
+          padding: 1.15rem;
+          margin-bottom: 1.5rem;
+        }
+        .zones-header {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          margin-bottom: 0.85rem;
+        }
+        .zones-header strong {
+          font-size: 0.9rem;
+          color: #0F172A;
+          display: block;
+        }
+        .zones-sub-text {
+          font-size: 0.78rem;
+          color: #64748B;
+          margin: 0.15rem 0 0 0;
+        }
+        .zones-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 0.65rem;
+        }
+        .zone-card {
+          background: #FFFFFF;
+          border: 1.5px solid #E2E8F0;
+          border-radius: 6px;
+          padding: 0.75rem 0.95rem;
+          cursor: pointer;
+          transition: all 0.15s ease;
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
+        }
+        .zone-card:hover {
+          border-color: #94A3B8;
+        }
+        .zone-card.selected {
+          border-color: #E11D48;
+          background: #FFF1F2;
+          box-shadow: 0 0 0 1px #E11D48;
+        }
+        .zone-card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .zone-tag-pill {
+          font-size: 0.68rem;
+          font-weight: 800;
+          padding: 0.15rem 0.5rem;
+          border-radius: 4px;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+        .tag-caba { background: #FCE7F3; color: #DB2777; }
+        .tag-gba1 { background: #CCFBF1; color: #0D9488; }
+        .tag-gba2 { background: #DBEAFE; color: #1E40AF; }
+        .tag-gba3 { background: #FEE2E2; color: #DC2626; }
+        .tag-interior { background: #F1F5F9; color: #334155; }
+
+        .zone-card-price {
+          font-size: 1rem;
+          font-weight: 900;
+          color: #0F172A;
+        }
+        .zone-card-title {
+          font-size: 0.88rem;
+          font-weight: 800;
+          color: #0F172A;
+        }
+        .zone-card-partidos {
+          font-size: 0.76rem;
+          color: #475569;
+          line-height: 1.35;
+        }
+        .zone-card-time {
+          font-size: 0.72rem;
+          color: #059669;
+          font-weight: 700;
+        }
+
         .pickup-info-alert {
           display: flex;
           align-items: flex-start;

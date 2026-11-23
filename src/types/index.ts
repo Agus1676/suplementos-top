@@ -84,6 +84,8 @@ export interface CustomerShippingAddress {
   phone: string;
   dni: string;
   deliveryMethod: 'shipping' | 'pickup';
+  shippingZone?: 'caba' | 'gba1' | 'gba2' | 'gba3' | 'interior';
+  shippingZoneName?: string;
   street: string;
   number: string;
   apartment?: string;
@@ -133,6 +135,14 @@ export interface Order {
   shippingCarrier?: string;
 }
 
+export interface ShippingRatesSettings {
+  cabaInCents: number;
+  gba1InCents: number;
+  gba2InCents: number;
+  gba3InCents: number;
+  interiorInCents: number;
+}
+
 export interface StoreSettings {
   storeName: string;
   legalName: string;
@@ -144,6 +154,7 @@ export interface StoreSettings {
   dispatchAddress: string;
   freeShippingThresholdInCents: number;
   flatShippingRateInCents: number;
+  shippingRates?: ShippingRatesSettings;
   transferDiscountPercent?: number;
   bankAlias?: string;
   bankCvu?: string;
