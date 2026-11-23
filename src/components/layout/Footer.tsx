@@ -83,6 +83,24 @@ export const Footer: React.FC = () => {
                   <span>Preguntas frecuentes</span>
                 </Link>
               </li>
+              <li>
+                <Link to="/envios" className="ft-nav-link">
+                  <ChevronRight size={13} className="ft-chevron" />
+                  <span>Políticas de envíos</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/terminos" className="ft-nav-link">
+                  <ChevronRight size={13} className="ft-chevron" />
+                  <span>Términos y condiciones</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/responsabilidad" className="ft-nav-link">
+                  <ChevronRight size={13} className="ft-chevron" />
+                  <span>Aviso de suplementos</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -221,6 +239,17 @@ export const Footer: React.FC = () => {
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* Legal Bar */}
+        <div className="ft-legal-bar">
+          <Link to="/terminos" className="ft-legal-link">Términos y Condiciones de Uso y Compra</Link>
+          <span className="ft-legal-sep">•</span>
+          <Link to="/envios" className="ft-legal-link">Política de Envíos y Entregas</Link>
+          <span className="ft-legal-sep">•</span>
+          <Link to="/responsabilidad" className="ft-legal-link">Información sobre Suplementos &amp; Responsabilidad</Link>
+          <span className="ft-legal-sep">•</span>
+          <Link to="/faq" className="ft-legal-link">FAQ</Link>
         </div>
 
         {/* Footer Bottom Credits */}
@@ -507,6 +536,32 @@ export const Footer: React.FC = () => {
         .ft-pay-highlight {
           color: #16A34A;
           font-weight: 700;
+        }
+
+        /* Footer Legal Bar */
+        .ft-legal-bar {
+          border-top: 1px solid #E2E8F0;
+          padding: 14px 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+          font-size: 0.78rem;
+          color: #64748B;
+        }
+        .ft-legal-link {
+          color: #475569;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.15s ease;
+        }
+        .ft-legal-link:hover {
+          color: #E63946;
+          text-decoration: underline;
+        }
+        .ft-legal-sep {
+          color: #CBD5E1;
         }
 
         /* Footer Bottom */

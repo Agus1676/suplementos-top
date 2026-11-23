@@ -20,6 +20,7 @@ const ContactPage = named(() => import('../pages/storefront/ContactPage'), 'Cont
 const ShippingPolicyPage = named(() => import('../pages/storefront/LegalPages'), 'ShippingPolicyPage');
 const FAQPage = named(() => import('../pages/storefront/LegalPages'), 'FAQPage');
 const TermsPage = named(() => import('../pages/storefront/LegalPages'), 'TermsPage');
+const SupplementDisclaimerPage = named(() => import('../pages/storefront/LegalPages'), 'SupplementDisclaimerPage');
 const NotFoundPage = named(() => import('../pages/storefront/NotFoundPage'), 'NotFoundPage');
 
 // Admin (never loaded by shoppers)
@@ -68,6 +69,8 @@ export const AppRoutes: React.FC = () => {
           <Route path="/envios" element={<ShippingPolicyPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/terminos" element={<TermsPage />} />
+          <Route path="/responsabilidad" element={<SupplementDisclaimerPage />} />
+          <Route path="/disclaimer" element={<SupplementDisclaimerPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
 
