@@ -510,7 +510,7 @@ export const PRODUCTS: Product[] = [
     rating: 5.0,
     reviewCount: 88,
     servingInfo: 'Tratamiento completo para 30 a 60 días',
-    nutritionalHighlights: ['Ahorro del 15% en pack', 'Envío 100% Gratis a todo el país', '2 Marcas líderes oficiales', 'Shaker de regalo incluido'],
+    nutritionalHighlights: ['Ahorro del 15% en pack', 'Retiro sin cargo en Recoleta', '2 Marcas líderes oficiales', 'Shaker de regalo incluido'],
     images: [
       {
         id: 'img-combo-1',

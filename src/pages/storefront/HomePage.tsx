@@ -150,7 +150,7 @@ export const HomePage: React.FC = () => {
         name: '¿Hacen envíos a domicilio a todo el país?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Realizamos envíos en el día en CABA y despachos a todo el país por correo expreso con código de seguimiento online. Además, tenés envío gratis superando el monto mínimo de compra.',
+          text: 'Realizamos envíos en el día en CABA y despachos a todo el país por correo expreso con código de seguimiento online. Además, tenés retiro sin cargo en el día en nuestro local oficial de Recoleta (Pres. José E. Uriburu 1163).',
         },
       },
     ],
