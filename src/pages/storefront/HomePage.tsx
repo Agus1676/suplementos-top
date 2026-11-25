@@ -424,7 +424,7 @@ export const HomePage: React.FC = () => {
         /* 3. Compact Category Packshot Cards */
         .categories-section {
           padding: 1.5rem 0 0.75rem;
-          background: #FFFFFF;
+          background: var(--color-bg-main);
         }
         .cat-pack-card {
           display: flex;
@@ -438,8 +438,8 @@ export const HomePage: React.FC = () => {
           position: relative;
           width: 100%;
           aspect-ratio: 1 / 1;
-          background: #FFFFFF;
-          border: 1px solid #E4E4E7;
+          background: var(--color-bg-card);
+          border: 1px solid var(--color-border);
           border-radius: 12px;
           padding: 1.75rem 0.75rem 0.65rem;
           display: flex;
@@ -487,7 +487,7 @@ export const HomePage: React.FC = () => {
         }
         .cat-pack-subtitle {
           font-size: 0.74rem;
-          color: #64748B;
+          color: var(--color-text-muted);
           text-align: center;
           line-height: 1.2;
           margin-top: -0.25rem;
@@ -496,10 +496,10 @@ export const HomePage: React.FC = () => {
         /* 4. Products Showcase */
         .products-showcase-section {
           padding: 1.75rem 0;
-          background-color: #FFFFFF;
+          background-color: var(--color-bg-main);
         }
         .bg-secondary-section {
-          background-color: #F8FAFC;
+          background-color: var(--color-bg-secondary);
           border-top: 1px solid var(--color-border);
           border-bottom: 1px solid var(--color-border);
         }
@@ -507,7 +507,7 @@ export const HomePage: React.FC = () => {
         /* 5. Promotional Banners with Real Packshots */
         .promotional-banners-section {
           padding: 0.75rem 0 2.25rem;
-          background-color: #FFFFFF;
+          background-color: var(--color-bg-main);
         }
         .promo-banners-grid {
           display: grid;
@@ -646,7 +646,7 @@ export const HomePage: React.FC = () => {
         /* 7. Brands Showcase with Real Product Packshots */
         .brands-strip-section {
           padding: 2rem 0;
-          background-color: #FFFFFF;
+          background-color: var(--color-bg-main);
           border-bottom: 1px solid var(--color-border);
         }
         .brands-showcase-grid {
@@ -665,8 +665,8 @@ export const HomePage: React.FC = () => {
           }
         }
         .brand-pack-card {
-          background: #FFFFFF;
-          border: 1px solid #E4E4E7;
+          background: var(--color-bg-card);
+          border: 1px solid var(--color-border);
           border-radius: 8px;
           padding: 0.85rem;
           display: flex;
@@ -674,6 +674,8 @@ export const HomePage: React.FC = () => {
           gap: 0.75rem;
           text-decoration: none;
           color: var(--color-text-main);
+          min-width: 0;
+          overflow: hidden;
           transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
         }
         .brand-pack-card:hover {
@@ -682,28 +684,48 @@ export const HomePage: React.FC = () => {
           transform: translateY(-2px);
         }
         .brand-pack-img {
-          width: 48px;
-          height: 48px;
+          width: 44px;
+          height: 44px;
           object-fit: contain;
           flex-shrink: 0;
         }
         .brand-pack-name {
           font-family: var(--font-display);
-          font-size: 0.86rem;
+          font-size: 0.85rem;
           font-weight: 800;
           color: var(--color-text-main);
           line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        @media (max-width: 420px) {
+          .brands-showcase-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+          }
+          .brand-pack-card {
+            padding: 0.65rem 0.5rem;
+            gap: 0.45rem;
+          }
+          .brand-pack-img {
+            width: 36px;
+            height: 36px;
+          }
+          .brand-pack-name {
+            font-size: 0.76rem;
+          }
         }
 
         /* 8. Location Callout with Real Map */
         .location-callout-section {
           padding: 2rem 0 1rem;
-          background-color: #FFFFFF;
+          background-color: var(--color-bg-main);
         }
         .location-callout-card {
-          background: #FFFFFF;
+          background: var(--color-bg-card);
           border: 1px solid var(--color-border);
-          border-radius: 8px;
+          border-radius: 12px;
           overflow: hidden;
           display: grid;
           grid-template-columns: 1fr;
@@ -714,7 +736,7 @@ export const HomePage: React.FC = () => {
           }
         }
         .location-info-side {
-          padding: 1.25rem 1rem;
+          padding: 1.5rem 1.25rem;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -728,6 +750,7 @@ export const HomePage: React.FC = () => {
           .location-actions {
             flex-direction: column;
             width: 100%;
+            gap: 0.6rem;
           }
           .location-actions .btn {
             width: 100%;
@@ -737,6 +760,7 @@ export const HomePage: React.FC = () => {
         .location-heading {
           font-size: 1.5rem;
           font-weight: 800;
+          color: var(--color-text-main);
           margin: 0 0 0.5rem;
           letter-spacing: -0.02em;
         }
@@ -751,9 +775,9 @@ export const HomePage: React.FC = () => {
           font-weight: 800;
           letter-spacing: 0.05em;
           text-transform: uppercase;
-          background: #FEF2F2;
+          background: rgba(0, 255, 102, 0.12);
           color: var(--color-accent);
-          border: 1px solid #FECACA;
+          border: 1px solid rgba(0, 255, 102, 0.4);
           padding: 0.2rem 0.65rem;
           border-radius: var(--radius-full);
         }
@@ -787,7 +811,7 @@ export const HomePage: React.FC = () => {
         .location-map-side {
           position: relative;
           min-height: 260px;
-          background: #F1F5F9;
+          background: var(--color-bg-secondary);
           border-top: 1px solid var(--color-border);
         }
         @media (min-width: 900px) {
@@ -800,18 +824,18 @@ export const HomePage: React.FC = () => {
         /* 9. SEO Local Authority Section */
         .seo-local-authority-section {
           padding: 2.5rem 0 3.5rem;
-          background: #FFFFFF;
+          background: var(--color-bg-main);
         }
         .seo-authority-card {
-          background: #F8FAFC;
-          border: 1px solid #E2E8F0;
+          background: var(--color-bg-secondary);
+          border: 1px solid var(--color-border);
           border-radius: 16px;
           padding: 2.25rem 2rem;
         }
         .seo-authority-title {
           font-size: 1.35rem;
           font-weight: 800;
-          color: #0F172A;
+          color: var(--color-text-main);
           letter-spacing: -0.02em;
           margin: 0 0 1.75rem 0;
           text-align: center;
@@ -836,20 +860,85 @@ export const HomePage: React.FC = () => {
           font-size: 0.70rem;
           font-weight: 800;
           letter-spacing: 0.06em;
-          color: #E63946;
+          color: var(--color-accent);
           text-transform: uppercase;
         }
         .seo-authority-item h3 {
           font-size: 1.05rem;
           font-weight: 700;
-          color: #0F172A;
+          color: var(--color-text-main);
           margin: 0;
         }
         .seo-authority-item p {
           font-size: 0.85rem;
-          color: #64748B;
+          color: var(--color-text-muted);
           line-height: 1.55;
           margin: 0;
+        }
+
+        /* NEON THEME HOME PAGE OVERRIDES */
+        [data-theme="neon"] .cat-pack-stage {
+          background: #121824 !important;
+          border-color: #1E293B !important;
+        }
+        [data-theme="neon"] .cat-pack-stage:hover {
+          border-color: #00FF66 !important;
+          box-shadow: 0 0 16px rgba(0, 255, 102, 0.25) !important;
+        }
+        [data-theme="neon"] .cat-pack-title {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .cat-pack-subtitle {
+          color: #94A3B8 !important;
+        }
+        [data-theme="neon"] .brand-pack-card {
+          background: #121824 !important;
+          border-color: #1E293B !important;
+        }
+        [data-theme="neon"] .brand-pack-card:hover {
+          border-color: #00FF66 !important;
+          box-shadow: 0 0 16px rgba(0, 255, 102, 0.22) !important;
+        }
+        [data-theme="neon"] .brand-pack-name {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .location-callout-card {
+          background: #121824 !important;
+          border-color: #1E293B !important;
+        }
+        [data-theme="neon"] .location-heading {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .location-address {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .location-hours,
+        [data-theme="neon"] .location-details-text {
+          color: #94A3B8 !important;
+        }
+        [data-theme="neon"] .location-map-side {
+          background: #0E141E !important;
+          border-color: #1E293B !important;
+        }
+        [data-theme="neon"] .seo-authority-card {
+          background: #121824 !important;
+          border-color: #1E293B !important;
+        }
+        [data-theme="neon"] .seo-authority-title,
+        [data-theme="neon"] .seo-authority-item h3 {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .seo-authority-item p {
+          color: #94A3B8 !important;
+        }
+        [data-theme="neon"] .btn-outline {
+          background: transparent !important;
+          border: 1.5px solid #00FF66 !important;
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .btn-outline:hover {
+          background: #00FF66 !important;
+          color: #0B0E14 !important;
         }
       `}</style>
     </div>

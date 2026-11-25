@@ -605,6 +605,66 @@ export const Footer: React.FC = () => {
         .ft-admin-link:hover {
           background: #E63946;
         }
+
+        /* NEON THEME FOOTER */
+        [data-theme="neon"] .ft {
+          background: #070A0F !important;
+          color: #E2E8F0 !important;
+          border-top-color: #1E293B !important;
+        }
+        [data-theme="neon"] .ft-brand .ft-name {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .ft-badge {
+          background: rgba(0, 255, 102, 0.15) !important;
+          color: #00FF66 !important;
+          border-color: rgba(0, 255, 102, 0.3) !important;
+        }
+        [data-theme="neon"] .ft-about {
+          color: #94A3B8 !important;
+        }
+        [data-theme="neon"] .ft-heading {
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .ft-nav-link {
+          color: #94A3B8 !important;
+        }
+        [data-theme="neon"] .ft-nav-link:hover {
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .ft-contact-item {
+          background: #121824 !important;
+          border-color: #1E293B !important;
+        }
+        [data-theme="neon"] .ft-strong {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .ft-logistics-title {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .ft-logistics-desc {
+          color: #94A3B8 !important;
+        }
+        [data-theme="neon"] .ft-legal-bar {
+          border-top-color: #1E293B !important;
+        }
+        [data-theme="neon"] .ft-legal-link {
+          color: #94A3B8 !important;
+        }
+        [data-theme="neon"] .ft-legal-link:hover {
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .ft-bottom {
+          border-top-color: #1E293B !important;
+          color: #64748B !important;
+        }
+        [data-theme="neon"] .ft-bottom-right a {
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .ft-admin-link {
+          background: #00FF66 !important;
+          color: #0B0E14 !important;
+        }
       `}</style>
     </footer>
   );

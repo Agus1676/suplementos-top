@@ -423,3 +423,151 @@ input, select, textarea {
 [data-theme="neon"] .shipping-status {
   color: #E2E8F0 !important;
 }
+
+/* PDP & Product Detail Overrides */
+[data-theme="neon"] .pdp-card,
+[data-theme="neon"] .pdp-main-image-wrap,
+[data-theme="neon"] .pdp-details-wrap {
+  background: #121824 !important;
+  border-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="neon"] .pdp-thumbnail-btn {
+  background: #121824 !important;
+  border-color: #1E293B !important;
+}
+
+[data-theme="neon"] .pdp-thumbnail-btn.active {
+  border-color: #00FF66 !important;
+}
+
+[data-theme="neon"] .accordion-header {
+  background: #121824 !important;
+  border-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="neon"] .accordion-header:hover {
+  background: #162030 !important;
+}
+
+[data-theme="neon"] .accordion-body {
+  background: #101622 !important;
+  border-color: #1E293B !important;
+  color: #CBD5E1 !important;
+}
+
+[data-theme="neon"] .flavor-btn,
+[data-theme="neon"] .size-btn {
+  background: #121824 !important;
+  border-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="neon"] .flavor-btn.active,
+[data-theme="neon"] .size-btn.active {
+  border-color: #00FF66 !important;
+  background: rgba(0, 255, 102, 0.12) !important;
+  color: #00FF66 !important;
+}
+
+[data-theme="neon"] .pdp-sticky-bar {
+  background: #0B0E14 !important;
+  border-top-color: #1E293B !important;
+}
+
+/* Checkout Overrides */
+[data-theme="neon"] .checkout-step-card,
+[data-theme="neon"] .checkout-order-summary {
+  background: #121824 !important;
+  border-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="neon"] .shipping-zone-card {
+  background: #121824 !important;
+  border-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="neon"] .shipping-zone-card.selected {
+  border-color: #00FF66 !important;
+  background: rgba(0, 255, 102, 0.08) !important;
+}
+
+[data-theme="neon"] .checkout-discreet-legal {
+  background: #0E141E !important;
+  border-color: #1E293B !important;
+  color: #94A3B8 !important;
+}
+
+[data-theme="neon"] .discreet-legal-link {
+  color: #00FF66 !important;
+}
+
+/* Order Tracking Overrides */
+[data-theme="neon"] .not-found-alert,
+[data-theme="neon"] .tracking-result-card {
+  background: #121824 !important;
+  border-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="neon"] .timeline-wrap {
+  background: #0E141E !important;
+  border-color: #1E293B !important;
+}
+
+[data-theme="neon"] .step-circle {
+  background: #121824 !important;
+}
+
+[data-theme="neon"] .details-col h4,
+[data-theme="neon"] .step-title {
+  color: #F8FAFC !important;
+}
+
+/* Legal Pages Overrides */
+[data-theme="neon"] .legal-card {
+  background: #121824 !important;
+  border-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="neon"] .legal-intro,
+[data-theme="neon"] .legal-contact-item {
+  background: #0E141E !important;
+  border-color: #1E293B !important;
+  color: #E2E8F0 !important;
+}
+
+[data-theme="neon"] .legal-contact-item strong,
+[data-theme="neon"] .legal-section h2,
+[data-theme="neon"] .faq-item h3 {
+  color: #F8FAFC !important;
+}
+
+[data-theme="neon"] .legal-section p,
+[data-theme="neon"] .faq-item p,
+[data-theme="neon"] .legal-bullets {
+  color: #CBD5E1 !important;
+}
+
+[data-theme="neon"] .legal-tab-btn {
+  background: #121824 !important;
+  color: #94A3B8 !important;
+  border: 1px solid #1E293B !important;
+}
+
+[data-theme="neon"] .legal-tab-btn.active {
+  background: #00FF66 !important;
+  color: #0B0E14 !important;
+  border-color: #00FF66 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="neon"] .legal-tabs-nav {
+  background: #070A0F !important;
+  border-color: #1E293B !important;
+}

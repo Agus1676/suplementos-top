@@ -683,6 +683,17 @@ export const Header: React.FC = () => {
         .pv-nav-list a:hover {
           color: #18181B;
         }
+        [data-theme="neon"] .pv-nav {
+          background: #0B0E14 !important;
+          border-top: 1px solid #1E293B !important;
+          border-bottom: 1px solid #1E293B !important;
+        }
+        [data-theme="neon"] .pv-nav-list a {
+          color: #E2E8F0 !important;
+        }
+        [data-theme="neon"] .pv-nav-list a:hover {
+          color: #00FF66 !important;
+        }
 
         /* Mobile Drawer */
         .pv-mobile-backdrop {

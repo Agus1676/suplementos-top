@@ -86,6 +86,25 @@ export const TrustMarquee: React.FC = () => {
         @media (prefers-reduced-motion: reduce) {
           .tm-track { animation-duration: 90s; }
         }
+
+        /* NEON THEME MARQUEE */
+        [data-theme="neon"] .tm-root {
+          background: #070A0F !important;
+          border-bottom: 1px solid #1E293B !important;
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .tm-item strong {
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .tm-icon {
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .tm-desc {
+          color: #CBD5E1 !important;
+        }
+        [data-theme="neon"] .tm-sep {
+          color: #334155 !important;
+        }
       `}</style>
     </section>
   );

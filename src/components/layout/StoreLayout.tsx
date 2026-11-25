@@ -28,6 +28,10 @@ export const StoreLayout: React.FC = () => {
           flex-direction: column;
           min-height: 100vh;
           background-color: var(--color-bg-main);
+          overflow-x: clip;
+          width: 100%;
+          max-width: 100vw;
+          box-sizing: border-box;
         }
         .store-main-content {
           flex: 1;
