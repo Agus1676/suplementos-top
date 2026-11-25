@@ -23,6 +23,8 @@ interface StoreContextType {
     roundHundreds: boolean;
   }) => void;
   resetToFactoryProducts: () => void;
+  theme: 'neon' | 'light';
+  toggleTheme: () => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -60,6 +62,32 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       return INITIAL_STORE_SETTINGS;
     }
   });
+
+  const [theme, setTheme] = useState<'neon' | 'light'>(() => {
+    try {
+      const saved = localStorage.getItem('suplementos_top_theme');
+      return (saved === 'light' || saved === 'neon') ? saved : 'neon';
+    } catch {
+      return 'neon';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('suplementos_top_theme', theme);
+      if (theme === 'neon') {
+        document.documentElement.setAttribute('data-theme', 'neon');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'neon' ? 'light' : 'neon'));
+  };
 
   useEffect(() => {
     try {
@@ -224,6 +252,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         deleteProduct,
         applyBulkPriceAdjustment,
         resetToFactoryProducts,
+        theme,
+        toggleTheme,
       }}
     >
       {children}

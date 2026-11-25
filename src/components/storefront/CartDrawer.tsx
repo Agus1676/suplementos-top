@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Truck, CreditCard, Zap } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
@@ -187,6 +187,20 @@ export const CartDrawer: React.FC = () => {
             <div className="cart-security-badge">
               <ShieldCheck size={15} className="text-success" />
               <span>Compra 100% segura con Mercado Pago</span>
+            </div>
+
+            <div className="cart-discreet-legal">
+              <Link to="/terminos" onClick={closeCartDrawer} className="cart-legal-link">
+                Términos y Condiciones
+              </Link>
+              <span className="cart-legal-sep">•</span>
+              <Link to="/envios" onClick={closeCartDrawer} className="cart-legal-link">
+                Envíos
+              </Link>
+              <span className="cart-legal-sep">•</span>
+              <Link to="/responsabilidad" onClick={closeCartDrawer} className="cart-legal-link">
+                Aviso Legal
+              </Link>
             </div>
           </div>
         )}
@@ -570,6 +584,26 @@ export const CartDrawer: React.FC = () => {
           font-size: 0.75rem;
           color: var(--color-text-muted);
           margin-top: 0.15rem;
+        }
+        .cart-discreet-legal {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          font-size: 0.72rem;
+          color: #94A3B8;
+          margin-top: 0.25rem;
+        }
+        .cart-legal-link {
+          color: #64748B;
+          text-decoration: underline;
+          transition: color 0.15s ease;
+        }
+        .cart-legal-link:hover {
+          color: #0F172A;
+        }
+        .cart-legal-sep {
+          color: #CBD5E1;
         }
         @media (max-width: 420px) {
           .cart-drawer-header {

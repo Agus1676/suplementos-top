@@ -13,7 +13,7 @@ import { formatARS } from '../../lib/utils';
 
 export const Header: React.FC = () => {
   const { totalItemsCount, openCartDrawer } = useCart();
-  const { products, settings } = useStore();
+  const { products, settings, theme, toggleTheme } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -155,6 +155,18 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="pv-actions-cluster">
+            {/* Theme Toggle Button (Negro & Neón / Claro) */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className={`pv-theme-toggle ${theme === 'neon' ? 'is-neon' : 'is-light'}`}
+              title="Cambiar entre Tema Neón (Negro y Verde) y Tema Claro"
+              aria-label="Cambiar tema"
+            >
+              <span className="pv-theme-dot" />
+              <span className="pv-theme-text">{theme === 'neon' ? 'NEÓN' : 'CLARO'}</span>
+            </button>
+
             <Link
               to="/seguimiento"
               className="pv-icon-btn"
@@ -278,6 +290,18 @@ export const Header: React.FC = () => {
                 <X size={20} />
               </button>
             </div>
+            <div className="pv-mobile-theme-bar">
+              <span className="pv-mobile-theme-label">Tema visual:</span>
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className={`pv-theme-toggle ${theme === 'neon' ? 'is-neon' : 'is-light'}`}
+              >
+                <span className="pv-theme-dot" />
+                <span className="pv-theme-text">{theme === 'neon' ? '🟢 NEGRO & NEÓN' : '⚪ CLARO'}</span>
+              </button>
+            </div>
+
             <ul className="pv-mobile-links">
               <li><Link to="/">Inicio</Link></li>
               <li><Link to="/catalogo">Todos los productos</Link></li>
@@ -289,6 +313,10 @@ export const Header: React.FC = () => {
               <li><Link to="/catalogo?categoria=salud-vitaminas">Vitaminas y Salud</Link></li>
               <li><Link to="/seguimiento">Seguimiento de pedido</Link></li>
               <li><Link to="/contacto">Contacto y retiro en Recoleta</Link></li>
+              <li className="pv-mobile-sep" />
+              <li><Link to="/terminos" className="text-muted text-xs">Términos y Condiciones</Link></li>
+              <li><Link to="/envios" className="text-muted text-xs">Políticas de Envío</Link></li>
+              <li><Link to="/responsabilidad" className="text-muted text-xs">Aviso Legal y Suplementos</Link></li>
             </ul>
           </div>
         </div>
@@ -696,6 +724,58 @@ export const Header: React.FC = () => {
           display: flex;
           flex-direction: column;
           gap: 0.15rem;
+        }
+        .pv-theme-toggle {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 10px;
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 0.72rem;
+          font-weight: 800;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border: 1px solid transparent;
+        }
+        .pv-theme-toggle.is-neon {
+          background: #00FF66;
+          color: #0B0E14;
+          border-color: #00FF66;
+          box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+        }
+        .pv-theme-toggle.is-light {
+          background: #F4F4F5;
+          color: #18181B;
+          border-color: #E4E4E7;
+        }
+        .pv-theme-toggle:hover {
+          transform: scale(1.04);
+        }
+        .pv-theme-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: currentColor;
+        }
+        .pv-mobile-theme-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.75rem 0.5rem;
+          background: #F8FAFC;
+          border-radius: 8px;
+          margin-bottom: 0.5rem;
+        }
+        .pv-mobile-theme-label {
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #475569;
+        }
+        .pv-mobile-sep {
+          height: 1px;
+          background: #E2E8F0;
+          margin: 0.5rem 0;
         }
         .pv-mobile-links a {
           display: block;

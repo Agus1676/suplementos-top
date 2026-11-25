@@ -283,6 +283,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           background: #CBD5E1;
           cursor: not-allowed;
         }
+
+        /* Neon Theme Card Overrides */
+        [data-theme="neon"] .pv-card {
+          background: #121824;
+          border-color: #1E293B;
+        }
+        [data-theme="neon"] .pv-card:hover {
+          border-color: #00FF66;
+          box-shadow: 0 0 18px rgba(0, 255, 102, 0.22);
+        }
+        [data-theme="neon"] .pv-card-img-wrap {
+          background: #0E141E;
+        }
+        [data-theme="neon"] .pv-card-title {
+          color: #CBD5E1;
+        }
+        [data-theme="neon"] .pv-list-price {
+          color: #F8FAFC;
+        }
+        [data-theme="neon"] .pv-rating-text {
+          color: #CBD5E1;
+        }
+        [data-theme="neon"] .pv-transfer-box {
+          background: #00FF66;
+          color: #0B0E14;
+        }
+        [data-theme="neon"] .pv-mp-box {
+          background: #162030;
+        }
+        [data-theme="neon"] .pv-mp-line {
+          color: #F8FAFC;
+        }
+        [data-theme="neon"] .pv-mp-brand-row {
+          color: #94A3B8;
+        }
+        [data-theme="neon"] .pv-add-btn {
+          background: #00FF66;
+          color: #0B0E14;
+          font-weight: 800;
+        }
+        [data-theme="neon"] .pv-add-btn:hover:not(:disabled) {
+          background: #10B981;
+          color: #0B0E14;
+        }
+
         @media (min-width: 768px) {
           .pv-card {
             padding: 0.65rem;

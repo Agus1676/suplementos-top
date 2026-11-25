@@ -719,6 +719,16 @@ export const CheckoutPage: React.FC = () => {
                   Al confirmarse el pago, recibirás tu comprobante y se enviará la alerta a nuestro depósito en Uriburu 1163 para despachar de inmediato.
                 </span>
               </div>
+
+              {/* Botón discreto de Legales & Términos */}
+              <div className="checkout-discreet-legal">
+                <span>
+                  Compra protegida conforme a la Ley 24.240. Al confirmar tu compra, declarás conocer y aceptar los{' '}
+                  <Link to="/terminos" target="_blank" className="discreet-legal-link">Términos y Condiciones de Uso y Compra</Link>,{' '}
+                  las <Link to="/envios" target="_blank" className="discreet-legal-link">Políticas de Envío</Link> y el{' '}
+                  <Link to="/responsabilidad" target="_blank" className="discreet-legal-link">Aviso de Suplementos Dietarios</Link>.
+                </span>
+              </div>
             </div>
           </div>
         </form>
@@ -1143,6 +1153,25 @@ export const CheckoutPage: React.FC = () => {
           gap: 0.5rem;
           font-size: 0.775rem;
           color: #6B7280;
+        }
+        .checkout-discreet-legal {
+          margin-top: 0.85rem;
+          padding: 0.75rem 0.85rem;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          border-radius: var(--radius-sm);
+          font-size: 0.73rem;
+          line-height: 1.5;
+          color: #64748B;
+          text-align: center;
+        }
+        .discreet-legal-link {
+          color: #334155;
+          font-weight: 600;
+          text-decoration: underline;
+        }
+        .discreet-legal-link:hover {
+          color: #E63946;
         }
         .empty-checkout-wrap {
           display: flex;

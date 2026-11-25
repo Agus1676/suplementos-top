@@ -76,3 +76,50 @@
   /* Layout */
   --container-max-width: 1280px;
 }
+
+/* ==========================================================================
+   NEON THEME (INVERTIDO: NEGRO PROFUNDO & VERDE NEÓN ATLÉTICO)
+   ========================================================================== */
+[data-theme="neon"] {
+  /* Backgrounds */
+  --color-bg-main: #0B0E14;
+  --color-bg-secondary: #0F141F;
+  --color-bg-tertiary: #161D2B;
+  --color-bg-card: #121824;
+  --color-bg-card-hover: #182233;
+  --color-bg-input: #0F141F;
+
+  /* Typography */
+  --color-text-main: #FFFFFF;
+  --color-text-body: #E2E8F0;
+  --color-text-muted: #94A3B8;
+  --color-text-subtle: #64748B;
+  --color-text-inverse: #0B0E14;
+
+  /* Primary Brand Colors */
+  --color-primary: #00FF66;
+  --color-primary-hover: #10B981;
+  --color-primary-light: #064E3B;
+
+  /* Neon Green Accent */
+  --color-accent: #00FF66;
+  --color-accent-hover: #10B981;
+  --color-accent-light: #064E3B;
+  --color-brand-red: #00FF66;
+
+  /* Promo palette */
+  --color-promo-red: #00FF66;
+  --color-promo-green: #00FF66;
+  --color-promo-green-dark: #10B981;
+  --color-promo-yellow: #FACC15;
+
+  /* Trust Green */
+  --color-success: #00FF66;
+  --color-success-light: #064E3B;
+  --color-success-border: #10B981;
+
+  /* Borders & Dividers */
+  --color-border: #1E293B;
+  --color-border-hover: #334155;
+  --color-border-dark: #00FF66;
+}

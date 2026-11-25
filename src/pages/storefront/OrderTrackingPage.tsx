@@ -47,15 +47,18 @@ export const OrderTrackingPage: React.FC = () => {
           }}
           className="tracking-search-form"
         >
-          <Search size={18} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Número de pedido (ST-...) o DNI"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="tracking-input"
-          />
-          <button type="submit" className="btn btn-primary">
+          <div className="tracking-input-wrapper">
+            <Search size={18} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Número de pedido (ST-...) o DNI"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="tracking-input"
+              autoComplete="off"
+            />
+          </div>
+          <button type="submit" className="btn btn-primary tracking-search-btn">
             BUSCAR PEDIDO
           </button>
         </form>
@@ -167,6 +170,10 @@ export const OrderTrackingPage: React.FC = () => {
           padding-top: 2.5rem;
           padding-bottom: 5rem;
           max-width: 860px;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          width: 100%;
+          box-sizing: border-box;
         }
         .section-eyebrow {
           font-size: 0.75rem;
@@ -180,6 +187,10 @@ export const OrderTrackingPage: React.FC = () => {
         .tracking-header {
           text-align: center;
           margin-bottom: 2.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
         }
         .tracking-title {
           font-size: 2.2rem;
@@ -187,40 +198,68 @@ export const OrderTrackingPage: React.FC = () => {
           margin-bottom: 0.5rem;
           color: var(--color-text);
           letter-spacing: -0.02em;
+          text-align: center;
         }
         .tracking-subtitle {
           color: var(--color-text-muted);
           font-size: 0.95rem;
           max-width: 580px;
           margin: 0 auto 1.5rem;
+          text-align: center;
         }
         .tracking-search-form {
           display: flex;
-          max-width: 520px;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          max-width: 540px;
           margin: 0 auto;
+          gap: 0.65rem;
+          box-sizing: border-box;
+        }
+        .tracking-input-wrapper {
           position: relative;
-          gap: 0.5rem;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          width: 100%;
         }
         .search-icon {
           position: absolute;
           left: 1rem;
-          top: 50%;
-          transform: translateY(-50%);
           color: var(--color-text-muted);
           pointer-events: none;
         }
         .tracking-input {
-          flex: 1;
+          width: 100%;
           background: #FFFFFF;
           border: 1px solid var(--color-border);
           border-radius: var(--radius-sm);
-          padding: 0.75rem 1rem 0.75rem 2.5rem;
+          padding: 0.75rem 1rem 0.75rem 2.6rem;
           font-size: 0.95rem;
           color: var(--color-text);
+          box-sizing: border-box;
         }
         .tracking-input:focus {
           border-color: var(--color-text);
           outline: none;
+        }
+        .tracking-search-btn {
+          white-space: nowrap;
+          padding: 0.75rem 1.4rem;
+        }
+        @media (max-width: 560px) {
+          .tracking-title {
+            font-size: 1.7rem;
+          }
+          .tracking-search-form {
+            flex-direction: column;
+            gap: 0.6rem;
+            width: 100%;
+          }
+          .tracking-search-btn {
+            width: 100%;
+          }
         }
         .not-found-alert {
           text-align: center;
