@@ -298,7 +298,7 @@ export const Header: React.FC = () => {
                 className={`pv-theme-toggle ${theme === 'neon' ? 'is-neon' : 'is-light'}`}
               >
                 <span className="pv-theme-dot" />
-                <span className="pv-theme-text">{theme === 'neon' ? '🟢 NEGRO & NEÓN' : '⚪ CLARO'}</span>
+                <span className="pv-theme-text">{theme === 'neon' ? 'NEGRO & NEÓN' : 'CLARO'}</span>
               </button>
             </div>
 
@@ -796,6 +796,118 @@ export const Header: React.FC = () => {
           font-size: 0.88rem;
           font-weight: 500;
           border-bottom: 1px solid #F4F4F5;
+        }
+
+        /* Theme toggle: texto siempre visible */
+        .pv-theme-toggle {
+          white-space: nowrap;
+          line-height: 1;
+          min-height: 28px;
+          flex-shrink: 0;
+        }
+        .pv-theme-toggle .pv-theme-text {
+          display: inline-block;
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          line-height: 1;
+        }
+        .pv-theme-toggle.is-neon,
+        .pv-theme-toggle.is-neon .pv-theme-text {
+          color: #0B0E14 !important;
+        }
+        .pv-theme-toggle.is-light,
+        .pv-theme-toggle.is-light .pv-theme-text {
+          color: #18181B !important;
+        }
+        .pv-theme-dot {
+          flex-shrink: 0;
+        }
+
+        /* Mobile: header compacto para que el nombre no se corte */
+        @media (max-width: 520px) {
+          .pv-actions-cluster .pv-theme-toggle {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            min-height: 32px;
+            justify-content: center;
+          }
+          .pv-actions-cluster .pv-theme-toggle .pv-theme-text {
+            display: none;
+          }
+          .pv-actions-cluster .pv-theme-dot {
+            width: 10px;
+            height: 10px;
+          }
+          .pv-brand-logo {
+            height: 36px;
+          }
+          .pv-brand-name {
+            font-size: 0.8rem;
+            letter-spacing: 0.01em;
+          }
+          .pv-header-row {
+            gap: 0.35rem;
+          }
+        }
+
+        /* NEON: buscador mobile */
+        [data-theme="neon"] .pv-mobile-search-row {
+          background: #0B0E14 !important;
+        }
+        [data-theme="neon"] .pv-search-form,
+        [data-theme="neon"] .pv-search-form--mobile {
+          background: #121824 !important;
+          border: 1px solid #1E293B !important;
+        }
+        [data-theme="neon"] .pv-search-form:focus-within {
+          border-color: #00FF66 !important;
+          box-shadow: 0 0 0 2px rgba(0, 255, 102, 0.18) !important;
+        }
+        [data-theme="neon"] .pv-search-form .pv-search-input {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .pv-search-mobile-icon,
+        [data-theme="neon"] .pv-search-btn,
+        [data-theme="neon"] .pv-search-clear-btn {
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .pv-mobile-btn {
+          color: #F8FAFC !important;
+        }
+
+        /* NEON: menú lateral mobile */
+        [data-theme="neon"] .pv-mobile-drawer {
+          background: #0B0E14 !important;
+          color: #F8FAFC !important;
+          border-right: 1px solid #1E293B;
+        }
+        [data-theme="neon"] .pv-mobile-head {
+          border-bottom-color: #1E293B !important;
+        }
+        [data-theme="neon"] .pv-mobile-head button {
+          color: #F8FAFC !important;
+        }
+        [data-theme="neon"] .pv-mobile-theme-bar {
+          background: #121824 !important;
+          border: 1px solid #1E293B;
+        }
+        [data-theme="neon"] .pv-mobile-theme-label {
+          color: #CBD5E1 !important;
+        }
+        [data-theme="neon"] .pv-mobile-links a {
+          color: #E2E8F0 !important;
+          border-bottom-color: #1E293B !important;
+        }
+        [data-theme="neon"] .pv-mobile-links a:hover {
+          color: #00FF66 !important;
+        }
+        [data-theme="neon"] .pv-mobile-sep {
+          background: #1E293B !important;
         }
       `}</style>
     </header>

@@ -877,9 +877,17 @@ export const HomePage: React.FC = () => {
         }
 
         /* NEON THEME HOME PAGE OVERRIDES */
+        /* Tarjetas de categoría: placa blanca completa (los packshots vienen con fondo blanco) */
         [data-theme="neon"] .cat-pack-stage {
-          background: #121824 !important;
-          border-color: #1E293B !important;
+          background: #FFFFFF !important;
+          border: 2px solid #1E293B !important;
+          padding: 1.9rem 0.6rem 0.6rem !important;
+        }
+        [data-theme="neon"] .categories-section {
+          padding-bottom: 0.25rem !important;
+        }
+        [data-theme="neon"] .cat-pack-title {
+          margin-top: 0.35rem !important;
         }
         [data-theme="neon"] .cat-pack-stage:hover {
           border-color: #00FF66 !important;
