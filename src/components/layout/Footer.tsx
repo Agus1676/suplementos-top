@@ -1,680 +1,410 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Phone, 
-  Mail, 
-  Instagram, 
-  MapPin, 
-  Clock, 
-  Truck, 
-  CreditCard, 
-  PackageCheck, 
-  ChevronRight,
-  ShieldCheck
-} from 'lucide-react';
+import { Instagram, MessageCircle, MapPin, Mail, PackageCheck } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 
 export const Footer: React.FC = () => {
   const { settings } = useStore();
 
   return (
-    <footer className="ft">
-      <div className="ft-inner">
-        <div className="ft-grid">
-          {/* Brand Info */}
-          <div className="ft-col ft-brand-col">
+    <footer className="site-footer">
+      <div className="container">
+        {/* Main 4-column clean layout */}
+        <div className="footer-grid">
+          {/* Col 1: Brand & Social */}
+          <div className="footer-col footer-col--brand">
             <Link
               to="/"
-              className="ft-brand"
+              className="footer-brand"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              <img src="/logo.png" alt={settings.storeName} className="ft-logo" />
-              <div>
-                <div className="ft-name">SUPLEMENTOS TOP</div>
-                <span className="ft-badge">GIMNASIO TOP SHAPE • RECOLETA</span>
+              <img src="/logo.png" alt={settings.storeName} className="footer-logo" />
+              <div className="footer-brand-text">
+                <span className="footer-brand-title">SUPLEMENTOS TOP</span>
+                <span className="footer-brand-sub">Gimnasio Top Shape • Recoleta</span>
               </div>
             </Link>
-            <p className="ft-about">
-              Tienda oficial de suplementación deportiva original en Recoleta, CABA. Retiro sin cargo en el día y envíos a todo el país.
+            <p className="footer-desc">
+              Punto oficial en Recoleta, CABA. Suplementos 100% originales con precinto de seguridad, retiro en el día sin cargo y envíos a todo el país.
             </p>
-            <div className="ft-trust-pill">
-              <ShieldCheck size={14} className="text-emerald-600" />
-              <span>Garantía de originalidad 100% sellado</span>
+            <div className="footer-social-row">
+              <a
+                href={settings.instagram || 'https://www.instagram.com/suplementos_topp'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-link"
+                aria-label="Instagram de Suplementos Top"
+              >
+                <Instagram size={18} />
+                <span>@suplementos_topp</span>
+              </a>
+              <a
+                href="https://wa.me/5491165652990"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-link"
+                aria-label="WhatsApp oficial"
+              >
+                <MessageCircle size={18} />
+                <span>11 6565-2990</span>
+              </a>
             </div>
           </div>
 
-          {/* Tienda */}
-          <div className="ft-col">
-            <h4 className="ft-heading">Tienda</h4>
-            <ul className="ft-nav-list">
-              <li>
-                <Link to="/catalogo" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Catálogo completo</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=proteinas" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Proteínas Whey &amp; Isolate</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=creatinas" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Creatinas Creapure®</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=pre-entrenos" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Pre-Entrenos &amp; Óxido</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/catalogo?categoria=combos" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Combos &amp; Ofertas</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/faq" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Preguntas frecuentes</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/envios" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Políticas de envíos</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/terminos" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Términos y condiciones</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/responsabilidad" className="ft-nav-link">
-                  <ChevronRight size={13} className="ft-chevron" />
-                  <span>Aviso de suplementos</span>
-                </Link>
-              </li>
+          {/* Col 2: Tienda */}
+          <div className="footer-col">
+            <h4 className="footer-heading">Categorías</h4>
+            <ul className="footer-links">
+              <li><Link to="/catalogo?categoria=proteinas">Proteínas Whey &amp; Isolate</Link></li>
+              <li><Link to="/catalogo?categoria=creatinas">Creatinas Micronizadas</Link></li>
+              <li><Link to="/catalogo?categoria=pre-entrenos">Pre-Entrenos &amp; Óxido</Link></li>
+              <li><Link to="/catalogo?categoria=combos">Combos &amp; Packs Ahorro</Link></li>
+              <li><Link to="/catalogo?categoria=aminoacidos">Aminoácidos &amp; BCAA</Link></li>
+              <li><Link to="/catalogo?categoria=salud-vitaminas">Vitaminas &amp; Magnesio</Link></li>
+              <li><Link to="/catalogo" className="footer-link-highlight">Ver todo el catálogo →</Link></li>
             </ul>
           </div>
 
-          {/* Contacto con iconos destacados */}
-          <div className="ft-col">
-            <h4 className="ft-heading">Contacto Directo</h4>
-            <ul className="ft-contact-list">
+          {/* Col 3: Ayuda & Envíos */}
+          <div className="footer-col">
+            <h4 className="footer-heading">Información</h4>
+            <ul className="footer-links">
               <li>
-                <a
-                  href="https://wa.me/5491165652990"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ft-contact-item ft-item-wa"
-                  title="WhatsApp oficial"
-                >
-                  <div className="ft-icon-box ft-icon-wa">
-                    <Phone size={14} />
-                  </div>
-                  <div className="ft-item-texts">
-                    <span className="ft-label-sub">WhatsApp Oficial:</span>
-                    <strong className="ft-strong">11 6565-2990</strong>
-                  </div>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href={`mailto:${settings.supportEmail}`}
-                  className="ft-contact-item"
-                  title="Correo electrónico oficial"
-                >
-                  <div className="ft-icon-box ft-icon-mail">
-                    <Mail size={14} />
-                  </div>
-                  <div className="ft-item-texts">
-                    <span className="ft-label-sub">Email de atención:</span>
-                    <strong className="ft-strong">{settings.supportEmail}</strong>
-                  </div>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href={settings.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ft-contact-item ft-item-ig"
-                  title="Instagram oficial"
-                >
-                  <div className="ft-icon-box ft-icon-ig">
-                    <Instagram size={14} />
-                  </div>
-                  <div className="ft-item-texts">
-                    <span className="ft-label-sub">Instagram:</span>
-                    <strong className="ft-strong">@suplementos_topp</strong>
-                  </div>
-                </a>
-              </li>
-
-              <li>
-                <Link to="/seguimiento" className="ft-contact-item">
-                  <div className="ft-icon-box ft-icon-tracking">
-                    <PackageCheck size={14} />
-                  </div>
-                  <div className="ft-item-texts">
-                    <span className="ft-label-sub">Tu Pedido:</span>
-                    <strong className="ft-strong">Seguimiento de despacho</strong>
-                  </div>
+                <Link to="/seguimiento" className="footer-link-flex">
+                  <PackageCheck size={14} />
+                  <span>Seguimiento de pedido</span>
                 </Link>
               </li>
-
-              <li>
-                <Link to="/contacto" className="ft-contact-item">
-                  <div className="ft-icon-box ft-icon-map">
-                    <MapPin size={14} />
-                  </div>
-                  <div className="ft-item-texts">
-                    <span className="ft-label-sub">Sede Física:</span>
-                    <strong className="ft-strong">Ubicación y horarios</strong>
-                  </div>
-                </Link>
-              </li>
+              <li><Link to="/envios">Política de envíos y entregas</Link></li>
+              <li><Link to="/terminos">Términos y condiciones</Link></li>
+              <li><Link to="/responsabilidad">Aviso legal y suplementos</Link></li>
+              <li><Link to="/faq">Preguntas frecuentes</Link></li>
+              <li><Link to="/contacto">Ubicación y cómo llegar</Link></li>
             </ul>
           </div>
 
-          {/* Retiro y Envíos con iconos destacados */}
-          <div className="ft-col">
-            <h4 className="ft-heading">Retiro &amp; Envíos</h4>
-            <ul className="ft-logistics-list">
-              <li className="ft-logistics-item">
-                <div className="ft-icon-box ft-icon-pickup">
-                  <MapPin size={15} />
-                </div>
+          {/* Col 4: Local & Horarios */}
+          <div className="footer-col">
+            <h4 className="footer-heading">Sede Recoleta</h4>
+            <div className="footer-info-block">
+              <div className="footer-info-item">
+                <MapPin size={15} className="footer-info-icon" />
                 <div>
-                  <strong className="ft-logistics-title">Retiro sin cargo en Recoleta:</strong>
-                  <p className="ft-logistics-desc">
-                    Pres. José E. Uriburu 1163 (Gimnasio Top Shape), entre Av. Santa Fe y Arenales.
-                  </p>
+                  <strong>Pres. José E. Uriburu 1163</strong>
+                  <span>Gimnasio Top Shape (entre Av. Santa Fe y Arenales)</span>
                 </div>
-              </li>
+              </div>
 
-              <li className="ft-logistics-item">
-                <div className="ft-icon-box ft-icon-clock">
-                  <Clock size={15} />
-                </div>
-                <div>
-                  <strong className="ft-logistics-title">Horarios de mostrador:</strong>
-                  <p className="ft-logistics-desc">
-                    Lun a Vie 8:00 a 23:00 hs | Sáb 10:00 a 18:00 hs.
-                  </p>
-                </div>
-              </li>
+              <div className="footer-info-item">
+                <Mail size={15} className="footer-info-icon" />
+                <a href={`mailto:${settings.supportEmail || 'suplementostopparg@gmail.com'}`} className="footer-mail-link">
+                  {settings.supportEmail || 'suplementostopparg@gmail.com'}
+                </a>
+              </div>
 
-              <li className="ft-logistics-item">
-                <div className="ft-icon-box ft-icon-truck">
-                  <Truck size={15} />
-                </div>
-                <div>
-                  <strong className="ft-logistics-title">Envíos a todo el país:</strong>
-                  <p className="ft-logistics-desc">
-                    Despacho express por Correo con código de seguimiento online.
-                  </p>
-                </div>
-              </li>
+              <div className="footer-info-hours">
+                <span className="footer-hours-label">Horarios de mostrador:</span>
+                <span className="footer-hours-text">Lun a Vie 8:00 a 23:00 hs · Sáb 10:00 a 18:00 hs</span>
+              </div>
 
-              <li className="ft-logistics-item">
-                <div className="ft-icon-box ft-icon-pay">
-                  <CreditCard size={15} />
-                </div>
-                <div>
-                  <strong className="ft-logistics-title">Medios de pago:</strong>
-                  <p className="ft-logistics-desc">
-                    <span className="ft-pay-highlight">10% OFF por Transferencia</span> o en cuotas con Mercado Pago.
-                  </p>
-                </div>
-              </li>
-            </ul>
+              <div className="footer-pay-pill">
+                <span>10% OFF por transferencia · 6 cuotas con Mercado Pago</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Legal Bar */}
-        <div className="ft-legal-bar">
-          <Link to="/terminos" className="ft-legal-link">Términos y Condiciones de Uso y Compra</Link>
-          <span className="ft-legal-sep">•</span>
-          <Link to="/envios" className="ft-legal-link">Política de Envíos y Entregas</Link>
-          <span className="ft-legal-sep">•</span>
-          <Link to="/responsabilidad" className="ft-legal-link">Información sobre Suplementos &amp; Responsabilidad</Link>
-          <span className="ft-legal-sep">•</span>
-          <Link to="/faq" className="ft-legal-link">FAQ</Link>
-        </div>
+        {/* Bottom Credits & Legal Links */}
+        <div className="footer-bottom">
+          <p className="footer-copy">
+            © {new Date().getFullYear()} Suplementos Top · Recoleta, CABA · Todos los derechos reservados.
+          </p>
 
-        {/* Footer Bottom Credits */}
-        <div className="ft-bottom">
-          <span>© {new Date().getFullYear()} {settings.storeName}. Todos los derechos reservados • Recoleta, CABA.</span>
-          <div className="ft-bottom-right">
-            <span>
-              Desarrollado por{' '}
-              <a href="https://agustinpollan.vercel.app/" target="_blank" rel="noopener noreferrer">
-                Agustín Pollán ↗
-              </a>
-            </span>
-            <span className="ft-bottom-sep">•</span>
-            <Link to="/admin" className="ft-admin-link">
-              Acceso Panel Admin
-            </Link>
+          <div className="footer-bottom-links">
+            <Link to="/terminos">Términos</Link>
+            <span className="footer-sep">·</span>
+            <Link to="/envios">Envíos</Link>
+            <span className="footer-sep">·</span>
+            <Link to="/responsabilidad">Aviso ANMAT</Link>
+            <span className="footer-sep">·</span>
+            <Link to="/admin" className="footer-admin-link">Panel</Link>
           </div>
         </div>
       </div>
 
       <style>{`
         /* ========================================================
-           HIGH-CONTRAST PROFESSIONAL FOOTER - NO MÁS "MEDIO LAVADO"
-           Bold Icons, Rich Typography & Responsive Layout
+           CLEAN, COMPACT, PROFESSIONAL E-COMMERCE FOOTER
+           No noisy pastel circle icons, no oversized bulk
            ======================================================== */
-        .ft {
-          background: #FFFFFF;
-          color: #0F172A;
-          border-top: 1px solid #E2E8F0;
-          margin-top: 3.5rem;
-          width: 100%;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        .site-footer {
+          background: #0B0F19;
+          color: #94A3B8;
+          padding: 3rem 0 1.5rem;
+          border-top: 1px solid #1E293B;
+          font-family: var(--font-body);
         }
-        .ft-inner {
-          max-width: 1320px;
-          margin: 0 auto;
-          padding: 44px 20px 20px;
-          box-sizing: border-box;
-        }
-        .ft-grid {
+
+        .footer-grid {
           display: grid;
-          grid-template-columns: 1.25fr 1fr 1.2fr 1.2fr;
-          gap: 32px;
-          padding-bottom: 32px;
+          grid-template-columns: 1.3fr 1fr 1fr 1.2fr;
+          gap: 2.5rem;
+          padding-bottom: 2.25rem;
+          border-bottom: 1px solid #1E293B;
         }
-        @media (max-width: 1024px) {
-          .ft-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
+
+        @media (max-width: 991px) {
+          .footer-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
           }
         }
-        @media (max-width: 640px) {
-          .ft-grid {
+
+        @media (max-width: 600px) {
+          .footer-grid {
             grid-template-columns: 1fr;
-            gap: 28px;
+            gap: 2rem;
           }
         }
 
         /* Brand Column */
-        .ft-brand-col {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-        .ft-brand {
+        .footer-brand {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 0.75rem;
           text-decoration: none;
+          margin-bottom: 0.85rem;
         }
-        .ft-logo {
-          height: 52px;
-          width: auto;
+
+        .footer-logo {
+          width: 38px;
+          height: 38px;
           object-fit: contain;
-          flex-shrink: 0;
+          border-radius: 6px;
         }
-        .ft-name {
-          font-size: 1.05rem;
-          font-weight: 900;
-          color: #0F172A;
-          letter-spacing: 0.03em;
-          line-height: 1.1;
-        }
-        .ft-badge {
-          display: inline-block;
-          font-size: 0.68rem;
+
+        .footer-brand-title {
+          font-family: var(--font-display);
+          font-size: 1rem;
           font-weight: 800;
-          color: #E63946;
-          letter-spacing: 0.05em;
-          margin-top: 3px;
-        }
-        .ft-about {
-          font-size: 0.84rem;
-          color: #475569;
-          line-height: 1.5;
-          margin: 0;
-        }
-        .ft-trust-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: #ECFDF5;
-          border: 1px solid #A7F3D0;
-          color: #065F46;
-          padding: 4px 10px;
-          border-radius: 9999px;
-          font-size: 0.75rem;
-          font-weight: 700;
-          width: fit-content;
-        }
-
-        /* Headings */
-        .ft-heading {
-          font-size: 0.85rem;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          color: #0F172A;
-          margin: 0 0 14px 0;
-          padding-bottom: 8px;
-          border-bottom: 2px solid #0F172A;
-          display: inline-block;
-        }
-
-        /* Tienda List */
-        .ft-nav-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .ft-nav-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: #334155;
-          text-decoration: none;
-          transition: all 0.15s ease;
-        }
-        .ft-chevron {
-          color: #94A3B8;
-          transition: transform 0.15s ease, color 0.15s ease;
-        }
-        .ft-nav-link:hover {
-          color: #E63946;
-          transform: translateX(3px);
-        }
-        .ft-nav-link:hover .ft-chevron {
-          color: #E63946;
-        }
-
-        /* Contact List with Bold Colored Icon Boxes */
-        .ft-contact-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        .ft-contact-item {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-          padding: 6px 8px;
-          border-radius: 8px;
-          transition: background 0.15s ease;
-        }
-        .ft-contact-item:hover {
-          background: #F8FAFC;
-        }
-        .ft-icon-box {
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          transition: transform 0.15s ease;
-        }
-        .ft-contact-item:hover .ft-icon-box {
-          transform: scale(1.08);
-        }
-
-        .ft-icon-wa {
-          background: #DCFCE7;
-          color: #16A34A;
-          border: 1px solid #BBF7D0;
-        }
-        .ft-icon-mail {
-          background: #EFF6FF;
-          color: #2563EB;
-          border: 1px solid #BFDBFE;
-        }
-        .ft-icon-ig {
-          background: #FDF2F8;
-          color: #DB2777;
-          border: 1px solid #FBCFE8;
-        }
-        .ft-icon-tracking {
-          background: #F1F5F9;
-          color: #0F172A;
-          border: 1px solid #E2E8F0;
-        }
-        .ft-icon-map {
-          background: #FFF1F2;
-          color: #E11D48;
-          border: 1px solid #FFE4E6;
-        }
-
-        .ft-item-texts {
-          display: flex;
-          flex-direction: column;
-          line-height: 1.25;
-        }
-        .ft-label-sub {
-          font-size: 0.70rem;
-          font-weight: 600;
-          color: #64748B;
-          text-transform: uppercase;
+          color: #FFFFFF;
           letter-spacing: 0.04em;
-        }
-        .ft-strong {
-          font-size: 0.86rem;
-          font-weight: 700;
-          color: #0F172A;
-          word-break: break-all;
+          display: block;
         }
 
-        /* Logistics List */
-        .ft-logistics-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
+        .footer-brand-sub {
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: #10B981;
+          letter-spacing: 0.02em;
+          display: block;
+        }
+
+        .footer-desc {
+          font-size: 0.82rem;
+          line-height: 1.55;
+          color: #94A3B8;
+          margin: 0 0 1.15rem 0;
+          max-width: 340px;
+        }
+
+        .footer-social-row {
           display: flex;
           flex-direction: column;
-          gap: 12px;
-        }
-        .ft-logistics-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
-        }
-        .ft-icon-pickup {
-          background: #FFF1F2;
-          color: #E11D48;
-          border: 1px solid #FFE4E6;
-        }
-        .ft-icon-clock {
-          background: #F1F5F9;
-          color: #0F172A;
-          border: 1px solid #CBD5E1;
-        }
-        .ft-icon-truck {
-          background: #E0F2FE;
-          color: #0284C7;
-          border: 1px solid #BAE6FD;
-        }
-        .ft-icon-pay {
-          background: #DCFCE7;
-          color: #16A34A;
-          border: 1px solid #BBF7D0;
+          gap: 0.5rem;
         }
 
-        .ft-logistics-title {
-          display: block;
-          font-size: 0.84rem;
-          font-weight: 800;
-          color: #0F172A;
-          margin-bottom: 2px;
-        }
-        .ft-logistics-desc {
-          font-size: 0.78rem;
-          color: #475569;
-          line-height: 1.4;
-          margin: 0;
-        }
-        .ft-pay-highlight {
-          color: #16A34A;
-          font-weight: 700;
-        }
-
-        /* Footer Legal Bar */
-        .ft-legal-bar {
-          border-top: 1px solid #E2E8F0;
-          padding: 14px 0;
-          display: flex;
-          justify-content: center;
+        .footer-social-link {
+          display: inline-flex;
           align-items: center;
-          gap: 12px;
-          flex-wrap: wrap;
-          font-size: 0.78rem;
-          color: #64748B;
-        }
-        .ft-legal-link {
-          color: #475569;
-          text-decoration: none;
+          gap: 0.5rem;
+          font-size: 0.82rem;
           font-weight: 600;
+          color: #E2E8F0;
+          text-decoration: none;
           transition: color 0.15s ease;
         }
-        .ft-legal-link:hover {
-          color: #E63946;
-          text-decoration: underline;
-        }
-        .ft-legal-sep {
-          color: #CBD5E1;
+
+        .footer-social-link:hover {
+          color: #22C55E;
         }
 
-        /* Footer Bottom */
-        .ft-bottom {
-          border-top: 1px solid #E2E8F0;
-          padding-top: 16px;
-          padding-bottom: 1.5rem;
+        /* Column Headings */
+        .footer-heading {
+          font-family: var(--font-display);
+          font-size: 0.85rem;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+          margin: 0 0 1rem 0;
+        }
+
+        /* Links Lists */
+        .footer-links {
+          list-style: none;
+          padding: 0;
+          margin: 0;
           display: flex;
-          justify-content: space-between;
+          flex-direction: column;
+          gap: 0.55rem;
+        }
+
+        .footer-links a {
+          font-size: 0.82rem;
+          color: #94A3B8;
+          text-decoration: none;
+          transition: color 0.15s ease;
+          display: inline-block;
+        }
+
+        .footer-links a:hover {
+          color: #FFFFFF;
+        }
+
+        .footer-link-highlight {
+          color: #22C55E !important;
+          font-weight: 700;
+          margin-top: 0.25rem;
+        }
+
+        .footer-link-flex {
+          display: inline-flex !important;
           align-items: center;
-          gap: 12px;
+          gap: 0.45rem;
+        }
+
+        /* Info Block */
+        .footer-info-block {
+          display: flex;
+          flex-direction: column;
+          gap: 0.85rem;
+          font-size: 0.82rem;
+        }
+
+        .footer-info-item {
+          display: flex;
+          gap: 0.55rem;
+          line-height: 1.45;
+        }
+
+        .footer-info-icon {
+          color: #22C55E;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        .footer-info-item strong {
+          color: #FFFFFF;
+          display: block;
+          font-size: 0.84rem;
+        }
+
+        .footer-info-item span {
+          color: #94A3B8;
+          display: block;
+          font-size: 0.78rem;
+        }
+
+        .footer-mail-link {
+          color: #CBD5E1;
+          text-decoration: none;
+          font-size: 0.82rem;
+        }
+
+        .footer-mail-link:hover {
+          color: #22C55E;
+        }
+
+        .footer-info-hours {
+          padding-top: 0.35rem;
+          border-top: 1px solid #1E293B;
+          font-size: 0.78rem;
+          line-height: 1.4;
+        }
+
+        .footer-hours-label {
+          color: #CBD5E1;
+          font-weight: 700;
+          display: block;
+          margin-bottom: 0.15rem;
+        }
+
+        .footer-hours-text {
+          color: #94A3B8;
+          display: block;
+        }
+
+        .footer-pay-pill {
+          background: rgba(34, 197, 94, 0.1);
+          border: 1px solid rgba(34, 197, 94, 0.25);
+          color: #86EFAC;
+          padding: 0.4rem 0.65rem;
+          border-radius: 6px;
+          font-size: 0.74rem;
+          font-weight: 600;
+          line-height: 1.35;
+        }
+
+        /* Bottom Row */
+        .footer-bottom {
+          padding-top: 1.35rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           flex-wrap: wrap;
+          gap: 0.75rem;
           font-size: 0.78rem;
           color: #64748B;
         }
+
         @media (min-width: 768px) {
-          .ft-bottom {
-            padding-right: 5.5rem;
+          .footer-bottom {
+            padding-right: 5rem;
           }
-        }
-        @media (max-width: 767px) {
-          .ft-bottom {
-            padding-bottom: 4.5rem;
-          }
-        }
-        .ft-bottom-right {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .ft-bottom-right a {
-          color: #0F172A;
-          font-weight: 700;
-          text-decoration: none;
-        }
-        .ft-bottom-right a:hover {
-          color: #E63946;
-          text-decoration: underline;
-        }
-        .ft-bottom-sep {
-          color: #CBD5E1;
-        }
-        .ft-admin-link {
-          background: #0F172A;
-          color: #FFFFFF !important;
-          padding: 3px 10px;
-          border-radius: 4px;
-          font-size: 0.72rem;
-          font-weight: 700;
-          transition: background 0.15s ease;
-        }
-        .ft-admin-link:hover {
-          background: #E63946;
         }
 
-        /* NEON THEME FOOTER */
-        [data-theme="neon"] .ft {
-          background: #070A0F !important;
-          color: #E2E8F0 !important;
-          border-top-color: #1E293B !important;
+        @media (max-width: 640px) {
+          .footer-bottom {
+            flex-direction: column;
+            align-items: flex-start;
+            padding-bottom: 4rem;
+          }
         }
-        [data-theme="neon"] .ft-brand .ft-name {
-          color: #F8FAFC !important;
+
+        .footer-copy {
+          margin: 0;
+          color: #64748B;
         }
-        [data-theme="neon"] .ft-badge {
-          background: rgba(0, 255, 102, 0.15) !important;
-          color: #00FF66 !important;
-          border-color: rgba(0, 255, 102, 0.3) !important;
+
+        .footer-bottom-links {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
         }
-        [data-theme="neon"] .ft-about {
+
+        .footer-bottom-links a {
+          color: #94A3B8;
+          text-decoration: none;
+          transition: color 0.15s ease;
+        }
+
+        .footer-bottom-links a:hover {
+          color: #FFFFFF;
+        }
+
+        .footer-sep {
+          color: #334155;
+        }
+
+        .footer-admin-link {
+          color: #475569 !important;
+          font-size: 0.72rem;
+          text-decoration: none;
+        }
+
+        .footer-admin-link:hover {
           color: #94A3B8 !important;
-        }
-        [data-theme="neon"] .ft-heading {
-          color: #00FF66 !important;
-        }
-        [data-theme="neon"] .ft-nav-link {
-          color: #94A3B8 !important;
-        }
-        [data-theme="neon"] .ft-nav-link:hover {
-          color: #00FF66 !important;
-        }
-        [data-theme="neon"] .ft-contact-item {
-          background: #121824 !important;
-          border-color: #1E293B !important;
-        }
-        [data-theme="neon"] .ft-strong {
-          color: #F8FAFC !important;
-        }
-        [data-theme="neon"] .ft-logistics-title {
-          color: #F8FAFC !important;
-        }
-        [data-theme="neon"] .ft-logistics-desc {
-          color: #94A3B8 !important;
-        }
-        [data-theme="neon"] .ft-legal-bar {
-          border-top-color: #1E293B !important;
-        }
-        [data-theme="neon"] .ft-legal-link {
-          color: #94A3B8 !important;
-        }
-        [data-theme="neon"] .ft-legal-link:hover {
-          color: #00FF66 !important;
-        }
-        [data-theme="neon"] .ft-bottom {
-          border-top-color: #1E293B !important;
-          color: #64748B !important;
-        }
-        [data-theme="neon"] .ft-bottom-right a {
-          color: #00FF66 !important;
-        }
-        [data-theme="neon"] .ft-admin-link {
-          background: #00FF66 !important;
-          color: #0B0E14 !important;
         }
       `}</style>
     </footer>
