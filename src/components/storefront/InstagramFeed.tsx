@@ -33,7 +33,7 @@ const REELS_DATA: ReelItem[] = [
     title: 'Primera competencia de fuerza & atletas en CABA',
     tag: 'COMUNIDAD',
     views: '95.2K',
-    imageUrl: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=700&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?auto=format&fit=crop&w=700&q=80',
     instagramUrl: 'https://www.instagram.com/suplementos_topp',
   },
   {

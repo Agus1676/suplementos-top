@@ -568,6 +568,7 @@ export const Footer: React.FC = () => {
         .ft-bottom {
           border-top: 1px solid #E2E8F0;
           padding-top: 16px;
+          padding-bottom: 1.5rem;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -575,6 +576,16 @@ export const Footer: React.FC = () => {
           flex-wrap: wrap;
           font-size: 0.78rem;
           color: #64748B;
+        }
+        @media (min-width: 768px) {
+          .ft-bottom {
+            padding-right: 5.5rem;
+          }
+        }
+        @media (max-width: 767px) {
+          .ft-bottom {
+            padding-bottom: 4.5rem;
+          }
         }
         .ft-bottom-right {
           display: flex;

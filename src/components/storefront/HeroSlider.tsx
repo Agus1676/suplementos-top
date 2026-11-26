@@ -52,7 +52,7 @@ const SLIDES: Slide[] = [
   },
   {
     id: 2,
-    bgImage: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=1600&q=80',
+    bgImage: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=1600&q=80',
     tag: '🔥 MASA MUSCULAR & RENDIMIENTO',
     title: 'PROTEÍNAS WHEY Y CREATINAS 100% PURAS',
     subtitle:
@@ -354,6 +354,8 @@ export const HeroSlider: React.FC = () => {
           .pv-hero-grid {
             grid-template-columns: 1.2fr 0.8fr;
             gap: 2.5rem;
+            padding-left: 3.75rem;
+            padding-right: 3.75rem;
           }
         }
 
