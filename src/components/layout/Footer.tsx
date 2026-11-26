@@ -360,7 +360,7 @@ export const Footer: React.FC = () => {
 
         @media (min-width: 768px) {
           .footer-bottom {
-            padding-right: 5rem;
+            padding-right: 6.5rem;
           }
         }
 
