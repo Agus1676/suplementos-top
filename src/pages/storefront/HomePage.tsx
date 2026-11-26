@@ -12,14 +12,14 @@ import { HeroSlider } from '../../components/storefront/HeroSlider';
 import { TrustMarquee } from '../../components/storefront/TrustMarquee';
 import { HorizontalScroller } from '../../components/ui/HorizontalScroller';
 import { SEO } from '../../components/common/SEO';
+import { InstagramFeed } from '../../components/storefront/InstagramFeed';
 
 interface CategoryTile {
   title: string;
   subtitle: string;
   slug: string;
-  imageUrl: string;
-  badge: string;
-  badgeColor: string;
+  headerTitle: string;
+  packshots: string[];
 }
 
 const CATEGORY_TILES: CategoryTile[] = [
@@ -27,49 +27,63 @@ const CATEGORY_TILES: CategoryTile[] = [
     title: 'Proteínas Whey',
     subtitle: 'Masa Muscular',
     slug: 'proteinas',
-    badge: '⭐ Top Ventas',
-    badgeColor: '#F0522A',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
+    headerTitle: 'PROTEÍNAS',
+    packshots: [
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-36-d9bc6bd2b3819e422717800791905669-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-95-5c7345af65acc8ee4917654696614725-640-0.webp',
+    ],
   },
   {
-    title: 'Creatinas',
+    title: 'Creatinas Puras',
     subtitle: 'Fuerza & Potencia',
     slug: 'creatinas',
-    badge: '⚡ 100% Pura',
-    badgeColor: '#0EA5E9',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-86-b01227391a8693a81817830230456620-640-0.webp',
+    headerTitle: 'CREATINAS',
+    packshots: [
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/crea1-43ecc9d7c95f3dd32316495194702323-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-86-b01227391a8693a81817830230456620-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-66-89296cadbf5be4b82e17579636094867-640-0.webp',
+    ],
   },
   {
     title: 'Pre-Entreno',
     subtitle: 'Energía Explosiva',
     slug: 'pre-entrenos',
-    badge: '🚀 Pump V8',
-    badgeColor: '#E58E09',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/v8-acai-296d8b9d4323834baa17326403674588-640-0.webp',
+    headerTitle: 'PRE-ENTRENO',
+    packshots: [
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/v8-acai-296d8b9d4323834baa17326403674588-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/1-beta-alanina1-9e9e31c14f3fab222116395930246659-640-0.webp',
+    ],
+  },
+  {
+    title: 'Combos Ahorro',
+    subtitle: 'Proteína + Creatina',
+    slug: 'combos',
+    headerTitle: 'COMBOS',
+    packshots: [
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/crea1-43ecc9d7c95f3dd32316495194702323-640-0.webp',
+    ],
   },
   {
     title: 'Aminoácidos',
-    subtitle: 'Recuperación',
+    subtitle: 'Recuperación Rápida',
     slug: 'aminoacidos',
-    badge: '🧬 BCAA 2000',
-    badgeColor: '#10B981',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/1-beta-alanina1-9e9e31c14f3fab222116395930246659-640-0.webp',
+    headerTitle: 'AMINOÁCIDOS',
+    packshots: [
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/1-beta-alanina1-9e9e31c14f3fab222116395930246659-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/colag-sport-fp-34b023adaa65e4448817335106040409-640-0.webp',
+    ],
   },
   {
-    title: 'Combos',
-    subtitle: 'Pack Ahorro',
-    slug: 'combos',
-    badge: '🔥 20% OFF',
-    badgeColor: '#E11D48',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
-  },
-  {
-    title: 'Vitaminas',
-    subtitle: 'Salud & Magnesio',
+    title: 'Salud & Vitaminas',
+    subtitle: 'Magnesio & Vitalidad',
     slug: 'salud-vitaminas',
-    badge: '💊 Vitalidad',
-    badgeColor: '#8B5CF6',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
+    headerTitle: 'VITAMINAS',
+    packshots: [
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/colag-sport-fp-34b023adaa65e4448817335106040409-640-0.webp',
+    ],
   },
 ];
 
@@ -171,40 +185,54 @@ export const HomePage: React.FC = () => {
       {/* 2. Trust strip — compact, auto-scrolling to the left */}
       <TrustMarquee />
 
-      {/* 3. Compact category rail with real product packshots */}
-      <section className="categories-section" aria-label="Categorías">
+      {/* 3. Categorías principales (Estilo ProteViking con banner verde y bundle packshots) */}
+      <section className="categories-section" aria-label="Categorías principales">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Comprá por categoría</h2>
+            <div>
+              <span className="section-eyebrow">SELECCIÓN OFICIAL</span>
+              <h2 className="section-title">Categorías principales</h2>
+            </div>
             <Link to="/catalogo" className="section-link">
-              <span>Ver todo</span>
+              <span>Ver todas</span>
               <ArrowRight size={16} />
             </Link>
           </div>
 
           <HorizontalScroller
-            ariaLabel="Categorías de productos"
-            perView={{ mobile: 2, tablet: 4, desktop: 6 }}
-            gapRem={0.75}
-            mobilePeek={0.35}
+            ariaLabel="Categorías principales de productos"
+            perView={{ mobile: 1.6, tablet: 3.2, desktop: 4.2 }}
+            gapRem={0.85}
+            mobilePeek={0.25}
           >
             {CATEGORY_TILES.map((cat) => (
               <Link
                 key={cat.slug}
                 to={`/catalogo?categoria=${cat.slug}`}
-                className="cat-pack-card"
+                className="cat-card-viking"
               >
-                <div className="cat-pack-stage">
-                  <span
-                    className="cat-pack-badge"
-                    style={{ backgroundColor: cat.badgeColor }}
-                  >
-                    {cat.badge}
-                  </span>
-                  <img src={cat.imageUrl} alt={cat.title} loading="lazy" className="cat-pack-img" />
+                <div className="cat-card-header">
+                  <span className="cat-card-header-title">{cat.headerTitle}</span>
                 </div>
-                <span className="cat-pack-title">{cat.title}</span>
-                <span className="cat-pack-subtitle">{cat.subtitle}</span>
+
+                <div className="cat-card-stage">
+                  <div className="cat-bundle-wrap">
+                    {cat.packshots.map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img}
+                        alt=""
+                        className={`cat-bundle-img cat-bundle-img--${idx === 0 ? 'center' : idx === 1 ? 'left' : 'right'}`}
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="cat-card-footer">
+                  <span className="cat-card-title">{cat.title}</span>
+                  <span className="cat-card-subtitle">{cat.subtitle}</span>
+                </div>
               </Link>
             ))}
           </HorizontalScroller>
@@ -378,7 +406,10 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 9. Local SEO Semantic Authority Section */}
+      {/* 9. Human Community & Instagram Reels (Estilo ProteViking) */}
+      <InstagramFeed />
+
+      {/* 10. Local SEO Semantic Authority Section */}
       <section className="seo-local-authority-section" aria-label="Información local de Suplementos Top en Recoleta">
         <div className="container">
           <div className="seo-authority-card">
@@ -421,76 +452,119 @@ export const HomePage: React.FC = () => {
           gap: 0;
         }
 
-        /* 3. Compact Category Packshot Cards */
+        /* 3. Categorías principales (Estilo ProteViking con banner verde y bundle packshots) */
         .categories-section {
-          padding: 1.5rem 0 0.75rem;
+          padding: 2rem 0 1.25rem;
           background: var(--color-bg-main);
         }
-        .cat-pack-card {
+        .cat-card-viking {
+          position: relative;
+          background: #FFFFFF;
+          border: 1.5px solid #E2E8F0;
+          border-radius: 18px;
+          overflow: hidden;
           display: flex;
           flex-direction: column;
-          align-items: center;
-          gap: 0.45rem;
           text-decoration: none;
-          color: var(--color-text-main);
+          box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+          transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
-        .cat-pack-stage {
+        .cat-card-viking:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.14);
+          border-color: #22C55E;
+        }
+        .cat-card-header {
+          background: linear-gradient(135deg, #15803D 0%, #16A34A 50%, #22C55E 100%);
+          padding: 0.75rem 1rem;
+          color: #FFFFFF;
+        }
+        .cat-card-header-title {
+          font-family: var(--font-display);
+          font-size: 0.92rem;
+          font-weight: 900;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+          display: block;
+        }
+        .cat-card-stage {
+          position: relative;
+          height: 155px;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          padding: 0.85rem 0.5rem 0.65rem;
+          background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+          overflow: hidden;
+        }
+        .cat-bundle-wrap {
           position: relative;
           width: 100%;
-          aspect-ratio: 1 / 1;
-          background: var(--color-bg-card);
-          border: 1px solid var(--color-border);
-          border-radius: 12px;
-          padding: 1.75rem 0.75rem 0.65rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-        }
-        .cat-pack-card:hover .cat-pack-stage {
-          border-color: var(--color-accent);
-          box-shadow: 0 8px 20px -8px rgba(15, 23, 42, 0.14);
-          transform: translateY(-2px);
-        }
-        .cat-pack-img {
-          width: 100%;
           height: 100%;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+        }
+        .cat-bundle-img {
           object-fit: contain;
           transition: transform 0.25s ease;
+          filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));
         }
-        .cat-pack-card:hover .cat-pack-img {
+        .cat-bundle-img--center {
+          position: relative;
+          z-index: 3;
+          height: 125px;
+          max-width: 58%;
+        }
+        .cat-bundle-img--left {
+          position: absolute;
+          left: 4%;
+          bottom: 2px;
+          z-index: 2;
+          height: 105px;
+          max-width: 48%;
+          transform: rotate(-5deg);
+          opacity: 0.95;
+        }
+        .cat-bundle-img--right {
+          position: absolute;
+          right: 4%;
+          bottom: 2px;
+          z-index: 1;
+          height: 102px;
+          max-width: 48%;
+          transform: rotate(5deg);
+          opacity: 0.95;
+        }
+        .cat-card-viking:hover .cat-bundle-img--center {
           transform: scale(1.05);
         }
-        .cat-pack-badge {
-          position: absolute;
-          top: 0.5rem;
-          left: 50%;
-          transform: translateX(-50%);
-          color: #FFFFFF;
-          font-size: 0.68rem;
-          font-weight: 700;
-          padding: 0.22rem 0.65rem;
-          border-radius: 999px;
-          white-space: nowrap;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-          z-index: 2;
+        .cat-card-viking:hover .cat-bundle-img--left {
+          transform: rotate(-7deg) scale(1.03);
         }
-        .cat-pack-title {
+        .cat-card-viking:hover .cat-bundle-img--right {
+          transform: rotate(7deg) scale(1.03);
+        }
+        .cat-card-footer {
+          padding: 0.65rem 0.85rem 0.85rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+          background: #FFFFFF;
+          border-top: 1px solid #F1F5F9;
+        }
+        .cat-card-title {
           font-family: var(--font-display);
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: var(--color-text-main);
-          text-align: center;
+          font-size: 0.92rem;
+          font-weight: 800;
+          color: #0F172A;
           line-height: 1.2;
-          margin-top: 0.15rem;
         }
-        .cat-pack-subtitle {
-          font-size: 0.74rem;
-          color: var(--color-text-muted);
-          text-align: center;
-          line-height: 1.2;
-          margin-top: -0.25rem;
+        .cat-card-subtitle {
+          font-size: 0.76rem;
+          color: #64748B;
+          font-weight: 500;
         }
 
         /* 4. Products Showcase */

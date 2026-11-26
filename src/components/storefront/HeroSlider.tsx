@@ -24,13 +24,13 @@ const SLIDES: Slide[] = [
   {
     id: 1,
     bgImage: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1600&q=80',
-    tag: '⚡ SUPLEMENTACIÓN DEPORTIVA 100% ORIGINAL',
-    title: 'Suplementos originales de las mejores marcas',
+    tag: '⚡ 100% ORIGINALES • ENVÍO A TODO EL PAÍS',
+    title: 'MÁS DE 100 PEDIDOS POR DÍA, SALEN DE ACÁ',
     subtitle:
-      'Star Nutrition, ENA Sport, Optimum Nutrition y One Fit con envío express a todo el país o retiro sin cargo en Recoleta.',
-    highlight1: '10% OFF por transferencia',
-    highlight2: '6 cuotas sin interés con Mercado Pago',
-    ctaText: 'Ver catálogo completo',
+      'Suplementos originales de las mejores marcas, con envío a todo el país o retiro sin cargo en nuestro local de Recoleta.',
+    highlight1: '🤝 10% OFF Transferencia',
+    highlight2: '💳 6 Cuotas Sin Interés',
+    ctaText: 'Ver Productos',
     ctaLink: '/catalogo',
     products: [
       {
@@ -44,7 +44,7 @@ const SLIDES: Slide[] = [
           'https://acdn-us.mitiendanube.com/stores/001/247/962/products/crea1-43ecc9d7c95f3dd32316495194702323-640-0.webp',
       },
       {
-        name: 'Optimum Nutrition Creatine',
+        name: 'Optimum Nutrition Gold Standard',
         imageUrl:
           'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-66-89296cadbf5be4b82e17579636094867-640-0.webp',
       },
@@ -54,12 +54,12 @@ const SLIDES: Slide[] = [
     id: 2,
     bgImage: 'https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=1600&q=80',
     tag: '🔥 MASA MUSCULAR & RENDIMIENTO',
-    title: 'Proteínas Whey y Creatinas 100% puras',
+    title: 'PROTEÍNAS WHEY Y CREATINAS 100% PURAS',
     subtitle:
       'Materia prima importada con máxima pureza y disolución instantánea. Recuperación muscular y fuerza explosiva sin rellenos.',
-    highlight1: 'Hasta 20% OFF en combos',
-    highlight2: 'Envíos a todo el país',
-    ctaText: 'Ver proteínas y combos',
+    highlight1: '🔥 Hasta 20% OFF en Combos',
+    highlight2: '🚚 Envíos Express en el Día',
+    ctaText: 'Ver Proteínas y Combos',
     ctaLink: '/catalogo?categoria=proteinas',
     products: [
       {
@@ -68,7 +68,7 @@ const SLIDES: Slide[] = [
           'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
       },
       {
-        name: 'ENA True Made Whey',
+        name: 'ENA True Made Whey 2lb',
         imageUrl:
           'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
       },
@@ -83,12 +83,12 @@ const SLIDES: Slide[] = [
     id: 3,
     bgImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=80',
     tag: '📍 GIMNASIO TOP SHAPE • RECOLETA',
-    title: 'Comprá online y retirá hoy en Recoleta',
+    title: 'COMPRÁ ONLINE Y RETIRÁ HOY EN RECOLETA',
     subtitle:
-      'Sede oficial en Pres. José E. Uriburu 1163 (entre Av. Santa Fe y Arenales). Lun a Vie 8 a 23 hs y Sáb 10 a 18 hs sin costo.',
-    highlight1: 'Retiro en el día $0 GRATIS',
-    highlight2: 'WhatsApp 11 6565-2990',
-    ctaText: 'Ubicación y cómo llegar',
+      'Sede oficial en Pres. José E. Uriburu 1163 (entre Av. Santa Fe y Arenales). Lunes a Viernes de 8 a 23 hs y Sábados de 10 a 18 hs sin costo.',
+    highlight1: '📍 Retiro en el Día $0 GRATIS',
+    highlight2: '💬 WhatsApp 11 6565-2990',
+    ctaText: 'Ubicación y Horarios',
     ctaLink: '/contacto',
     products: [
       {
@@ -110,7 +110,7 @@ const SLIDES: Slide[] = [
   },
 ];
 
-const AUTOPLAY_INTERVAL = 4000;
+const AUTOPLAY_INTERVAL = 4500;
 
 export const HeroSlider: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -168,7 +168,7 @@ export const HeroSlider: React.FC = () => {
               className={`pv-hero-slide ${isActive ? 'active' : ''}`}
               aria-hidden={!isActive}
             >
-              {/* Background atmospheric athletic photo */}
+              {/* Background atmospheric photo */}
               <div className="pv-hero-bg">
                 <img
                   src={slide.bgImage}
@@ -184,22 +184,26 @@ export const HeroSlider: React.FC = () => {
                   <div className="pv-hero-tag-wrap">
                     <span className="pv-hero-tag">{slide.tag}</span>
                   </div>
+
                   <h1 className="pv-hero-title">{slide.title}</h1>
                   <p className="pv-hero-sub">{slide.subtitle}</p>
 
+                  {/* Pills (Estilo ProteViking: 10% OFF & 6 Cuotas) */}
                   <div className="pv-hero-highlights">
-                    <span className="pv-hi pv-hi-green">{slide.highlight1}</span>
-                    <span className="pv-hi pv-hi-neutral">{slide.highlight2}</span>
+                    <span className="pv-hi pv-hi-pill-white">{slide.highlight1}</span>
+                    <span className="pv-hi pv-hi-pill-green">{slide.highlight2}</span>
                   </div>
 
+                  {/* Prominent floating CTA button at the bottom */}
                   <div className="pv-hero-actions">
-                    <Link to={slide.ctaLink} className="pv-hero-cta">
+                    <Link to={slide.ctaLink} className="pv-hero-cta-viking">
                       <span>{slide.ctaText}</span>
-                      <ArrowRight size={17} />
+                      <ArrowRight size={18} />
                     </Link>
                   </div>
                 </div>
 
+                {/* Real Product Packshots Trio on Right */}
                 <div className="pv-hero-products">
                   {slide.products.map((prod, idx) => (
                     <div key={prod.name} className={`pv-hero-pack pv-hero-pack--${idx}`}>
@@ -223,7 +227,7 @@ export const HeroSlider: React.FC = () => {
         className="pv-hero-arrow pv-hero-arrow--prev"
         aria-label="Anterior"
       >
-        <ChevronLeft size={20} />
+        <ChevronLeft size={22} />
       </button>
       <button
         type="button"
@@ -231,9 +235,10 @@ export const HeroSlider: React.FC = () => {
         className="pv-hero-arrow pv-hero-arrow--next"
         aria-label="Siguiente"
       >
-        <ChevronRight size={20} />
+        <ChevronRight size={22} />
       </button>
 
+      {/* Pagination dots centered at bottom */}
       <div className="pv-hero-dots">
         {SLIDES.map((s, index) => (
           <button
@@ -252,11 +257,11 @@ export const HeroSlider: React.FC = () => {
           overflow: hidden;
           background: #0B0E14;
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          min-height: 380px;
+          min-height: 440px;
         }
         @media (min-width: 900px) {
           .pv-hero {
-            height: clamp(390px, 48vh, 460px);
+            height: clamp(430px, 52vh, 490px);
           }
         }
         .pv-hero-slides {
@@ -273,7 +278,7 @@ export const HeroSlider: React.FC = () => {
           pointer-events: none;
           display: flex;
           align-items: center;
-          padding: 1.5rem 0 2.5rem;
+          padding: 2rem 0 3.25rem;
         }
         .pv-hero-slide.active {
           opacity: 1;
@@ -290,8 +295,8 @@ export const HeroSlider: React.FC = () => {
             grid-area: 1 / 1;
             position: relative;
             inset: auto;
-            min-height: 350px;
-            padding: 1.75rem 0 2.75rem;
+            min-height: 420px;
+            padding: 2rem 0 3.75rem;
           }
           .pv-hero-slide:not(.active) {
             display: none;
@@ -321,17 +326,17 @@ export const HeroSlider: React.FC = () => {
           inset: 0;
           background: linear-gradient(
             90deg, 
-            rgba(11, 14, 20, 0.96) 0%, 
-            rgba(11, 14, 20, 0.88) 48%, 
-            rgba(11, 14, 20, 0.55) 100%
+            rgba(11, 14, 20, 0.95) 0%, 
+            rgba(11, 14, 20, 0.88) 52%, 
+            rgba(11, 14, 20, 0.50) 100%
           );
         }
         @media (max-width: 899px) {
           .pv-hero-bg-overlay {
             background: linear-gradient(
               180deg, 
-              rgba(11, 14, 20, 0.94) 0%, 
-              rgba(11, 14, 20, 0.97) 100%
+              rgba(11, 14, 20, 0.92) 0%, 
+              rgba(11, 14, 20, 0.96) 100%
             );
           }
         }
@@ -347,7 +352,7 @@ export const HeroSlider: React.FC = () => {
         }
         @media (min-width: 900px) {
           .pv-hero-grid {
-            grid-template-columns: 1.15fr 0.85fr;
+            grid-template-columns: 1.2fr 0.8fr;
             gap: 2.5rem;
           }
         }
@@ -356,8 +361,16 @@ export const HeroSlider: React.FC = () => {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          max-width: 580px;
+          max-width: 620px;
         }
+        @media (max-width: 899px) {
+          .pv-hero-copy {
+            align-items: center;
+            text-align: center;
+            margin: 0 auto;
+          }
+        }
+
         .pv-hero-tag-wrap {
           margin-bottom: 0.65rem;
         }
@@ -367,92 +380,111 @@ export const HeroSlider: React.FC = () => {
           font-weight: 800;
           letter-spacing: 0.08em;
           color: #FFFFFF;
-          border: 1px solid rgba(255, 255, 255, 0.35);
-          background: rgba(255, 255, 255, 0.1);
-          padding: 0.25rem 0.65rem;
-          border-radius: 4px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.12);
+          backdrop-filter: blur(4px);
+          padding: 0.25rem 0.75rem;
+          border-radius: 999px;
         }
+
         .pv-hero-title {
           font-family: var(--font-display);
           font-weight: 900;
-          font-size: clamp(1.65rem, 3.4vw, 2.55rem);
-          line-height: 1.12;
+          font-size: clamp(1.65rem, 3.8vw, 2.75rem);
+          line-height: 1.1;
           color: #FFFFFF;
           margin: 0 0 0.75rem;
-          letter-spacing: -0.02em;
-          text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-        .pv-hero-sub {
-          font-size: clamp(0.86rem, 1.3vw, 0.98rem);
-          line-height: 1.55;
-          color: #CBD5E1;
-          margin: 0 0 1.25rem;
-          text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+          letter-spacing: -0.01em;
+          text-transform: uppercase;
+          text-shadow: 0 2px 12px rgba(0,0,0,0.6);
         }
 
+        .pv-hero-sub {
+          font-size: clamp(0.88rem, 1.3vw, 1.02rem);
+          line-height: 1.55;
+          color: #CBD5E1;
+          margin: 0 0 1.35rem;
+          text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+          max-width: 540px;
+        }
+
+        /* Pills (Estilo ProteViking: 10% OFF & 6 Cuotas) */
         .pv-hero-highlights {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.5rem;
-          margin-bottom: 1.35rem;
+          gap: 0.6rem;
+          margin-bottom: 1.6rem;
+        }
+        @media (max-width: 899px) {
+          .pv-hero-highlights {
+            justify-content: center;
+          }
         }
         .pv-hi {
           display: inline-flex;
           align-items: center;
-          font-size: 0.8rem;
+          font-size: 0.82rem;
           font-weight: 800;
-          padding: 0.45rem 0.95rem;
-          border-radius: 6px;
-          line-height: 1.1;
+          padding: 0.45rem 1rem;
+          border-radius: 999px;
+          line-height: 1.15;
           letter-spacing: 0.02em;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
-        .pv-hi-green {
+        .pv-hi-pill-white {
+          background: #FFFFFF;
+          color: #15803D;
+          border: 1.5px solid #86EFAC;
+        }
+        .pv-hi-pill-green {
           background: #16A34A;
           color: #FFFFFF;
-        }
-        .pv-hi-neutral {
-          background: rgba(255, 255, 255, 0.12);
-          color: #FFFFFF;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          backdrop-filter: blur(4px);
+          border: 1.5px solid #22C55E;
         }
 
+        /* Floating CTA Button (Estilo ProteViking) */
         .pv-hero-actions {
           display: flex;
           gap: 0.75rem;
         }
-        @media (max-width: 640px) {
+        @media (max-width: 899px) {
           .pv-hero-actions {
             width: 100%;
-          }
-          .pv-hero-cta {
-            width: 100%;
-            text-align: center;
+            justify-content: center;
           }
         }
-        .pv-hero-cta {
+        .pv-hero-cta-viking {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 0.5rem;
-          background: #FFFFFF;
-          color: #0F172A;
-          font-family: var(--font-body);
+          gap: 0.6rem;
+          background: linear-gradient(135deg, #16A34A 0%, #22C55E 100%);
+          color: #FFFFFF;
+          font-family: var(--font-display);
           font-weight: 800;
-          font-size: 0.95rem;
-          padding: 0.8rem 2rem;
-          border-radius: 6px;
+          font-size: 1.05rem;
+          letter-spacing: -0.01em;
+          padding: 0.85rem 2.5rem;
+          border-radius: 999px;
           text-decoration: none;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-          transition: all 0.2s ease;
+          box-shadow: 0 6px 22px rgba(22, 163, 74, 0.45);
+          transition: all 0.22s ease;
         }
-        .pv-hero-cta:hover {
-          background: var(--color-accent);
-          transform: translateY(-2px);
+        .pv-hero-cta-viking:hover {
+          background: linear-gradient(135deg, #15803D 0%, #16A34A 100%);
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 8px 28px rgba(22, 163, 74, 0.6);
           color: #FFFFFF;
         }
+        @media (max-width: 480px) {
+          .pv-hero-cta-viking {
+            width: 85%;
+            padding: 0.8rem 1.75rem;
+            font-size: 0.98rem;
+          }
+        }
 
-        /* Real Product Packshots Trio on Right with Glow */
+        /* Real Product Packshots Trio on Right */
         .pv-hero-products {
           display: none;
           align-items: center;
@@ -466,24 +498,25 @@ export const HeroSlider: React.FC = () => {
         }
         .pv-hero-pack {
           background: rgba(255, 255, 255, 0.95);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-radius: 12px;
-          padding: 0.75rem;
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          border-radius: 14px;
+          padding: 0.85rem;
           width: 155px;
-          height: 185px;
+          height: 190px;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
           transition: transform 0.25s ease;
         }
         .pv-hero-pack:hover {
           transform: translateY(-4px) scale(1.02);
         }
         .pv-hero-pack--1 {
-          width: 180px;
-          height: 220px;
-          box-shadow: 0 16px 35px rgba(0, 0, 0, 0.5);
+          width: 185px;
+          height: 225px;
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+          border-color: rgba(34, 197, 94, 0.5);
         }
         .pv-hero-pack img {
           width: 100%;
@@ -491,17 +524,18 @@ export const HeroSlider: React.FC = () => {
           object-fit: contain;
         }
 
+        /* Arrows */
         .pv-hero-arrow {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          width: 40px;
-          height: 40px;
+          width: 42px;
+          height: 42px;
           border-radius: 50%;
-          background: rgba(11, 14, 20, 0.75);
+          background: rgba(11, 14, 20, 0.7);
           backdrop-filter: blur(8px);
           color: #FFFFFF;
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.25);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -521,12 +555,14 @@ export const HeroSlider: React.FC = () => {
           .pv-hero-arrow { display: none; }
         }
 
+        /* Pagination dots centered at bottom */
         .pv-hero-dots {
           position: absolute;
           bottom: 1rem;
           left: 50%;
           transform: translateX(-50%);
           display: flex;
+          align-items: center;
           gap: 0.5rem;
           z-index: 10;
         }
@@ -534,15 +570,17 @@ export const HeroSlider: React.FC = () => {
           width: 8px;
           height: 8px;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.45);
+          background: rgba(255, 255, 255, 0.4);
           border: none;
           padding: 0;
           cursor: pointer;
           transition: all 0.25s ease;
         }
         .pv-hero-dot.active {
-          width: 24px;
-          background: #FFFFFF;
+          width: 26px;
+          border-radius: 999px;
+          background: #22C55E;
+          box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
         }
       `}</style>
     </section>
