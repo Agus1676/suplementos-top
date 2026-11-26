@@ -366,9 +366,9 @@ export const HeroSlider: React.FC = () => {
           font-size: 0.72rem;
           font-weight: 800;
           letter-spacing: 0.08em;
-          color: #00FF66;
-          border: 1px solid rgba(0, 255, 102, 0.5);
-          background: rgba(0, 255, 102, 0.12);
+          color: #FFFFFF;
+          border: 1px solid rgba(255, 255, 255, 0.35);
+          background: rgba(255, 255, 255, 0.1);
           padding: 0.25rem 0.65rem;
           border-radius: 4px;
         }
@@ -407,9 +407,8 @@ export const HeroSlider: React.FC = () => {
           letter-spacing: 0.02em;
         }
         .pv-hi-green {
-          background: #00FF66;
-          color: #0B0E14;
-          box-shadow: 0 0 16px rgba(0, 255, 102, 0.35);
+          background: #16A34A;
+          color: #FFFFFF;
         }
         .pv-hi-neutral {
           background: rgba(255, 255, 255, 0.12);
@@ -436,22 +435,21 @@ export const HeroSlider: React.FC = () => {
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
-          background: #00FF66;
-          color: #0B0E14;
+          background: #FFFFFF;
+          color: #0F172A;
           font-family: var(--font-body);
           font-weight: 800;
           font-size: 0.95rem;
           padding: 0.8rem 2rem;
           border-radius: 6px;
           text-decoration: none;
-          box-shadow: 0 4px 20px rgba(0, 255, 102, 0.4);
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
           transition: all 0.2s ease;
         }
         .pv-hero-cta:hover {
-          background: #10B981;
+          background: var(--color-accent);
           transform: translateY(-2px);
-          box-shadow: 0 6px 24px rgba(0, 255, 102, 0.6);
-          color: #0B0E14;
+          color: #FFFFFF;
         }
 
         /* Real Product Packshots Trio on Right with Glow */
@@ -485,8 +483,7 @@ export const HeroSlider: React.FC = () => {
         .pv-hero-pack--1 {
           width: 180px;
           height: 220px;
-          box-shadow: 0 16px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 102, 0.2);
-          border-color: rgba(0, 255, 102, 0.4);
+          box-shadow: 0 16px 35px rgba(0, 0, 0, 0.5);
         }
         .pv-hero-pack img {
           width: 100%;
@@ -513,9 +510,9 @@ export const HeroSlider: React.FC = () => {
           transition: all 0.2s ease;
         }
         .pv-hero-arrow:hover {
-          background: #00FF66;
-          color: #0B0E14;
-          border-color: #00FF66;
+          background: #FFFFFF;
+          color: #0F172A;
+          border-color: #FFFFFF;
           transform: translateY(-50%) scale(1.06);
         }
         .pv-hero-arrow--prev { left: 1rem; }
@@ -534,19 +531,18 @@ export const HeroSlider: React.FC = () => {
           z-index: 10;
         }
         .pv-hero-dot {
-          width: 24px;
-          height: 5px;
-          border-radius: 3px;
-          background: rgba(255, 255, 255, 0.3);
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.45);
           border: none;
           padding: 0;
           cursor: pointer;
           transition: all 0.25s ease;
         }
         .pv-hero-dot.active {
-          width: 40px;
-          background: #00FF66;
-          box-shadow: 0 0 10px rgba(0, 255, 102, 0.7);
+          width: 24px;
+          background: #FFFFFF;
         }
       `}</style>
     </section>

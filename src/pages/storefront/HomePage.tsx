@@ -775,9 +775,9 @@ export const HomePage: React.FC = () => {
           font-weight: 800;
           letter-spacing: 0.05em;
           text-transform: uppercase;
-          background: rgba(0, 255, 102, 0.12);
+          background: var(--color-accent-light);
           color: var(--color-accent);
-          border: 1px solid rgba(0, 255, 102, 0.4);
+          border: 1px solid rgba(240, 16, 58, 0.3);
           padding: 0.2rem 0.65rem;
           border-radius: var(--radius-full);
         }

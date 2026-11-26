@@ -13,7 +13,7 @@ import { formatARS } from '../../lib/utils';
 
 export const Header: React.FC = () => {
   const { totalItemsCount, openCartDrawer } = useCart();
-  const { products, settings, theme, toggleTheme } = useStore();
+  const { products, settings } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -155,18 +155,6 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="pv-actions-cluster">
-            {/* Theme Toggle Button (Negro & Neón / Claro) */}
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className={`pv-theme-toggle ${theme === 'neon' ? 'is-neon' : 'is-light'}`}
-              title="Cambiar entre Tema Neón (Negro y Verde) y Tema Claro"
-              aria-label="Cambiar tema"
-            >
-              <span className="pv-theme-dot" />
-              <span className="pv-theme-text">{theme === 'neon' ? 'NEÓN' : 'CLARO'}</span>
-            </button>
-
             <Link
               to="/seguimiento"
               className="pv-icon-btn"
@@ -288,17 +276,6 @@ export const Header: React.FC = () => {
                 aria-label="Cerrar menú"
               >
                 <X size={20} />
-              </button>
-            </div>
-            <div className="pv-mobile-theme-bar">
-              <span className="pv-mobile-theme-label">Tema visual:</span>
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className={`pv-theme-toggle ${theme === 'neon' ? 'is-neon' : 'is-light'}`}
-              >
-                <span className="pv-theme-dot" />
-                <span className="pv-theme-text">{theme === 'neon' ? 'NEGRO & NEÓN' : 'CLARO'}</span>
               </button>
             </div>
 

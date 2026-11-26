@@ -63,31 +63,19 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   });
 
-  const [theme, setTheme] = useState<'neon' | 'light'>(() => {
-    try {
-      const saved = localStorage.getItem('suplementos_top_theme');
-      return (saved === 'light' || saved === 'neon') ? saved : 'neon';
-    } catch {
-      return 'neon';
-    }
-  });
+  // Tema único: diseño claro (blanco) profesional. Se eliminó el modo neón.
+  const theme: 'neon' | 'light' = 'light';
 
   useEffect(() => {
     try {
-      localStorage.setItem('suplementos_top_theme', theme);
-      if (theme === 'neon') {
-        document.documentElement.setAttribute('data-theme', 'neon');
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-      }
+      localStorage.removeItem('suplementos_top_theme');
+      document.documentElement.removeAttribute('data-theme');
     } catch (e) {
       console.error(e);
     }
-  }, [theme]);
+  }, []);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'neon' ? 'light' : 'neon'));
-  };
+  const toggleTheme = () => {};
 
   useEffect(() => {
     try {
