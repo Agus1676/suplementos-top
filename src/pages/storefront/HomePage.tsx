@@ -54,6 +54,7 @@ const CATEGORY_TILES: CategoryTile[] = [
     packshots: [
       'https://acdn-us.mitiendanube.com/stores/001/247/962/products/v8-acai-296d8b9d4323834baa17326403674588-640-0.webp',
       'https://acdn-us.mitiendanube.com/stores/001/247/962/products/1-beta-alanina1-9e9e31c14f3fab222116395930246659-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/crea1-43ecc9d7c95f3dd32316495194702323-640-0.webp',
     ],
   },
   {
@@ -64,6 +65,7 @@ const CATEGORY_TILES: CategoryTile[] = [
     packshots: [
       'https://acdn-us.mitiendanube.com/stores/001/247/962/products/3kg-ban-f6002d8b105495880e17326433478591-640-0.webp',
       'https://acdn-us.mitiendanube.com/stores/001/247/962/products/crea1-43ecc9d7c95f3dd32316495194702323-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
     ],
   },
   {
@@ -74,6 +76,7 @@ const CATEGORY_TILES: CategoryTile[] = [
     packshots: [
       'https://acdn-us.mitiendanube.com/stores/001/247/962/products/1-beta-alanina1-9e9e31c14f3fab222116395930246659-640-0.webp',
       'https://acdn-us.mitiendanube.com/stores/001/247/962/products/colag-sport-fp-34b023adaa65e4448817335106040409-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-86-b01227391a8693a81817830230456620-640-0.webp',
     ],
   },
   {
@@ -84,6 +87,7 @@ const CATEGORY_TILES: CategoryTile[] = [
     packshots: [
       'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
       'https://acdn-us.mitiendanube.com/stores/001/247/962/products/colag-sport-fp-34b023adaa65e4448817335106040409-640-0.webp',
+      'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-36-d9bc6bd2b3819e422717800791905669-640-0.webp',
     ],
   },
 ];
@@ -518,11 +522,11 @@ export const HomePage: React.FC = () => {
         }
         .cat-card-stage {
           position: relative;
-          height: 155px;
+          height: 165px;
           display: flex;
           align-items: flex-end;
           justify-content: center;
-          padding: 0.85rem 0.5rem 0.65rem;
+          padding: 0.85rem 0.5rem 0.5rem;
           background: #FFFFFF;
           overflow: hidden;
         }
@@ -542,28 +546,28 @@ export const HomePage: React.FC = () => {
         .cat-bundle-img--center {
           position: relative;
           z-index: 3;
-          height: 125px;
-          max-width: 58%;
+          height: 135px;
+          max-width: 62%;
         }
         .cat-bundle-img--left {
           position: absolute;
-          left: 4%;
+          left: 2%;
           bottom: 2px;
           z-index: 2;
-          height: 105px;
-          max-width: 48%;
-          transform: rotate(-5deg);
-          opacity: 0.95;
+          height: 115px;
+          max-width: 52%;
+          transform: rotate(-4deg);
+          opacity: 0.98;
         }
         .cat-bundle-img--right {
           position: absolute;
-          right: 4%;
+          right: 2%;
           bottom: 2px;
           z-index: 1;
-          height: 102px;
-          max-width: 48%;
-          transform: rotate(5deg);
-          opacity: 0.95;
+          height: 112px;
+          max-width: 52%;
+          transform: rotate(4deg);
+          opacity: 0.98;
         }
         .cat-card-viking:hover .cat-bundle-img--center {
           transform: scale(1.05);
