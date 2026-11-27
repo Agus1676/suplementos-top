@@ -523,7 +523,7 @@ export const HomePage: React.FC = () => {
           align-items: flex-end;
           justify-content: center;
           padding: 0.85rem 0.5rem 0.65rem;
-          background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+          background: #FFFFFF;
           overflow: hidden;
         }
         .cat-bundle-wrap {
@@ -537,7 +537,7 @@ export const HomePage: React.FC = () => {
         .cat-bundle-img {
           object-fit: contain;
           transition: transform 0.25s ease;
-          filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));
+          mix-blend-mode: multiply;
         }
         .cat-bundle-img--center {
           position: relative;
