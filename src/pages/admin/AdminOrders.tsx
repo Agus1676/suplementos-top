@@ -21,11 +21,14 @@ export const AdminOrders: React.FC = () => {
   const { orders, updateOrderStatus, settings } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [deliveryFilter, setDeliveryFilter] = useState<'all' | 'pickup' | 'shipping'>('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [newTrackingNumber, setNewTrackingNumber] = useState('');
+  const [quickLabelOrder, setQuickLabelOrder] = useState<Order | null>(null);
 
   const filteredOrders = orders.filter((o) => {
     if (filterStatus !== 'all' && o.fulfillmentStatus !== filterStatus) return false;
+    if (deliveryFilter !== 'all' && o.deliveryMethod !== deliveryFilter) return false;
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
       const matchNumber = o.orderNumber.toLowerCase().includes(term);
@@ -60,6 +63,30 @@ export const AdminOrders: React.FC = () => {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  // Helper to build fast customized WhatsApp message
+  const buildCustomWhatsAppUrl = (order: Order, type: 'ready' | 'shipped') => {
+    const rawPhone = order.customerPhone.replace(/\D/g, '');
+    if (!rawPhone) return '#';
+    const cleanPhone = `549${rawPhone.startsWith('54') ? rawPhone.slice(2) : rawPhone}`;
+
+    let text = '';
+    if (type === 'ready') {
+      text = `¡Hola ${order.customerName}! Te escribimos de *Suplementos Top Recoleta* 🏋️‍♂️.\n\n` +
+        `Tu pedido *#${order.orderNumber}* ya se encuentra listo para retirar en el mostrador de *Gimnasio Top Shape* (Pres. José E. Uriburu 1163).\n\n` +
+        `• Horarios: Lun a Vie 8:00 a 23:00 hs | Sáb 10:00 a 18:00 hs.\n` +
+        `• Presentá tu DNI (${order.customerDni}) al retirar.\n\n` +
+        `¡Te esperamos!`;
+    } else {
+      text = `¡Hola ${order.customerName}! Te escribimos de *Suplementos Top* 📦.\n\n` +
+        `Tu pedido *#${order.orderNumber}* ya fue embalado y despachado por correo expreso.\n\n` +
+        (order.trackingNumber ? `• Código de seguimiento online: *${order.trackingNumber}*\n` : '') +
+        `Podés consultar el estado de tu envío en cualquier momento desde nuestra web en la sección de Seguimiento.\n\n` +
+        `¡Muchas gracias por confiar en nosotros!`;
+    }
+
+    return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
   };
 
   // Helper to format clean date (e.g., "17 nov 2026 • 21:05 hs")
@@ -101,6 +128,36 @@ export const AdminOrders: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="filter-search-input"
           />
+        </div>
+
+        {/* Delivery Method Segmented Switch */}
+        <div className="delivery-filter-bar">
+          <span className="delivery-filter-label">Filtrar por Entrega:</span>
+          <div className="delivery-filter-pills">
+            <button
+              type="button"
+              onClick={() => setDeliveryFilter('all')}
+              className={`delivery-filter-btn ${deliveryFilter === 'all' ? 'active' : ''}`}
+            >
+              <span>Todos ({orders.length})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeliveryFilter('pickup')}
+              className={`delivery-filter-btn ${deliveryFilter === 'pickup' ? 'active' : ''}`}
+            >
+              <MapPin size={13} />
+              <span>Retiro en Recoleta ({orders.filter(o => o.deliveryMethod === 'pickup').length})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeliveryFilter('shipping')}
+              className={`delivery-filter-btn ${deliveryFilter === 'shipping' ? 'active' : ''}`}
+            >
+              <Truck size={13} />
+              <span>Envíos por Correo ({orders.filter(o => o.deliveryMethod === 'shipping').length})</span>
+            </button>
+          </div>
         </div>
 
         <div className="status-tabs-row">
@@ -191,25 +248,7 @@ export const AdminOrders: React.FC = () => {
               ) : (
                 filteredOrders.map((order) => {
                   const totalProductsQty = order.items.reduce((acc, i) => acc + i.quantity, 0);
-                  const itemsText = order.items
-                    .map((item) => `• ${item.quantity}x ${item.productName} (${item.variantTitle})`)
-                    .join('\n');
-                  const addressText = order.shippingAddress 
-                    ? `${order.shippingAddress.street} ${order.shippingAddress.number}, ${order.shippingAddress.city}`
-                    : 'Retiro en sucursal Uriburu 1163 (Gimnasio Top Shape)';
                   
-                  const waLink = buildWhatsAppDispatchLink({
-                    orderNumber: order.orderNumber,
-                    customerName: order.customerName,
-                    customerPhone: order.customerPhone,
-                    customerDni: order.customerDni,
-                    deliveryMethod: order.deliveryMethod,
-                    addressText,
-                    itemsText,
-                    totalText: formatARS(order.totalInCents),
-                    paymentStatus: order.paymentStatus,
-                  });
-
                   // Format phone link for 1-click WhatsApp
                   const rawPhone = order.customerPhone.replace(/\D/g, '');
                   const waCustomerChat = rawPhone ? `https://wa.me/549${rawPhone.startsWith('54') ? rawPhone.slice(2) : rawPhone}` : null;
@@ -326,20 +365,43 @@ export const AdminOrders: React.FC = () => {
                             className="btn-action-view"
                             title="Ver Remito y Detalle"
                           >
-                            <Eye size={15} />
-                            <span>Ver</span>
+                            <Eye size={14} />
+                            <span>Remito</span>
                           </button>
 
-                          <a
-                            href={waLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-action-wa"
-                            title="Avisar por WhatsApp al cliente"
+                          <button
+                            type="button"
+                            onClick={() => setQuickLabelOrder(order)}
+                            className="btn-action-label"
+                            title="Etiqueta Térmica de Envío / Despacho"
                           >
-                            <Send size={13} />
-                            <span>Aviso WA</span>
-                          </a>
+                            <Printer size={14} />
+                            <span>Etiqueta</span>
+                          </button>
+
+                          {order.deliveryMethod === 'pickup' ? (
+                            <a
+                              href={buildCustomWhatsAppUrl(order, 'ready')}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn-action-wa btn-action-wa--pickup"
+                              title="Avisar que está listo para retirar en Gimnasio Top Shape"
+                            >
+                              <Send size={13} />
+                              <span>Listo Retiro</span>
+                            </a>
+                          ) : (
+                            <a
+                              href={buildCustomWhatsAppUrl(order, 'shipped')}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn-action-wa btn-action-wa--shipped"
+                              title="Enviar aviso de despacho por Correo"
+                            >
+                              <Send size={13} />
+                              <span>Aviso Envío</span>
+                            </a>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -547,6 +609,101 @@ export const AdminOrders: React.FC = () => {
         </div>
       )}
 
+      {/* Quick Shipping / Pickup Label Modal */}
+      {quickLabelOrder && (
+        <div className="modal-backdrop" onClick={() => setQuickLabelOrder(null)}>
+          <div className="modal-card modal-card--label" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-topbar">
+              <div className="modal-topbar-left">
+                <h2>Etiqueta Térmica de Despacho</h2>
+                <span className="modal-date-sub">Pedido #{quickLabelOrder.orderNumber}</span>
+              </div>
+              <div className="modal-topbar-actions">
+                <button type="button" onClick={handlePrint} className="btn-modal-print">
+                  <Printer size={15} />
+                  <span>Imprimir Etiqueta</span>
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => setQuickLabelOrder(null)} 
+                  className="modal-btn-close"
+                  aria-label="Cerrar"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            <div className="thermal-label-container">
+              <div className="thermal-label-box" id="thermal-label-print">
+                <div className="label-brand-head">
+                  <div className="label-logo-row">
+                    <img src="/logo.png" alt="Suplementos Top" className="label-logo" />
+                    <div>
+                      <strong className="label-brand-name">SUPLEMENTOS TOP</strong>
+                      <span className="label-brand-sub">Sede Recoleta • Pres. José E. Uriburu 1163</span>
+                    </div>
+                  </div>
+                  <div className="label-order-tag">
+                    <span>PEDIDO</span>
+                    <strong>#{quickLabelOrder.orderNumber}</strong>
+                  </div>
+                </div>
+
+                <div className="label-divider-heavy" />
+
+                <div className="label-section">
+                  <span className="label-section-title">DESTINATARIO / CLIENTE:</span>
+                  <div className="label-dest-name">{quickLabelOrder.customerName}</div>
+                  <div className="label-dest-row">
+                    <span><strong>DNI:</strong> {quickLabelOrder.customerDni}</span>
+                    <span><strong>TEL:</strong> {quickLabelOrder.customerPhone}</span>
+                  </div>
+                  <div className="label-dest-address">
+                    <strong>MODALIDAD:</strong>{' '}
+                    {quickLabelOrder.deliveryMethod === 'pickup' ? (
+                      <span className="label-pickup-text">RETIRO EN MOSTRADOR (GIMNASIO TOP SHAPE - RECOLETA)</span>
+                    ) : (
+                      <span className="label-shipping-text">
+                        ENVÍO A DOMICILIO: {quickLabelOrder.shippingAddress?.street} {quickLabelOrder.shippingAddress?.number}
+                        {quickLabelOrder.shippingAddress?.apartment ? ` (Piso/Depto ${quickLabelOrder.shippingAddress.apartment})` : ''}, {quickLabelOrder.shippingAddress?.city} (CP {quickLabelOrder.shippingAddress?.postalCode || 'CABA'})
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="label-divider" />
+
+                <div className="label-section">
+                  <span className="label-section-title">DETALLE DEL PAQUETE:</span>
+                  <div className="label-items-list">
+                    {quickLabelOrder.items.map((item, idx) => (
+                      <div key={idx} className="label-item-row">
+                        <span className="label-item-qty">{item.quantity}x</span>
+                        <span className="label-item-name">{item.productName} ({item.variantTitle})</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="label-divider" />
+
+                <div className="label-footer-row">
+                  <div>
+                    <span className="label-footnote">PAQUETE SELLADO • FRÁGIL</span>
+                    <span className="label-footnote-sub">Fecha: {formatOrderDate(quickLabelOrder.createdAt)}</span>
+                  </div>
+                  <div className="label-total-box">
+                    <span>TOTAL:</span>
+                    <strong>{formatARS(quickLabelOrder.totalInCents)}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         /* ========================================================
            TIENDA MAY / JOKERS UI - PROFESSIONAL ORDERS TABLE
@@ -616,6 +773,53 @@ export const AdminOrders: React.FC = () => {
         .filter-search-input:focus {
           border-color: #0F172A;
           box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+        }
+
+        /* Delivery Filter Bar */
+        .delivery-filter-bar {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #F1F5F9;
+          margin-bottom: 12px;
+          flex-wrap: wrap;
+        }
+        .delivery-filter-label {
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #64748B;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+        .delivery-filter-pills {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .delivery-filter-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          background: #F8FAFC;
+          color: #475569;
+          border: 1px solid #E2E8F0;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .delivery-filter-btn:hover {
+          background: #F1F5F9;
+          color: #0F172A;
+          border-color: #CBD5E1;
+        }
+        .delivery-filter-btn.active {
+          background: #16A34A;
+          color: #FFFFFF;
+          border-color: #16A34A;
         }
 
         .status-tabs-row {
@@ -933,6 +1137,25 @@ export const AdminOrders: React.FC = () => {
           color: #FFFFFF;
           border-color: #0F172A;
         }
+        .btn-action-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: #F8FAFC;
+          border: 1px solid #CBD5E1;
+          color: #1E293B;
+          padding: 6px 10px;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .btn-action-label:hover {
+          background: #0284C7;
+          color: #FFFFFF;
+          border-color: #0284C7;
+        }
         .btn-action-wa {
           display: inline-flex;
           align-items: center;
@@ -946,8 +1169,170 @@ export const AdminOrders: React.FC = () => {
           text-decoration: none;
           transition: background 0.15s ease;
         }
-        .btn-action-wa:hover {
-          background: #15803D;
+        .btn-action-wa--pickup {
+          background: #059669;
+        }
+        .btn-action-wa--pickup:hover {
+          background: #047857;
+        }
+        .btn-action-wa--shipped {
+          background: #2563EB;
+        }
+        .btn-action-wa--shipped:hover {
+          background: #1D4ED8;
+        }
+
+        /* Thermal Label Modal Specifics */
+        .modal-card--label {
+          max-width: 520px;
+        }
+        .thermal-label-container {
+          padding: 1.5rem;
+          background: #F1F5F9;
+          overflow-y: auto;
+          display: flex;
+          justify-content: center;
+        }
+        .thermal-label-box {
+          background: #FFFFFF;
+          border: 2px dashed #0F172A;
+          border-radius: 8px;
+          padding: 1.5rem;
+          width: 100%;
+          max-width: 440px;
+          font-family: 'Courier New', Courier, monospace;
+          color: #000000;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .label-brand-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .label-logo-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .label-logo {
+          width: 38px;
+          height: 38px;
+          object-fit: contain;
+        }
+        .label-brand-name {
+          font-family: sans-serif;
+          font-size: 0.95rem;
+          font-weight: 900;
+          display: block;
+        }
+        .label-brand-sub {
+          font-family: sans-serif;
+          font-size: 0.7rem;
+          color: #475569;
+          display: block;
+        }
+        .label-order-tag {
+          text-align: right;
+          font-family: sans-serif;
+        }
+        .label-order-tag span {
+          display: block;
+          font-size: 0.65rem;
+          color: #64748B;
+        }
+        .label-order-tag strong {
+          font-size: 1.1rem;
+          font-weight: 900;
+        }
+        .label-divider-heavy {
+          height: 3px;
+          background: #000000;
+          margin: 12px 0;
+        }
+        .label-divider {
+          height: 1px;
+          border-top: 1px dashed #94A3B8;
+          margin: 12px 0;
+        }
+        .label-section-title {
+          font-family: sans-serif;
+          font-size: 0.7rem;
+          font-weight: 800;
+          color: #64748B;
+          display: block;
+          margin-bottom: 4px;
+        }
+        .label-dest-name {
+          font-family: sans-serif;
+          font-size: 1.15rem;
+          font-weight: 900;
+          margin-bottom: 4px;
+        }
+        .label-dest-row {
+          display: flex;
+          gap: 16px;
+          font-size: 0.85rem;
+          margin-bottom: 6px;
+        }
+        .label-dest-address {
+          font-size: 0.85rem;
+          line-height: 1.4;
+          background: #F8FAFC;
+          padding: 6px 8px;
+          border-radius: 4px;
+          border: 1px solid #E2E8F0;
+        }
+        .label-pickup-text {
+          color: #047857;
+          font-weight: 800;
+        }
+        .label-shipping-text {
+          color: #1D4ED8;
+          font-weight: 700;
+        }
+        .label-items-list {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          font-size: 0.82rem;
+        }
+        .label-item-row {
+          display: flex;
+          gap: 8px;
+        }
+        .label-item-qty {
+          font-weight: 800;
+          width: 24px;
+        }
+        .label-footer-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .label-footnote {
+          font-family: sans-serif;
+          font-size: 0.72rem;
+          font-weight: 800;
+          display: block;
+        }
+        .label-footnote-sub {
+          font-family: sans-serif;
+          font-size: 0.68rem;
+          color: #64748B;
+          display: block;
+        }
+        .label-total-box {
+          text-align: right;
+          font-family: sans-serif;
+        }
+        .label-total-box span {
+          display: block;
+          font-size: 0.65rem;
+          color: #64748B;
+        }
+        .label-total-box strong {
+          font-size: 1.05rem;
+          font-weight: 900;
         }
 
         .empty-table-cell {

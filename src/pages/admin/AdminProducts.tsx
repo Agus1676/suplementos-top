@@ -7,7 +7,10 @@ import {
   TrendingUp, 
   Trash2, 
   Edit3, 
-  X
+  X,
+  Star,
+  Flame,
+  DollarSign
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { formatARS } from '../../lib/utils';
@@ -20,6 +23,10 @@ export const AdminProducts: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [brandFilter, setBrandFilter] = useState('all');
   const [feedback, setFeedback] = useState<string | null>(null);
+
+  // Inline Quick Price Edit State
+  const [editingPriceProdId, setEditingPriceProdId] = useState<string | null>(null);
+  const [quickPricePesos, setQuickPricePesos] = useState<string>('');
 
   // Modals
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -63,6 +70,42 @@ export const AdminProducts: React.FC = () => {
       return true;
     });
   }, [products, searchTerm, categoryFilter, brandFilter]);
+
+  // Toggle Best Seller
+  const handleToggleBestSeller = (product: Product) => {
+    const updated = { ...product, isBestSeller: !product.isBestSeller };
+    updateProduct(updated);
+    showFeedback(`${product.name}: ${updated.isBestSeller ? 'Marcado como Más Vendido 🔥' : 'Removido de Más Vendidos'}`);
+  };
+
+  // Toggle Featured
+  const handleToggleFeatured = (product: Product) => {
+    const updated = { ...product, isFeatured: !product.isFeatured };
+    updateProduct(updated);
+    showFeedback(`${product.name}: ${updated.isFeatured ? 'Marcado como Destacado ⭐' : 'Removido de Destacados'}`);
+  };
+
+  // Quick Price Save
+  const handleSaveQuickPrice = (product: Product) => {
+    const pesos = Number(quickPricePesos);
+    if (!pesos || pesos <= 0) {
+      showFeedback('Ingresá un precio válido en pesos');
+      return;
+    }
+    const cents = Math.round(pesos * 100);
+    const updatedVariants = product.variants.map((v) => ({
+      ...v,
+      priceInCents: cents,
+    }));
+    const updated = {
+      ...product,
+      basePriceInCents: cents,
+      variants: updatedVariants,
+    };
+    updateProduct(updated);
+    setEditingPriceProdId(null);
+    showFeedback(`Precio de "${product.name}" actualizado a ${formatARS(cents)}`);
+  };
 
   // Open Edit Modal
   const handleOpenEdit = (product: Product) => {
@@ -347,11 +390,74 @@ export const AdminProducts: React.FC = () => {
                         <strong className="price-bold">
                           {minPrice === maxPrice ? formatARS(minPrice) : `${formatARS(minPrice)} - ${formatARS(maxPrice)}`}
                         </strong>
+                        {editingPriceProdId === prod.id ? (
+                          <div className="quick-price-edit-box">
+                            <input
+                              type="number"
+                              min="1000"
+                              step="500"
+                              value={quickPricePesos}
+                              onChange={(e) => setQuickPricePesos(e.target.value)}
+                              className="quick-price-input"
+                              placeholder="Pesos"
+                              autoFocus
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleSaveQuickPrice(prod)}
+                              className="btn-quick-save"
+                              title="Guardar precio"
+                            >
+                              <Check size={13} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingPriceProdId(null)}
+                              className="btn-quick-cancel"
+                              title="Cancelar"
+                            >
+                              <X size={13} />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingPriceProdId(prod.id);
+                              setQuickPricePesos(String(Math.round(prod.basePriceInCents / 100)));
+                            }}
+                            className="btn-open-quick-price"
+                            title="Modificar precio rápido"
+                          >
+                            <DollarSign size={11} />
+                            <span>Editar $</span>
+                          </button>
+                        )}
                       </td>
                       <td>
                         <span className={`stock-badge ${totalStock <= 5 ? 'low' : ''}`}>
                           {totalStock} unidades
                         </span>
+                        <div className="destacados-toggle-row">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleBestSeller(prod)}
+                            className={`toggle-pill ${prod.isBestSeller ? 'active-fire' : ''}`}
+                            title="Alternar Más Vendido en la tienda"
+                          >
+                            <Flame size={12} />
+                            <span>Top</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleFeatured(prod)}
+                            className={`toggle-pill ${prod.isFeatured ? 'active-star' : ''}`}
+                            title="Alternar Destacado del Mes"
+                          >
+                            <Star size={12} />
+                            <span>Destacado</span>
+                          </button>
+                        </div>
                       </td>
                       <td style={{ textAlign: 'right' }}>
                         <div className="actions-cell">
@@ -803,6 +909,98 @@ export const AdminProducts: React.FC = () => {
         .price-bold {
           font-size: 0.92rem;
           color: #0F172A;
+          display: block;
+          margin-bottom: 4px;
+        }
+        .quick-price-edit-box {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin-top: 4px;
+        }
+        .quick-price-input {
+          width: 85px;
+          height: 28px;
+          padding: 2px 6px;
+          border: 1px solid #0284C7;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          outline: none;
+        }
+        .btn-quick-save {
+          background: #16A34A;
+          color: #FFFFFF;
+          border: none;
+          border-radius: 4px;
+          width: 26px;
+          height: 26px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+        .btn-quick-cancel {
+          background: #E2E8F0;
+          color: #475569;
+          border: none;
+          border-radius: 4px;
+          width: 26px;
+          height: 26px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+        .btn-open-quick-price {
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          color: #0284C7;
+          font-size: 0.72rem;
+          font-weight: 700;
+          padding: 2px 6px;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-top: 2px;
+        }
+        .btn-open-quick-price:hover {
+          background: #F0F9FF;
+          border-color: #0284C7;
+        }
+        .destacados-toggle-row {
+          display: flex;
+          gap: 4px;
+          margin-top: 6px;
+        }
+        .toggle-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 0.7rem;
+          font-weight: 700;
+          background: #F1F5F9;
+          color: #64748B;
+          border: 1px solid #E2E8F0;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .toggle-pill:hover {
+          background: #E2E8F0;
+        }
+        .toggle-pill.active-fire {
+          background: #FEF2F2;
+          border-color: #F87171;
+          color: #DC2626;
+        }
+        .toggle-pill.active-star {
+          background: #FEFCE8;
+          border-color: #FDE047;
+          color: #CA8A04;
         }
         .stock-badge {
           font-size: 0.78rem;
