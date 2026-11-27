@@ -25,7 +25,7 @@ const SLIDES: Slide[] = [
     id: 1,
     bgImage: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1600&q=80',
     tag: '⚡ 100% ORIGINALES • ENVÍO A TODO EL PAÍS',
-    title: 'MÁS DE 100 PEDIDOS POR DÍA, SALEN DE ACÁ',
+    title: 'MUCHOS PEDIDOS POR DÍA, SALEN DE ACÁ',
     subtitle:
       'Suplementos originales de las mejores marcas, con envío a todo el país o retiro sin cargo en nuestro local de Recoleta.',
     highlight1: '🤝 10% OFF Transferencia',
@@ -326,17 +326,17 @@ export const HeroSlider: React.FC = () => {
           inset: 0;
           background: linear-gradient(
             90deg, 
-            rgba(11, 14, 20, 0.95) 0%, 
-            rgba(11, 14, 20, 0.88) 52%, 
-            rgba(11, 14, 20, 0.50) 100%
+            rgba(11, 14, 20, 0.88) 0%, 
+            rgba(11, 14, 20, 0.72) 52%, 
+            rgba(11, 14, 20, 0.35) 100%
           );
         }
         @media (max-width: 899px) {
           .pv-hero-bg-overlay {
             background: linear-gradient(
               180deg, 
-              rgba(11, 14, 20, 0.92) 0%, 
-              rgba(11, 14, 20, 0.96) 100%
+              rgba(11, 14, 20, 0.80) 0%, 
+              rgba(11, 14, 20, 0.86) 100%
             );
           }
         }
