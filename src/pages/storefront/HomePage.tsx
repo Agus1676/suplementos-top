@@ -13,6 +13,7 @@ import { TrustMarquee } from '../../components/storefront/TrustMarquee';
 import { HorizontalScroller } from '../../components/ui/HorizontalScroller';
 import { SEO } from '../../components/common/SEO';
 import { InstagramFeed } from '../../components/storefront/InstagramFeed';
+import { GoogleReviews } from '../../components/storefront/GoogleReviews';
 
 interface CategoryTile {
   title: string;
@@ -90,28 +91,43 @@ const CATEGORY_TILES: CategoryTile[] = [
 const BRAND_SHOWCASE = [
   {
     name: 'Star Nutrition',
+    tagline: 'Líder en Calidad ANMAT',
     filter: 'Star Nutrition',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-36-d9bc6bd2b3819e422717800791905669-640-0.webp',
+    logoText: 'STAR',
+    logoSub: 'NUTRITION',
+    accentColor: '#10B981',
   },
   {
     name: 'ENA Sport',
+    tagline: 'Innovación Deportiva',
     filter: 'ENA Sport',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/truemade_vainilla_2lb-webp1-0f17ea0eb698979f4916826203173730-640-0.webp',
+    logoText: 'ENA',
+    logoSub: 'SPORT',
+    accentColor: '#EF4444',
   },
   {
     name: 'Optimum Nutrition',
+    tagline: 'Gold Standard 100% Whey',
     filter: 'Optimum Nutrition',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-66-89296cadbf5be4b82e17579636094867-640-0.webp',
+    logoText: 'ON',
+    logoSub: 'OPTIMUM',
+    accentColor: '#D97706',
   },
   {
     name: 'One Fit',
+    tagline: 'Máximo Rendimiento',
     filter: 'Suplementos Top Gear',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/proyecto-nuevo-95-5c7345af65acc8ee4917654696614725-640-0.webp',
+    logoText: 'ONE FIT',
+    logoSub: 'NUTRITION',
+    accentColor: '#3B82F6',
   },
   {
     name: 'Gentech',
+    tagline: 'Nutrición de Élite',
     filter: 'Gentech',
-    imageUrl: 'https://acdn-us.mitiendanube.com/stores/001/247/962/products/magnesio-star-715031aedf196789d517327300732618-640-0.webp',
+    logoText: 'GENTECH',
+    logoSub: 'PHARMA',
+    accentColor: '#6366F1',
   },
 ];
 
@@ -322,13 +338,16 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 7. Brands Showcase with Real Product Packshots */}
-      <section className="brands-strip-section">
+      {/* 7. Brands Showcase with Clean Brand Badges & Deep Shadows */}
+      <section className="brands-strip-section" aria-label="Marcas oficiales de suplementación">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Trabajamos con las mejores marcas</h2>
+            <div>
+              <span className="section-eyebrow">DISTRIBUCIÓN OFICIAL</span>
+              <h2 className="section-title">Nuestras Marcas</h2>
+            </div>
             <Link to="/catalogo" className="section-link">
-              <span>Ver catálogo</span>
+              <span>Ver catálogo completo</span>
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -340,13 +359,22 @@ export const HomePage: React.FC = () => {
                 to={`/catalogo?marca=${encodeURIComponent(brand.filter)}`}
                 className="brand-pack-card"
               >
-                <img src={brand.imageUrl} alt={brand.name} className="brand-pack-img" loading="lazy" />
-                <span className="brand-pack-name">{brand.name}</span>
+                <div className="brand-logo-emblem" style={{ borderColor: `${brand.accentColor}33` }}>
+                  <span className="brand-logo-text" style={{ color: brand.accentColor }}>{brand.logoText}</span>
+                  <span className="brand-logo-sub">{brand.logoSub}</span>
+                </div>
+                <div className="brand-pack-meta">
+                  <span className="brand-pack-name">{brand.name}</span>
+                  <span className="brand-pack-tagline">{brand.tagline}</span>
+                </div>
               </Link>
             ))}
           </div>
         </div>
       </section>
+
+      {/* 8. Google Reviews Moving Carousel */}
+      <GoogleReviews />
 
       {/* 8. Recoleta Pickup & Real Google Map */}
       <section className="location-callout-section">
@@ -717,77 +745,115 @@ export const HomePage: React.FC = () => {
           }
         }
 
-        /* 7. Brands Showcase with Real Product Packshots */
+        /* 7. Brands Showcase with Clean Brand Badges & Deep Shadows */
         .brands-strip-section {
-          padding: 2rem 0;
-          background-color: var(--color-bg-main);
+          padding: 2.5rem 0;
+          background-color: #FFFFFF;
           border-bottom: 1px solid var(--color-border);
         }
         .brands-showcase-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 0.75rem;
+          gap: 1rem;
         }
         @media (min-width: 640px) {
           .brands-showcase-grid {
             grid-template-columns: repeat(3, 1fr);
+            gap: 1.15rem;
           }
         }
         @media (min-width: 992px) {
           .brands-showcase-grid {
             grid-template-columns: repeat(5, 1fr);
+            gap: 1.25rem;
           }
         }
         .brand-pack-card {
-          background: var(--color-bg-card);
-          border: 1px solid var(--color-border);
-          border-radius: 8px;
-          padding: 0.85rem;
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 12px;
+          padding: 1.1rem 1rem;
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.85rem;
           text-decoration: none;
           color: var(--color-text-main);
           min-width: 0;
           overflow: hidden;
-          transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+          box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+          transition: all 0.25s ease;
         }
         .brand-pack-card:hover {
-          border-color: var(--color-accent);
-          box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.14);
-          transform: translateY(-2px);
+          border-color: #10B981;
+          box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.1);
+          transform: translateY(-3px);
         }
-        .brand-pack-img {
-          width: 44px;
-          height: 44px;
-          object-fit: contain;
+        .brand-logo-emblem {
+          width: 48px;
+          height: 48px;
+          border-radius: 10px;
+          background: #F8FAFC;
+          border: 1.5px solid #E2E8F0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
           flex-shrink: 0;
+          padding: 2px;
+          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .brand-logo-text {
+          font-family: var(--font-display);
+          font-size: 0.82rem;
+          font-weight: 900;
+          line-height: 1;
+          letter-spacing: 0.05em;
+        }
+        .brand-logo-sub {
+          font-family: var(--font-body);
+          font-size: 0.52rem;
+          font-weight: 800;
+          color: #64748B;
+          letter-spacing: 0.08em;
+          margin-top: 1px;
+        }
+        .brand-pack-meta {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
         }
         .brand-pack-name {
           font-family: var(--font-display);
-          font-size: 0.85rem;
+          font-size: 0.88rem;
           font-weight: 800;
-          color: var(--color-text-main);
+          color: #0F172A;
           line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .brand-pack-tagline {
+          font-size: 0.72rem;
+          color: #64748B;
+          margin-top: 2px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         @media (max-width: 420px) {
           .brands-showcase-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
+            grid-template-columns: 1fr;
+            gap: 0.65rem;
           }
           .brand-pack-card {
-            padding: 0.65rem 0.5rem;
-            gap: 0.45rem;
+            padding: 0.85rem;
           }
-          .brand-pack-img {
-            width: 36px;
-            height: 36px;
+          .brand-logo-emblem {
+            width: 42px;
+            height: 42px;
           }
-          .brand-pack-name {
-            font-size: 0.76rem;
+          .brand-logo-text {
+            font-size: 0.75rem;
           }
         }
 

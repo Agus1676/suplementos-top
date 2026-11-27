@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, MessageCircle, MapPin, Mail, PackageCheck } from 'lucide-react';
+import { Instagram, MessageCircle, MapPin, Mail, PackageCheck, ShieldCheck } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 
 export const Footer: React.FC = () => {
@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="site-footer">
       <div className="container">
-        {/* Main 4-column clean layout */}
+        {/* Main 4-column modern, clean, light layout */}
         <div className="footer-grid">
           {/* Col 1: Brand & Social */}
           <div className="footer-col footer-col--brand">
@@ -25,8 +25,14 @@ export const Footer: React.FC = () => {
               </div>
             </Link>
             <p className="footer-desc">
-              Punto oficial en Recoleta, CABA. Suplementos 100% originales con precinto de seguridad, retiro en el día sin cargo y envíos a todo el país.
+              Punto oficial en Recoleta, CABA. Suplementos 100% originales con precinto de seguridad de fábrica, retiro sin cargo en el día y envíos a todo el país.
             </p>
+
+            <div className="footer-trust-badge">
+              <ShieldCheck size={16} className="text-emerald-600" />
+              <span>Garantía de originalidad ANMAT</span>
+            </div>
+
             <div className="footer-social-row">
               <a
                 href={settings.instagram || 'https://www.instagram.com/suplementos_topp'}
@@ -35,7 +41,7 @@ export const Footer: React.FC = () => {
                 className="footer-social-link"
                 aria-label="Instagram de Suplementos Top"
               >
-                <Instagram size={18} />
+                <Instagram size={17} />
                 <span>@suplementos_topp</span>
               </a>
               <a
@@ -45,7 +51,7 @@ export const Footer: React.FC = () => {
                 className="footer-social-link"
                 aria-label="WhatsApp oficial"
               >
-                <MessageCircle size={18} />
+                <MessageCircle size={17} />
                 <span>11 6565-2990</span>
               </a>
             </div>
@@ -57,11 +63,11 @@ export const Footer: React.FC = () => {
             <ul className="footer-links">
               <li><Link to="/catalogo?categoria=proteinas">Proteínas Whey &amp; Isolate</Link></li>
               <li><Link to="/catalogo?categoria=creatinas">Creatinas Micronizadas</Link></li>
-              <li><Link to="/catalogo?categoria=pre-entrenos">Pre-Entrenos &amp; Óxido</Link></li>
+              <li><Link to="/catalogo?categoria=pre-entrenos">Pre-Entrenos &amp; Rendimiento</Link></li>
               <li><Link to="/catalogo?categoria=combos">Combos &amp; Packs Ahorro</Link></li>
               <li><Link to="/catalogo?categoria=aminoacidos">Aminoácidos &amp; BCAA</Link></li>
               <li><Link to="/catalogo?categoria=salud-vitaminas">Vitaminas &amp; Magnesio</Link></li>
-              <li><Link to="/catalogo" className="footer-link-highlight">Ver todo el catálogo →</Link></li>
+              <li><Link to="/catalogo" className="footer-link-highlight">Ver catálogo completo →</Link></li>
             </ul>
           </div>
 
@@ -71,13 +77,13 @@ export const Footer: React.FC = () => {
             <ul className="footer-links">
               <li>
                 <Link to="/seguimiento" className="footer-link-flex">
-                  <PackageCheck size={14} />
+                  <PackageCheck size={14} className="text-emerald-600" />
                   <span>Seguimiento de pedido</span>
                 </Link>
               </li>
               <li><Link to="/envios">Política de envíos y entregas</Link></li>
-              <li><Link to="/terminos">Términos y condiciones</Link></li>
-              <li><Link to="/responsabilidad">Aviso legal y suplementos</Link></li>
+              <li><Link to="/terminos">Términos y condiciones de compra</Link></li>
+              <li><Link to="/responsabilidad">Aviso legal ANMAT</Link></li>
               <li><Link to="/faq">Preguntas frecuentes</Link></li>
               <li><Link to="/contacto">Ubicación y cómo llegar</Link></li>
             </ul>
@@ -88,7 +94,7 @@ export const Footer: React.FC = () => {
             <h4 className="footer-heading">Sede Recoleta</h4>
             <div className="footer-info-block">
               <div className="footer-info-item">
-                <MapPin size={15} className="footer-info-icon" />
+                <MapPin size={16} className="footer-info-icon" />
                 <div>
                   <strong>Pres. José E. Uriburu 1163</strong>
                   <span>Gimnasio Top Shape (entre Av. Santa Fe y Arenales)</span>
@@ -96,7 +102,7 @@ export const Footer: React.FC = () => {
               </div>
 
               <div className="footer-info-item">
-                <Mail size={15} className="footer-info-icon" />
+                <Mail size={16} className="footer-info-icon" />
                 <a href={`mailto:${settings.supportEmail || 'suplementostopparg@gmail.com'}`} className="footer-mail-link">
                   {settings.supportEmail || 'suplementostopparg@gmail.com'}
                 </a>
@@ -108,7 +114,8 @@ export const Footer: React.FC = () => {
               </div>
 
               <div className="footer-pay-pill">
-                <span>10% OFF por transferencia · 6 cuotas con Mercado Pago</span>
+                <strong>10% OFF por transferencia</strong>
+                <span>6 cuotas sin interés con Mercado Pago</span>
               </div>
             </div>
           </div>
@@ -127,30 +134,30 @@ export const Footer: React.FC = () => {
             <span className="footer-sep">·</span>
             <Link to="/responsabilidad">Aviso ANMAT</Link>
             <span className="footer-sep">·</span>
-            <Link to="/admin" className="footer-admin-link">Panel</Link>
+            <Link to="/admin" className="footer-admin-link">Acceso Administrador</Link>
           </div>
         </div>
       </div>
 
       <style>{`
         /* ========================================================
-           CLEAN, COMPACT, PROFESSIONAL E-COMMERCE FOOTER
-           No noisy pastel circle icons, no oversized bulk
+           CLEAN, MODERN, SOPHISTICATED WHITE / LIGHT E-COMMERCE FOOTER
+           Professional, orderly, high-end retail look (Nike/Gymshark)
            ======================================================== */
         .site-footer {
-          background: #0B0F19;
-          color: #94A3B8;
-          padding: 3rem 0 1.5rem;
-          border-top: 1px solid #1E293B;
+          background: #FFFFFF;
+          color: #475569;
+          padding: 3.5rem 0 1.75rem;
+          border-top: 1px solid #E2E8F0;
           font-family: var(--font-body);
         }
 
         .footer-grid {
           display: grid;
-          grid-template-columns: 1.3fr 1fr 1fr 1.2fr;
+          grid-template-columns: 1.35fr 1fr 1fr 1.25fr;
           gap: 2.5rem;
-          padding-bottom: 2.25rem;
-          border-bottom: 1px solid #1E293B;
+          padding-bottom: 2.5rem;
+          border-bottom: 1px solid #F1F5F9;
         }
 
         @media (max-width: 991px) {
@@ -177,35 +184,49 @@ export const Footer: React.FC = () => {
         }
 
         .footer-logo {
-          width: 38px;
-          height: 38px;
+          width: 42px;
+          height: 42px;
           object-fit: contain;
-          border-radius: 6px;
+          border-radius: 8px;
         }
 
         .footer-brand-title {
           font-family: var(--font-display);
-          font-size: 1rem;
-          font-weight: 800;
-          color: #FFFFFF;
+          font-size: 1.05rem;
+          font-weight: 900;
+          color: #0F172A;
           letter-spacing: 0.04em;
           display: block;
         }
 
         .footer-brand-sub {
           font-size: 0.72rem;
-          font-weight: 600;
-          color: #10B981;
+          font-weight: 700;
+          color: #16A34A;
           letter-spacing: 0.02em;
           display: block;
         }
 
         .footer-desc {
-          font-size: 0.82rem;
+          font-size: 0.84rem;
           line-height: 1.55;
-          color: #94A3B8;
-          margin: 0 0 1.15rem 0;
-          max-width: 340px;
+          color: #64748B;
+          margin: 0 0 1rem;
+          max-width: 320px;
+        }
+
+        .footer-trust-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          background: #F0FDF4;
+          border: 1px solid #BBF7D0;
+          color: #15803D;
+          font-size: 0.75rem;
+          font-weight: 700;
+          padding: 0.35rem 0.65rem;
+          border-radius: 6px;
+          margin-bottom: 1.15rem;
         }
 
         .footer-social-row {
@@ -218,60 +239,65 @@ export const Footer: React.FC = () => {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          font-size: 0.82rem;
+          font-size: 0.84rem;
           font-weight: 600;
-          color: #E2E8F0;
+          color: #334155;
           text-decoration: none;
           transition: color 0.15s ease;
         }
 
         .footer-social-link:hover {
-          color: #22C55E;
+          color: #16A34A;
         }
 
-        /* Column Headings */
+        /* Headings */
         .footer-heading {
           font-family: var(--font-display);
-          font-size: 0.85rem;
+          font-size: 0.82rem;
           font-weight: 800;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: #FFFFFF;
-          margin: 0 0 1rem 0;
+          color: #0F172A;
+          margin: 0 0 1.15rem;
         }
 
-        /* Links Lists */
+        /* Links List */
         .footer-links {
           list-style: none;
-          padding: 0;
           margin: 0;
+          padding: 0;
           display: flex;
           flex-direction: column;
-          gap: 0.55rem;
+          gap: 0.65rem;
         }
 
         .footer-links a {
-          font-size: 0.82rem;
-          color: #94A3B8;
+          color: #64748B;
           text-decoration: none;
+          font-size: 0.84rem;
           transition: color 0.15s ease;
-          display: inline-block;
         }
 
         .footer-links a:hover {
-          color: #FFFFFF;
-        }
-
-        .footer-link-highlight {
-          color: #22C55E !important;
-          font-weight: 700;
-          margin-top: 0.25rem;
+          color: #0F172A;
+          font-weight: 600;
         }
 
         .footer-link-flex {
-          display: inline-flex !important;
+          display: inline-flex;
           align-items: center;
-          gap: 0.45rem;
+          gap: 0.4rem;
+        }
+
+        .footer-link-highlight {
+          color: #16A34A !important;
+          font-weight: 700 !important;
+          margin-top: 0.25rem;
+        }
+
+        .footer-link-highlight:hover {
+          color: #15803D !important;
+          text-decoration: underline;
         }
 
         /* Info Block */
@@ -279,81 +305,98 @@ export const Footer: React.FC = () => {
           display: flex;
           flex-direction: column;
           gap: 0.85rem;
-          font-size: 0.82rem;
+          font-size: 0.83rem;
         }
 
         .footer-info-item {
           display: flex;
-          gap: 0.55rem;
-          line-height: 1.45;
+          gap: 0.65rem;
+          align-items: flex-start;
+          color: #334155;
         }
 
         .footer-info-icon {
-          color: #22C55E;
+          color: #16A34A;
           flex-shrink: 0;
           margin-top: 2px;
         }
 
         .footer-info-item strong {
-          color: #FFFFFF;
           display: block;
-          font-size: 0.84rem;
+          color: #0F172A;
+          font-weight: 700;
         }
 
         .footer-info-item span {
-          color: #94A3B8;
-          display: block;
+          color: #64748B;
           font-size: 0.78rem;
+          display: block;
         }
 
         .footer-mail-link {
-          color: #CBD5E1;
+          color: #334155;
           text-decoration: none;
-          font-size: 0.82rem;
+          word-break: break-all;
+          font-weight: 500;
         }
 
         .footer-mail-link:hover {
-          color: #22C55E;
+          color: #16A34A;
+          text-decoration: underline;
         }
 
         .footer-info-hours {
-          padding-top: 0.35rem;
-          border-top: 1px solid #1E293B;
-          font-size: 0.78rem;
-          line-height: 1.4;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          padding: 0.6rem 0.75rem;
+          border-radius: 8px;
         }
 
         .footer-hours-label {
-          color: #CBD5E1;
-          font-weight: 700;
           display: block;
-          margin-bottom: 0.15rem;
+          font-size: 0.74rem;
+          font-weight: 700;
+          color: #0F172A;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
+          margin-bottom: 2px;
         }
 
         .footer-hours-text {
-          color: #94A3B8;
-          display: block;
+          font-size: 0.78rem;
+          color: #64748B;
         }
 
         .footer-pay-pill {
-          background: rgba(34, 197, 94, 0.1);
-          border: 1px solid rgba(34, 197, 94, 0.25);
-          color: #86EFAC;
-          padding: 0.4rem 0.65rem;
-          border-radius: 6px;
-          font-size: 0.74rem;
-          font-weight: 600;
-          line-height: 1.35;
+          background: #F0FDF4;
+          border: 1px solid #DCFCE7;
+          color: #15803D;
+          padding: 0.6rem 0.75rem;
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .footer-pay-pill strong {
+          font-size: 0.76rem;
+          font-weight: 800;
+          color: #166534;
+        }
+
+        .footer-pay-pill span {
+          font-size: 0.73rem;
+          color: #15803D;
         }
 
         /* Bottom Row */
         .footer-bottom {
-          padding-top: 1.35rem;
+          padding-top: 1.5rem;
           display: flex;
           align-items: center;
           justify-content: space-between;
           flex-wrap: wrap;
-          gap: 0.75rem;
+          gap: 0.85rem;
           font-size: 0.78rem;
           color: #64748B;
         }
@@ -368,7 +411,7 @@ export const Footer: React.FC = () => {
           .footer-bottom {
             flex-direction: column;
             align-items: flex-start;
-            padding-bottom: 4rem;
+            padding-bottom: 4.5rem;
           }
         }
 
@@ -381,30 +424,35 @@ export const Footer: React.FC = () => {
           display: flex;
           align-items: center;
           gap: 0.6rem;
+          flex-wrap: wrap;
         }
 
         .footer-bottom-links a {
-          color: #94A3B8;
+          color: #64748B;
           text-decoration: none;
           transition: color 0.15s ease;
         }
 
         .footer-bottom-links a:hover {
-          color: #FFFFFF;
+          color: #0F172A;
         }
 
         .footer-sep {
-          color: #334155;
+          color: #CBD5E1;
         }
 
         .footer-admin-link {
           color: #475569 !important;
-          font-size: 0.72rem;
-          text-decoration: none;
+          font-size: 0.74rem;
+          font-weight: 600;
+          background: #F1F5F9;
+          padding: 0.2rem 0.55rem;
+          border-radius: 4px;
         }
 
         .footer-admin-link:hover {
-          color: #94A3B8 !important;
+          background: #E2E8F0;
+          color: #0F172A !important;
         }
       `}</style>
     </footer>
